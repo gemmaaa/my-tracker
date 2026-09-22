@@ -4,83 +4,489 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <title>Quick Log</title>
   <style>
-    :root { --bg: #f2f2f7; --card: #ffffff; --accent: #007aff; --text: #1c1c1e; }
-    body { font-family: -apple-system, BlinkMacSystemFont, sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 16px; -webkit-tap-highlight-color: transparent; }
-    h2 { font-size: 22px; margin-bottom: 12px; }
-    .card { background: var(--card); padding: 16px; border-radius: 12px; box-shadow: 0 1px 4px rgba(0,0,0,0.05); margin-bottom: 16px; }
-    input, button { width: 100%; padding: 12px; font-size: 16px; border-radius: 8px; border: 1px solid #e5e5ea; box-sizing: border-box; margin-bottom: 8px; }
-    button { background: var(--accent); color: white; border: none; font-weight: 600; cursor: pointer; }
-    .btn-export { background: #34c759; margin-top: 8px; }
-    .log-item { border-bottom: 1px solid #e5e5ea; padding: 12px 0; }
-    .log-item:last-child { border-bottom: none; }
-    .time { font-size: 12px; color: #8e8e93; }
-    .tag { background: #e5e5ea; padding: 2px 6px; border-radius: 4px; font-size: 12px; font-weight: 500; margin-right: 4px; }
+    /* Default / Lavender Theme (Light) */
+    :root, [data-theme="lavender"] {
+      --bg: #f3effa;
+      --card: rgba(255, 255, 255, 0.9);
+      --text: #2a1b3d;
+      --subtext: #826b9e;
+      --border: #e2d8f0;
+      --accent: #ffd60a;
+      --accent-text: #4a3b00;
+      --tag-bg: #fff3b0;
+      --tag-text: #5c4d00;
+      --header-accent: #b5838d;
+      --danger: #ff3b30;
+    }
+
+    /* Hot Pink Theme (Dark) */
+    [data-theme="hotpink"] {
+      --bg: #160a18;
+      --card: rgba(38, 18, 43, 0.85);
+      --text: #fce4ec;
+      --subtext: #b388ff;
+      --border: #4a2154;
+      --accent: #ff375f;
+      --accent-text: #ffffff;
+      --tag-bg: #ff69b4;
+      --tag-text: #ffffff;
+      --header-accent: #ff80ab;
+      --danger: #ff453a;
+    }
+
+    /* Matcha Cream Theme (Calm Natural) */
+    [data-theme="matcha"] {
+      --bg: #f4f6f0;
+      --card: rgba(255, 255, 255, 0.9);
+      --text: #1c2b18;
+      --subtext: #6b8e62;
+      --border: #d4e0d0;
+      --accent: #a3b18a;
+      --accent-text: #ffffff;
+      --tag-bg: #dad7cd;
+      --tag-text: #3a5a40;
+      --header-accent: #588157;
+      --danger: #e63946;
+    }
+
+    /* Monochrome High-Contrast Theme */
+    [data-theme="monochrome"] {
+      --bg: #000000;
+      --card: rgba(20, 20, 20, 0.95);
+      --text: #ffffff;
+      --subtext: #a0a0a0;
+      --border: #333333;
+      --accent: #ffffff;
+      --accent-text: #000000;
+      --tag-bg: #333333;
+      --tag-text: #ffffff;
+      --header-accent: #ffffff;
+      --danger: #ff453a;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: var(--bg);
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+      color: var(--text);
+      margin: 0;
+      padding: 16px;
+      padding-bottom: 40px;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    h2 { font-size: 22px; margin-top: 0; margin-bottom: 12px; }
+    
+    .card {
+      background: var(--card);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      padding: 16px;
+      border-radius: 16px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+      margin-bottom: 16px;
+      border: 1px solid var(--border);
+    }
+
+    label {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--subtext);
+      display: block;
+      margin-bottom: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    input, select, button {
+      width: 100%;
+      padding: 12px;
+      font-size: 16px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: var(--card);
+      color: var(--text);
+      box-sizing: border-box;
+      margin-bottom: 10px;
+    }
+
+    button {
+      background: var(--accent);
+      color: var(--accent-text);
+      border: none;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .btn-export {
+      background: #34c759;
+      color: #ffffff;
+      margin-top: 12px;
+    }
+
+    .bg-options {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+
+    .bg-options button {
+      padding: 8px 10px;
+      font-size: 13px;
+      margin-bottom: 0;
+    }
+
+    /* Grouping & Timeline Styles */
+    .year-header {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--header-accent);
+      margin-top: 16px;
+      margin-bottom: 8px;
+      border-bottom: 2px solid var(--header-accent);
+      padding-bottom: 4px;
+    }
+
+    .month-header {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--subtext);
+      margin-top: 12px;
+      margin-bottom: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .date-card {
+      background: var(--card);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border-radius: 12px;
+      padding: 12px;
+      margin-bottom: 10px;
+      border: 1px solid var(--border);
+    }
+
+    .date-title {
+      font-weight: 600;
+      font-size: 14px;
+      color: var(--text);
+      margin-bottom: 8px;
+      padding-bottom: 4px;
+      border-bottom: 1px dashed var(--border);
+    }
+
+    .log-entry {
+      padding: 8px 0;
+    }
+
+    .log-entry:not(:last-child) {
+      border-bottom: 1px solid var(--border);
+    }
+
+    .log-header-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .time {
+      font-size: 12px;
+      color: var(--subtext);
+    }
+
+    .action-btns {
+      display: flex;
+      gap: 8px;
+    }
+
+    .btn-icon {
+      background: none;
+      border: none;
+      padding: 0;
+      margin: 0;
+      font-size: 13px;
+      width: auto;
+      cursor: pointer;
+      opacity: 0.7;
+    }
+
+    .tag {
+      background: var(--tag-bg);
+      color: var(--tag-text);
+      padding: 2px 8px;
+      border-radius: 12px;
+      font-size: 11px;
+      font-weight: 600;
+      margin-right: 4px;
+      display: inline-block;
+      margin-top: 4px;
+    }
+
+    /* Dark dimming overlay sitting behind cards & in front of background */
+    body::before {
+      content: "";
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-color: rgba(0, 0, 0, var(--bg-dim, 0.3));
+      z-index: -1;
+      pointer-events: none;
+    }
   </style>
 </head>
 <body>
 
-  <h2>Quick Tracker</h2>
+  <h2>Quick Tracker ✨</h2>
+  
   <div class="card">
-    <input type="text" id="tags" placeholder="Tags e.g. #food #lunch">
+    <label for="themeSelect">Color Palette Theme</label>
+    <select id="themeSelect" onchange="changeTheme(this.value)">
+      <option value="lavender">Girly Lavender (Light)</option>
+      <option value="hotpink">Hot Pink (Dark)</option>
+      <option value="matcha">Matcha Cream (Light)</option>
+      <option value="monochrome">High Contrast (Dark)</option>
+    </select>
+
+    <label>Custom Wallpaper</label>
+    <div class="bg-options">
+      <input type="file" id="bgPicker" accept="image/*" style="display:none;" onchange="uploadBackground(event)">
+      <button onclick="document.getElementById('bgPicker').click()">Choose Photo</button>
+      <button onclick="removeBackground()" style="background:var(--border); color:var(--text);">Remove</button>
+    </div>
+
+    <label for="dimmerSlider" style="margin-top: 6px;">Wallpaper Dimmer / Contrast</label>
+    <input type="range" id="dimmerSlider" min="0" max="80" value="30" oninput="updateOverlay(this.value)">
+
+    <label for="customDatetime">Date & Time (Optional)</label>
+    <input type="datetime-local" id="customDatetime">
+
+    <label for="tags">Tags</label>
+    <input type="text" id="tags" placeholder="#food #lunch">
+
+    <label for="note">Entry Details</label>
     <input type="text" id="note" placeholder="Log entry details...">
-    <button onclick="addLog()">Save Entry</button>
+
+    <input type="hidden" id="editingId" value="">
+    <button id="saveBtn" onclick="saveLog()">Save Entry</button>
+    <button id="cancelEditBtn" onclick="cancelEdit()" style="display:none; background:var(--border); color:var(--text); margin-top:-4px;">Cancel Edit</button>
   </div>
 
-  <div class="card">
-    <h3 style="margin-top:0;">Logs</h3>
-    <div id="logsContainer"></div>
-    <button class="btn-export" onclick="exportCSV()">Export to CSV</button>
+  <div style="display: flex; justify-content: space-between; align-items: center;">
+    <h3 style="margin: 0;">Log History</h3>
   </div>
+  
+  <div id="logsContainer"></div>
+
+  <button class="btn-export" onclick="exportCSV()">Export All Data (CSV)</button>
 
   <script>
-    function getLogs() { return JSON.parse(localStorage.getItem('my_pwa_logs') || '[]'); }
+    function changeTheme(themeName) {
+      document.documentElement.setAttribute('data-theme', themeName);
+      localStorage.setItem('selected_theme', themeName);
+    }
 
-    function addLog() {
+    function loadSavedTheme() {
+      const savedTheme = localStorage.getItem('selected_theme') || 'lavender';
+      document.documentElement.setAttribute('data-theme', savedTheme);
+      document.getElementById('themeSelect').value = savedTheme;
+    }
+
+    function loadSavedBackground() {
+      const savedBg = localStorage.getItem('custom_bg');
+      if (savedBg) {
+        document.body.style.backgroundImage = `url('${savedBg}')`;
+      } else {
+        document.body.style.backgroundImage = 'none';
+      }
+    }
+
+    function uploadBackground(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const base64Image = e.target.result;
+        localStorage.setItem('custom_bg', base64Image);
+        loadSavedBackground();
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function removeBackground() {
+      localStorage.removeItem('custom_bg');
+      loadSavedBackground();
+    }
+
+    function updateOverlay(val) {
+      const opacity = val / 100;
+      document.documentElement.style.setProperty('--bg-dim', opacity);
+      localStorage.setItem('custom_bg_dim', opacity);
+    }
+
+    function loadDimmerSetting() {
+      const savedDim = localStorage.getItem('custom_bg_dim') || '0.3';
+      document.documentElement.style.setProperty('--bg-dim', savedDim);
+      const slider = document.getElementById('dimmerSlider');
+      if (slider) slider.value = savedDim * 100;
+    }
+
+    function getLogs() {
+      return JSON.parse(localStorage.getItem('my_pwa_logs') || '[]');
+    }
+
+    function saveLog() {
       const tagsInput = document.getElementById('tags').value.trim();
       const noteInput = document.getElementById('note').value.trim();
-      if (!noteInput) return;
+      const datetimeInput = document.getElementById('customDatetime').value;
+      const editingId = document.getElementById('editingId').value;
 
-      const newEntry = {
-        id: Date.now(),
-        timestamp: new Date().toISOString(),
-        tags: tagsInput ? tagsInput.split(' ') : [],
-        note: noteInput
-      };
+      if (!noteInput) return alert('Please enter entry details.');
 
-      const logs = getLogs();
-      logs.unshift(newEntry);
+      const finalTimestamp = datetimeInput ? new Date(datetimeInput).toISOString() : new Date().toISOString();
+      let logs = getLogs();
+
+      if (editingId) {
+        logs = logs.map(log => {
+          if (log.id == editingId) {
+            return {
+              ...log,
+              timestamp: finalTimestamp,
+              tags: tagsInput ? tagsInput.split(' ') : [],
+              note: noteInput
+            };
+          }
+          return log;
+        });
+      } else {
+        const newEntry = {
+          id: Date.now(),
+          created_at: new Date().toISOString(),
+          timestamp: finalTimestamp,
+          tags: tagsInput ? tagsInput.split(' ') : [],
+          note: noteInput
+        };
+        logs.push(newEntry);
+      }
+
+      logs.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
       localStorage.setItem('my_pwa_logs', JSON.stringify(logs));
+      resetForm();
+      render();
+    }
 
+    function editLog(id) {
+      const logs = getLogs();
+      const log = logs.find(l => l.id == id);
+      if (!log) return;
+
+      document.getElementById('editingId').value = log.id;
+      document.getElementById('tags').value = log.tags.join(' ');
+      document.getElementById('note').value = log.note;
+
+      const localDate = new Date(log.timestamp);
+      localDate.setMinutes(localDate.getMinutes() - localDate.getTimezoneOffset());
+      document.getElementById('customDatetime').value = localDate.toISOString().slice(0, 16);
+
+      document.getElementById('saveBtn').innerText = 'Update Entry';
+      document.getElementById('cancelEditBtn').style.display = 'block';
+
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function deleteLog(id) {
+      if (!confirm('Are you sure you want to delete this entry?')) return;
+      let logs = getLogs();
+      logs = logs.filter(l => l.id != id);
+      localStorage.setItem('my_pwa_logs', JSON.stringify(logs));
+      render();
+    }
+
+    function cancelEdit() {
+      resetForm();
+    }
+
+    function resetForm() {
+      document.getElementById('editingId').value = '';
       document.getElementById('tags').value = '';
       document.getElementById('note').value = '';
-      render();
+      document.getElementById('customDatetime').value = '';
+      document.getElementById('saveBtn').innerText = 'Save Entry';
+      document.getElementById('cancelEditBtn').style.display = 'none';
     }
 
     function render() {
       const logs = getLogs();
       const container = document.getElementById('logsContainer');
+
       if (logs.length === 0) {
-        container.innerHTML = '<p style="color:#8e8e93;">No logs yet.</p>';
+        container.innerHTML = '<p style="color:var(--subtext); margin-top:12px;">No logs recorded yet.</p>';
         return;
       }
-      container.innerHTML = logs.map(l => `
-        <div class="log-item">
-          <div class="time">${new Date(l.timestamp).toLocaleString()}</div>
-          <div style="margin: 4px 0;"><strong>${l.note}</strong></div>
-          <div>${l.tags.map(t => `<span class="tag">${t}</span>`).join('')}</div>
-        </div>
-      `).join('');
+
+      const grouped = {};
+
+      logs.forEach(log => {
+        const d = new Date(log.timestamp);
+        const year = d.getFullYear();
+        const month = d.toLocaleString('default', { month: 'long' });
+        const dateStr = d.toLocaleDateString('default', { weekday: 'short', month: 'short', day: 'numeric' });
+
+        if (!grouped[year]) grouped[year] = {};
+        if (!grouped[year][month]) grouped[year][month] = {};
+        if (!grouped[year][month][dateStr]) grouped[year][month][dateStr] = [];
+
+        grouped[year][month][dateStr].push(log);
+      });
+
+      let html = '';
+
+      for (const year in grouped) {
+        html += `<div class="year-header">${year}</div>`;
+        for (const month in grouped[year]) {
+          html += `<div class="month-header">${month}</div>`;
+          for (const dateStr in grouped[year][month]) {
+            html += `
+              <div class="date-card">
+                <div class="date-title">${dateStr}</div>
+            `;
+            grouped[year][month][dateStr].forEach(l => {
+              const timeStr = new Date(l.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+              html += `
+                <div class="log-entry">
+                  <div class="log-header-row">
+                    <span class="time">${timeStr}</span>
+                    <div class="action-btns">
+                      <button class="btn-icon" onclick="editLog(${l.id})">✏️</button>
+                      <button class="btn-icon" onclick="deleteLog(${l.id})">🗑️</button>
+                    </div>
+                  </div>
+                  <div style="margin-top: 2px;"><strong>${l.note}</strong></div>
+                  <div>${l.tags.map(t => `<span class="tag">${t}</span>`).join('')}</div>
+                </div>
+              `;
+            });
+            html += `</div>`;
+          }
+        }
+      }
+
+      container.innerHTML = html;
     }
 
     function exportCSV() {
       const logs = getLogs();
       if (logs.length === 0) return alert('No data to export.');
-      let csv = "Timestamp,Tags,Note\n";
+
+      let csv = "EventTimestamp,RecordedTimestamp,Tags,Note\n";
       logs.forEach(l => {
-        csv += `"${l.timestamp}","${l.tags.join(' ')}","${l.note.replace(/"/g, '""')}"\n`;
+        const recorded = l.created_at || l.timestamp;
+        csv += `"${l.timestamp}","${recorded}","${l.tags.join(' ')}","${l.note.replace(/"/g, '""')}"\n`;
       });
 
       const blob = new Blob([csv], { type: 'text/csv' });
@@ -91,6 +497,10 @@
       a.click();
     }
 
+    // Initialize saved settings on startup
+    loadSavedTheme();
+    loadSavedBackground();
+    loadDimmerSetting();
     render();
   </script>
 </body>
