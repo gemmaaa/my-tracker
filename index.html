@@ -113,6 +113,7 @@
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
       margin-bottom: 16px;
       border: 1px solid var(--border);
+      box-sizing: border-box;
     }
 
     /* Full screen settings overlay */
@@ -152,7 +153,13 @@
 
     textarea { min-height: 75px; resize: vertical; }
 
-    .input-compact { padding: 8px 10px; font-size: 14px; }
+    /* Compact Datetime Field Fix */
+    .input-compact {
+      padding: 8px 10px;
+      font-size: 14px;
+      max-width: 100%;
+      box-sizing: border-box;
+    }
 
     button {
       background: var(--accent);
@@ -316,12 +323,12 @@
     </div>
   </div>
 
-  <!-- Collapsible Logger Card -->
-  <div id="entryCard" class="card" style="display: block;">
-    <label for="customDatetime">Date</label>
+  <!-- Collapsible Logger Card (Hidden by default) -->
+  <div id="entryCard" class="card" style="display: none;">
+    <label for="customDatetime" id="lbl-date">Date</label>
     <input type="datetime-local" id="customDatetime" class="input-compact">
 
-    <label>Select Category Emoji</label>
+    <label id="lbl-emoji">Select Category Emoji</label>
     <div class="emoji-bar" id="emojiBar">
       <div class="emoji-opt" onclick="selectEmoji(this, '😊')">😊</div>
       <div class="emoji-opt" onclick="selectEmoji(this, '🥖')">🥖</div>
@@ -335,10 +342,10 @@
     </div>
     <input type="hidden" id="selectedEmoji" value="">
 
-    <label for="note">Entry Details</label>
+    <label for="note" id="lbl-details">Entry Details</label>
     <textarea id="note" placeholder="What would you like to log today?"></textarea>
 
-    <label for="tags">Tags</label>
+    <label for="tags" id="lbl-tags">Tags</label>
     <div class="tag-scroll-bar" id="quickTagBar"></div>
     <input type="text" id="tags" placeholder="#food #lunch" onkeyup="handleTagTyping(event)">
 
@@ -347,24 +354,31 @@
     <button id="cancelEditBtn" onclick="cancelEdit()" style="display:none; background:var(--border); color:var(--text); margin-top:-4px;">Cancel Edit</button>
   </div>
 
-  <!-- Timeline Search & Header -->
+  <!-- Timeline Search -->
   <div style="margin-bottom: 8px;">
     <input type="text" id="searchFilter" placeholder="🔍 Search logs by tag or text..." oninput="render()" class="input-compact" style="margin-bottom: 12px;">
   </div>
 
   <div id="logsContainer"></div>
 
-  <button class="btn-themed" onclick="exportCSV()" style="margin-top: 16px;">Export All Data (CSV)</button>
+  <!-- Dynamic CSV Export Button -->
+  <button id="exportBtn" class="btn-themed" onclick="exportCSV()" style="margin-top: 16px;">Export All Data (CSV)</button>
 
   <!-- Full-Screen Settings Overlay -->
   <div id="settingsView" class="settings-view">
     <div class="top-bar">
-      <h2>Settings ⚙️</h2>
+      <h2 id="lbl-settings-title">Settings ⚙️</h2>
       <button class="btn-icon-head" onclick="closeSettings()">✕</button>
     </div>
 
     <div class="card">
-      <label for="themeSelect">Color Palette Theme</label>
+      <label for="langSelect" id="lbl-language">Language</label>
+      <select id="langSelect" onchange="changeLanguage(this.value)">
+        <option value="en">English</option>
+        <option value="es">Español</option>
+      </select>
+
+      <label for="themeSelect" id="lbl-theme">Color Palette Theme</label>
       <select id="themeSelect" onchange="changeTheme(this.value)">
         <option value="lavender">Lavender (Light)</option>
         <option value="hotpink">Hot Pink (Dark)</option>
@@ -372,30 +386,134 @@
         <option value="monochrome">High Contrast (Dark)</option>
       </select>
 
-      <label>Custom Wallpaper</label>
+      <label id="lbl-wallpaper">Custom Wallpaper</label>
       <div class="bg-options">
         <input type="file" id="bgPicker" accept="image/*" style="display:none;" onchange="uploadBackground(event)">
-        <button onclick="document.getElementById('bgPicker').click()">Choose Photo</button>
-        <button onclick="removeBackground()" style="background:var(--border); color:var(--text);">Remove</button>
+        <button id="btn-choose-photo" onclick="document.getElementById('bgPicker').click()">Choose Photo</button>
+        <button id="btn-remove-photo" onclick="removeBackground()" style="background:var(--border); color:var(--text);">Remove</button>
       </div>
 
-      <label for="bgFitSelect">Wallpaper Sizing</label>
+      <label for="bgFitSelect" id="lbl-bgfit">Wallpaper Sizing</label>
       <select id="bgFitSelect" onchange="changeBgFit(this.value)">
-        <option value="contain">Fit Screen (Sharp / Uncropped)</option>
-        <option value="cover">Fill Screen (Cropped to Edge)</option>
+        <option value="contain" id="opt-fit">Fit Screen (Sharp / Uncropped)</option>
+        <option value="cover" id="opt-cover">Fill Screen (Cropped to Edge)</option>
       </select>
 
-      <label for="dimmerSlider" style="margin-top: 6px;">Wallpaper Dimmer / Contrast</label>
+      <label for="dimmerSlider" id="lbl-dimmer" style="margin-top: 6px;">Wallpaper Dimmer / Contrast</label>
       <input type="range" id="dimmerSlider" min="0" max="80" value="30" oninput="updateOverlay(this.value)">
     </div>
 
     <div class="card" style="border: 1px solid var(--danger);">
-      <label style="color: var(--danger);">Data Management</label>
-      <button class="btn-danger" onclick="deleteAllLogs()">Clear All Logs (Reset)</button>
+      <label id="lbl-datamgmt" style="color: var(--danger);">Data Management</label>
+      <button id="btn-delete-all" class="btn-danger" onclick="deleteAllLogs()">Clear All Logs (Reset)</button>
     </div>
   </div>
 
   <script>
+    // Dictionary for Multilingual Translations
+    const translations = {
+      en: {
+        date: "Date",
+        emoji: "Select Category Emoji",
+        details: "Entry Details",
+        tags: "Tags",
+        placeholder_note: "What would you like to log today?",
+        placeholder_search: "🔍 Search logs by tag or text...",
+        save: "Save Entry",
+        update: "Update Entry",
+        cancel: "Cancel Edit",
+        export_all: "Export All Data (CSV)",
+        export_filtered: "Export Filtered Logs (CSV)",
+        settings_title: "Settings ⚙️",
+        language: "Language",
+        theme: "Color Palette Theme",
+        wallpaper: "Custom Wallpaper",
+        choose_photo: "Choose Photo",
+        remove_photo: "Remove",
+        bgfit: "Wallpaper Sizing",
+        fit_screen: "Fit Screen (Sharp / Uncropped)",
+        fill_screen: "Fill Screen (Cropped to Edge)",
+        dimmer: "Wallpaper Dimmer / Contrast",
+        datamgmt: "Data Management",
+        delete_all: "Clear All Logs (Reset)",
+        no_logs: "No logs recorded yet.",
+        no_matches: "No matching logs found."
+      },
+      es: {
+        date: "Fecha",
+        emoji: "Seleccionar Emoji de Categoría",
+        details: "Detalles de la Entrada",
+        tags: "Etiquetas",
+        placeholder_note: "¿Qué te gustaría registrar hoy?",
+        placeholder_search: "🔍 Buscar registros por etiqueta o texto...",
+        save: "Guardar Entrada",
+        update: "Actualizar Entrada",
+        cancel: "Cancelar Edición",
+        export_all: "Exportar Todos los Datos (CSV)",
+        export_filtered: "Exportar Registros Filtrados (CSV)",
+        settings_title: "Ajustes ⚙️",
+        language: "Idioma",
+        theme: "Paleta de Colores",
+        wallpaper: "Fondo de Pantalla Personalizado",
+        choose_photo: "Elegir Foto",
+        remove_photo: "Quitar",
+        bgfit: "Tamaño de Fondo",
+        fit_screen: "Ajustar a Pantalla (Sin Recortar)",
+        fill_screen: "Llenar Pantalla (Recortado)",
+        dimmer: "Atenuador de Fondo / Contraste",
+        datamgmt: "Gestión de Datos",
+        delete_all: "Borrar Todos los Registros (Reiniciar)",
+        no_logs: "Aún no hay registros guardados.",
+        no_matches: "No se encontraron registros coincidentes."
+      }
+    };
+
+    let currentLang = 'en';
+
+    function changeLanguage(lang) {
+      currentLang = lang || 'en';
+      localStorage.setItem('selected_lang', currentLang);
+      applyLanguage();
+      render();
+    }
+
+    function applyLanguage() {
+      const t = translations[currentLang] || translations.en;
+      document.getElementById('langSelect').value = currentLang;
+
+      document.getElementById('lbl-date').innerText = t.date;
+      document.getElementById('lbl-emoji').innerText = t.emoji;
+      document.getElementById('lbl-details').innerText = t.details;
+      document.getElementById('lbl-tags').innerText = t.tags;
+      document.getElementById('note').placeholder = t.placeholder_note;
+      document.getElementById('searchFilter').placeholder = t.placeholder_search;
+      
+      const isEditing = document.getElementById('editingId').value !== '';
+      document.getElementById('saveBtn').innerText = isEditing ? t.update : t.save;
+      document.getElementById('cancelEditBtn').innerText = t.cancel;
+
+      document.getElementById('lbl-settings-title').innerText = t.settings_title;
+      document.getElementById('lbl-language').innerText = t.language;
+      document.getElementById('lbl-theme').innerText = t.theme;
+      document.getElementById('lbl-wallpaper').innerText = t.wallpaper;
+      document.getElementById('btn-choose-photo').innerText = t.choose_photo;
+      document.getElementById('btn-remove-photo').innerText = t.remove_photo;
+      document.getElementById('lbl-bgfit').innerText = t.bgfit;
+      document.getElementById('opt-fit').innerText = t.fit_screen;
+      document.getElementById('opt-cover').innerText = t.fill_screen;
+      document.getElementById('lbl-dimmer').innerText = t.dimmer;
+      document.getElementById('lbl-datamgmt').innerText = t.datamgmt;
+      document.getElementById('btn-delete-all').innerText = t.delete_all;
+    }
+
+    function detectUserLanguage() {
+      const savedLang = localStorage.getItem('selected_lang');
+      if (savedLang) return savedLang;
+      // Auto-detect browser/system language
+      const sysLang = (navigator.language || 'en').slice(0, 2);
+      return translations[sysLang] ? sysLang : 'en';
+    }
+
     function getNowForInput() {
       const now = new Date();
       now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
@@ -411,13 +529,8 @@
       card.style.display = (card.style.display === 'none') ? 'block' : 'none';
     }
 
-    function openSettings() {
-      document.getElementById('settingsView').style.display = 'block';
-    }
-
-    function closeSettings() {
-      document.getElementById('settingsView').style.display = 'none';
-    }
+    function openSettings() { document.getElementById('settingsView').style.display = 'block'; }
+    function closeSettings() { document.getElementById('settingsView').style.display = 'none'; }
 
     function changeTheme(themeName) {
       document.documentElement.setAttribute('data-theme', themeName);
@@ -495,7 +608,6 @@
       const input = document.getElementById('tags');
       let val = input.value;
 
-      // Auto-add # on Space or single word completion
       if (e.key === ' ' || e.code === 'Space') {
         const words = val.split(' ').map(w => {
           if (!w) return '';
@@ -522,7 +634,6 @@
         });
       });
 
-      // Default tags + user's most used
       const defaults = ['#food', '#symptom', '#exercise', '#mood', '#meds', '#water'];
       const combined = Array.from(new Set([...defaults, ...Object.keys(tagCounts)]));
 
@@ -536,6 +647,18 @@
       return JSON.parse(localStorage.getItem('my_pwa_logs') || '[]');
     }
 
+    function getFilteredLogs() {
+      const logs = getLogs();
+      const searchQuery = (document.getElementById('searchFilter').value || '').toLowerCase();
+      if (!searchQuery) return logs;
+
+      return logs.filter(l => {
+        const textMatch = l.note.toLowerCase().includes(searchQuery);
+        const tagMatch = (l.tags || []).some(t => t.toLowerCase().includes(searchQuery));
+        return textMatch || tagMatch;
+      });
+    }
+
     function saveLog() {
       const tagsInput = document.getElementById('tags').value.trim();
       const noteInput = document.getElementById('note').value.trim();
@@ -545,7 +668,6 @@
 
       if (!noteInput) return alert('Please enter entry details.');
 
-      // Auto-format tags if missing #
       const formattedTags = tagsInput ? tagsInput.split(' ').map(t => t.startsWith('#') ? t : '#' + t) : [];
       const finalTimestamp = datetimeInput ? new Date(datetimeInput).toISOString() : new Date().toISOString();
       let logs = getLogs();
@@ -587,12 +709,12 @@
       const log = logs.find(l => l.id == id);
       if (!log) return;
 
+      const t = translations[currentLang] || translations.en;
       document.getElementById('editingId').value = log.id;
       document.getElementById('tags').value = (log.tags || []).join(' ');
       document.getElementById('note').value = log.note;
       document.getElementById('selectedEmoji').value = log.emoji || '';
 
-      // Highlight saved emoji
       document.querySelectorAll('.emoji-opt').forEach(e => {
         if (e.innerText === log.emoji) e.classList.add('selected');
         else e.classList.remove('selected');
@@ -602,7 +724,7 @@
       localDate.setMinutes(localDate.getMinutes() - localDate.getTimezoneOffset());
       document.getElementById('customDatetime').value = localDate.toISOString().slice(0, 16);
 
-      document.getElementById('saveBtn').innerText = 'Update Entry';
+      document.getElementById('saveBtn').innerText = t.update;
       document.getElementById('cancelEditBtn').style.display = 'block';
       document.getElementById('entryCard').style.display = 'block';
 
@@ -619,7 +741,6 @@
     }
 
     function deleteAllLogs() {
-      // Double Confirmation
       if (confirm('FIRST WARNING: Are you sure you want to delete ALL logged entries? This cannot be undone.')) {
         if (confirm('FINAL CONFIRMATION: Tap OK to permanently wipe all stored data.')) {
           localStorage.removeItem('my_pwa_logs');
@@ -631,35 +752,34 @@
       }
     }
 
-    function cancelEdit() {
-      resetForm();
-    }
+    function cancelEdit() { resetForm(); }
 
     function resetForm() {
+      const t = translations[currentLang] || translations.en;
       document.getElementById('editingId').value = '';
       document.getElementById('tags').value = '';
       document.getElementById('note').value = '';
       document.getElementById('selectedEmoji').value = '';
       document.querySelectorAll('.emoji-opt').forEach(e => e.classList.remove('selected'));
       setCurrentDatetime();
-      document.getElementById('saveBtn').innerText = 'Save Entry';
+      document.getElementById('saveBtn').innerText = t.save;
       document.getElementById('cancelEditBtn').style.display = 'none';
     }
 
     function render() {
-      const logs = getLogs();
       const container = document.getElementById('logsContainer');
-      const searchQuery = (document.getElementById('searchFilter').value || '').toLowerCase();
+      const searchQuery = (document.getElementById('searchFilter').value || '').trim();
+      const filteredLogs = getFilteredLogs();
+      const t = translations[currentLang] || translations.en;
 
-      // Filter by Search Query
-      const filteredLogs = logs.filter(l => {
-        const textMatch = l.note.toLowerCase().includes(searchQuery);
-        const tagMatch = (l.tags || []).some(t => t.toLowerCase().includes(searchQuery));
-        return textMatch || tagMatch;
-      });
+      // Update Export Button Label dynamically depending on filter
+      const exportBtn = document.getElementById('exportBtn');
+      if (exportBtn) {
+        exportBtn.innerText = searchQuery ? t.export_filtered : t.export_all;
+      }
 
       if (filteredLogs.length === 0) {
-        container.innerHTML = '<p style="color:var(--subtext); margin-top:12px;">No matching logs found.</p>';
+        container.innerHTML = `<p style="color:var(--subtext); margin-top:12px;">${searchQuery ? t.no_matches : t.no_logs}</p>`;
         return;
       }
 
@@ -668,8 +788,8 @@
       filteredLogs.forEach(log => {
         const d = new Date(log.timestamp);
         const year = d.getFullYear();
-        const month = d.toLocaleString('default', { month: 'long' });
-        const dateStr = d.toLocaleDateString('default', { weekday: 'short', month: 'short', day: 'numeric' });
+        const month = d.toLocaleString(currentLang, { month: 'long' });
+        const dateStr = d.toLocaleDateString(currentLang, { weekday: 'short', month: 'short', day: 'numeric' });
 
         if (!grouped[year]) grouped[year] = {};
         if (!grouped[year][month]) grouped[year][month] = {};
@@ -690,7 +810,7 @@
                 <div class="date-title">${dateStr}</div>
             `;
             grouped[year][month][dateStr].forEach(l => {
-              const timeStr = new Date(l.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+              const timeStr = new Date(l.timestamp).toLocaleTimeString(currentLang, { hour: '2-digit', minute: '2-digit' });
               const emojiDisplay = l.emoji ? `<span style="margin-right:6px; font-size:16px;">${l.emoji}</span>` : '';
               html += `
                 <div class="log-entry">
@@ -715,21 +835,22 @@
     }
 
     async function exportCSV() {
-      const logs = getLogs();
-      if (logs.length === 0) return alert('No data to export.');
+      const logsToExport = getFilteredLogs();
+      if (logsToExport.length === 0) return alert('No data to export.');
 
       let csv = "EventTimestamp,RecordedTimestamp,Emoji,Tags,Note\n";
-      logs.forEach(l => {
+      logsToExport.forEach(l => {
         const recorded = l.created_at || l.timestamp;
         const emoji = l.emoji || '';
         const tags = (l.tags || []).join(' ');
         csv += `"${l.timestamp}","${recorded}","${emoji}","${tags}","${l.note.replace(/"/g, '""')}"\n`;
       });
 
-      const fileName = `tracker_export_${new Date().toISOString().slice(0,10)}.csv`;
+      const isFiltered = (document.getElementById('searchFilter').value || '').trim() !== '';
+      const prefix = isFiltered ? 'filtered_logs' : 'tracker_export';
+      const fileName = `${prefix}_${new Date().toISOString().slice(0,10)}.csv`;
       const blob = new Blob([csv], { type: 'text/csv' });
 
-      // Native Web Share API (Triggers iOS Share Sheet for native file saving)
       if (navigator.canShare && navigator.canShare({ files: [new File([blob], fileName, { type: 'text/csv' })] })) {
         try {
           const file = new File([blob], fileName, { type: 'text/csv' });
@@ -754,6 +875,8 @@
     }
 
     // Startup Initialization
+    currentLang = detectUserLanguage();
+    applyLanguage();
     loadSavedTheme();
     loadSavedBackground();
     loadDimmerSetting();
