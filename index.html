@@ -7,18 +7,18 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <title>Quick Log</title>
   <style>
-    /* Default / Lavender Theme (Light) */
+    /* Default / Lavender Theme (Soft Purples & Soft Butter Yellow) */
     :root, [data-theme="lavender"] {
-      --bg: #f3effa;
-      --card: rgba(255, 255, 255, 0.9);
-      --text: #2a1b3d;
-      --subtext: #826b9e;
-      --border: #e2d8f0;
-      --accent: #ffd60a;
-      --accent-text: #4a3b00;
-      --tag-bg: #fff3b0;
-      --tag-text: #5c4d00;
-      --header-accent: #b5838d;
+      --bg: #e6def8;
+      --card: rgba(216, 204, 241, 0.92);
+      --text: #2d1e3e;
+      --subtext: #6b5288;
+      --border: #c9b8e8;
+      --accent: #ffe875;
+      --accent-text: #4a3c00;
+      --tag-bg: #fff099;
+      --tag-text: #594800;
+      --header-accent: #7b599c;
       --danger: #ff3b30;
     }
 
@@ -40,7 +40,7 @@
     /* Matcha Cream Theme (Calm Natural) */
     [data-theme="matcha"] {
       --bg: #f4f6f0;
-      --card: rgba(255, 255, 255, 0.9);
+      --card: rgba(225, 233, 220, 0.92);
       --text: #1c2b18;
       --subtext: #6b8e62;
       --border: #d4e0d0;
@@ -88,7 +88,7 @@
       -webkit-backdrop-filter: blur(10px);
       padding: 16px;
       border-radius: 16px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+      box-shadow: 0 4px 12px rgba(45, 30, 62, 0.08);
       margin-bottom: 16px;
       border: 1px solid var(--border);
     }
@@ -109,7 +109,7 @@
       font-size: 16px;
       border-radius: 10px;
       border: 1px solid var(--border);
-      background: var(--card);
+      background: var(--bg);
       color: var(--text);
       box-sizing: border-box;
       margin-bottom: 10px;
@@ -246,7 +246,7 @@
   <div class="card">
     <label for="themeSelect">Color Palette Theme</label>
     <select id="themeSelect" onchange="changeTheme(this.value)">
-      <option value="lavender">Girly Lavender (Light)</option>
+      <option value="lavender">Lavender (Light)</option>
       <option value="hotpink">Hot Pink (Dark)</option>
       <option value="matcha">Matcha Cream (Light)</option>
       <option value="monochrome">High Contrast (Dark)</option>
