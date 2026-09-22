@@ -7,19 +7,20 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <title>Quick Log</title>
   <style>
-    /* Lavender Theme with Very Pale Buttercream Yellow */
+    /* Lavender Theme (Default Light) */
     :root, [data-theme="lavender"] {
       --bg: #e6def8;
       --card: rgba(216, 204, 241, 0.92);
       --text: #2d1e3e;
       --subtext: #6b5288;
       --border: #c9b8e8;
-      --accent: #f7f0a8;       /* Pale Buttercream Accent */
+      --accent: #fff5a5;
       --accent-text: #4a3c00;
-      --tag-bg: #fceea1;       /* Extra Pale Chiffon for Tags */
+      --tag-bg: #fff8c4;
       --tag-text: #594800;
       --header-accent: #7b599c;
       --danger: #ff3b30;
+      --btn-secondary: rgba(107, 82, 136, 0.15);
     }
 
     /* Hot Pink Theme (Dark) */
@@ -35,9 +36,10 @@
       --tag-text: #ffffff;
       --header-accent: #ff80ab;
       --danger: #ff453a;
+      --btn-secondary: rgba(179, 136, 255, 0.2);
     }
 
-    /* Matcha Cream Theme (Calm Natural) */
+    /* Matcha Cream Theme (Light) */
     [data-theme="matcha"] {
       --bg: #f4f6f0;
       --card: rgba(225, 233, 220, 0.92);
@@ -50,6 +52,7 @@
       --tag-text: #3a5a40;
       --header-accent: #588157;
       --danger: #e63946;
+      --btn-secondary: rgba(107, 142, 98, 0.15);
     }
 
     /* Monochrome High-Contrast Theme */
@@ -65,14 +68,16 @@
       --tag-text: #ffffff;
       --header-accent: #ffffff;
       --danger: #ff453a;
+      --btn-secondary: #222222;
     }
 
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
       background-color: var(--bg);
-      background-size: cover;
-      background-position: center;
+      background-repeat: no-repeat;
+      background-position: center center;
       background-attachment: fixed;
+      background-size: var(--bg-fit, contain);
       color: var(--text);
       margin: 0;
       padding: 16px;
@@ -87,12 +92,9 @@
       margin-bottom: 12px;
     }
 
-    .top-bar h2 {
-      margin: 0;
-      font-size: 22px;
-    }
+    .top-bar h2 { margin: 0; font-size: 22px; }
 
-    .settings-btn {
+    .btn-icon-head {
       background: none;
       border: none;
       font-size: 22px;
@@ -108,14 +110,21 @@
       -webkit-backdrop-filter: blur(10px);
       padding: 16px;
       border-radius: 16px;
-      box-shadow: 0 4px 12px rgba(45, 30, 62, 0.08);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
       margin-bottom: 16px;
       border: 1px solid var(--border);
     }
 
-    .settings-drawer {
+    /* Full screen settings overlay */
+    .settings-view {
       display: none;
-      border-left: 3px solid var(--accent);
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: var(--bg);
+      z-index: 999;
+      padding: 20px;
+      overflow-y: auto;
+      box-sizing: border-box;
     }
 
     label {
@@ -141,15 +150,9 @@
       font-family: inherit;
     }
 
-    textarea {
-      min-height: 80px;
-      resize: vertical;
-    }
+    textarea { min-height: 75px; resize: vertical; }
 
-    .input-compact {
-      padding: 8px 10px;
-      font-size: 14px;
-    }
+    .input-compact { padding: 8px 10px; font-size: 14px; }
 
     button {
       background: var(--accent);
@@ -159,25 +162,71 @@
       cursor: pointer;
     }
 
-    .btn-export {
-      background: #34c759;
-      color: #ffffff;
-      margin-top: 12px;
+    .btn-themed {
+      background: var(--btn-secondary);
+      color: var(--text);
+      border: 1px solid var(--border);
     }
 
-    .bg-options {
+    .btn-danger {
+      background: var(--danger);
+      color: #ffffff;
+      margin-top: 16px;
+    }
+
+    .bg-options { display: flex; gap: 8px; margin-bottom: 8px; }
+    .bg-options button { padding: 8px 10px; font-size: 13px; margin-bottom: 0; }
+
+    /* Emoji Picker Bar */
+    .emoji-bar {
       display: flex;
       gap: 8px;
-      margin-bottom: 8px;
+      overflow-x: auto;
+      padding-bottom: 8px;
+      margin-bottom: 10px;
+      -webkit-overflow-scrolling: touch;
     }
 
-    .bg-options button {
-      padding: 8px 10px;
-      font-size: 13px;
-      margin-bottom: 0;
+    .emoji-opt {
+      font-size: 22px;
+      padding: 6px 10px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      cursor: pointer;
+      flex-shrink: 0;
+      transition: transform 0.1s;
     }
 
-    /* Grouping & Timeline Styles */
+    .emoji-opt.selected {
+      border: 2px solid var(--header-accent);
+      transform: scale(1.15);
+      background: var(--card);
+    }
+
+    /* Quick Tag Scrollbar */
+    .tag-scroll-bar {
+      display: flex;
+      gap: 6px;
+      overflow-x: auto;
+      padding: 4px 0 8px 0;
+      margin-bottom: 6px;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .tag-chip {
+      background: var(--tag-bg);
+      color: var(--tag-text);
+      padding: 4px 10px;
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: 600;
+      white-space: nowrap;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+
+    /* Timeline Styles */
     .year-header {
       font-size: 20px;
       font-weight: 700;
@@ -217,29 +266,11 @@
       border-bottom: 1px dashed var(--border);
     }
 
-    .log-entry {
-      padding: 8px 0;
-    }
-
-    .log-entry:not(:last-child) {
-      border-bottom: 1px solid var(--border);
-    }
-
-    .log-header-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .time {
-      font-size: 12px;
-      color: var(--subtext);
-    }
-
-    .action-btns {
-      display: flex;
-      gap: 8px;
-    }
+    .log-entry { padding: 8px 0; }
+    .log-entry:not(:last-child) { border-bottom: 1px solid var(--border); }
+    .log-header-row { display: flex; justify-content: space-between; align-items: center; }
+    .time { font-size: 12px; color: var(--subtext); }
+    .action-btns { display: flex; gap: 8px; }
 
     .btn-icon {
       background: none;
@@ -276,55 +307,93 @@
 </head>
 <body>
 
+  <!-- App Header -->
   <div class="top-bar">
     <h2>Quick Tracker ✨</h2>
-    <button class="settings-btn" onclick="toggleSettings()">⚙️</button>
-  </div>
-  
-  <!-- Hidden Settings Drawer -->
-  <div id="settingsDrawer" class="card settings-drawer">
-    <label for="themeSelect">Color Palette Theme</label>
-    <select id="themeSelect" onchange="changeTheme(this.value)">
-      <option value="lavender">Lavender (Light)</option>
-      <option value="hotpink">Hot Pink (Dark)</option>
-      <option value="matcha">Matcha Cream (Light)</option>
-      <option value="monochrome">High Contrast (Dark)</option>
-    </select>
-
-    <label>Custom Wallpaper</label>
-    <div class="bg-options">
-      <input type="file" id="bgPicker" accept="image/*" style="display:none;" onchange="uploadBackground(event)">
-      <button onclick="document.getElementById('bgPicker').click()">Choose Photo</button>
-      <button onclick="removeBackground()" style="background:var(--border); color:var(--text);">Remove</button>
+    <div>
+      <button class="btn-icon-head" onclick="toggleEntryForm()" title="Toggle Entry Form">📓</button>
+      <button class="btn-icon-head" onclick="openSettings()" title="Settings">⚙️</button>
     </div>
-
-    <label for="dimmerSlider" style="margin-top: 6px;">Wallpaper Dimmer / Contrast</label>
-    <input type="range" id="dimmerSlider" min="0" max="80" value="30" oninput="updateOverlay(this.value)">
   </div>
 
-  <!-- Entry Form Card -->
-  <div class="card">
+  <!-- Collapsible Logger Card -->
+  <div id="entryCard" class="card" style="display: block;">
     <label for="customDatetime">Date</label>
     <input type="datetime-local" id="customDatetime" class="input-compact">
+
+    <label>Select Category Emoji</label>
+    <div class="emoji-bar" id="emojiBar">
+      <div class="emoji-opt" onclick="selectEmoji(this, '😊')">😊</div>
+      <div class="emoji-opt" onclick="selectEmoji(this, '🥖')">🥖</div>
+      <div class="emoji-opt" onclick="selectEmoji(this, '💊')">💊</div>
+      <div class="emoji-opt" onclick="selectEmoji(this, '🏋️‍♀️')">🏋️‍♀️</div>
+      <div class="emoji-opt" onclick="selectEmoji(this, '☕️')">☕️</div>
+      <div class="emoji-opt" onclick="selectEmoji(this, '💤')">💤</div>
+      <div class="emoji-opt" onclick="selectEmoji(this, '🌸')">🌸</div>
+      <div class="emoji-opt" onclick="selectEmoji(this, '❤️')">❤️</div>
+      <div class="emoji-opt" onclick="selectEmoji(this, '📝')">📝</div>
+    </div>
+    <input type="hidden" id="selectedEmoji" value="">
 
     <label for="note">Entry Details</label>
     <textarea id="note" placeholder="What would you like to log today?"></textarea>
 
     <label for="tags">Tags</label>
-    <input type="text" id="tags" placeholder="#food #lunch">
+    <div class="tag-scroll-bar" id="quickTagBar"></div>
+    <input type="text" id="tags" placeholder="#food #lunch" onkeyup="handleTagTyping(event)">
 
     <input type="hidden" id="editingId" value="">
     <button id="saveBtn" onclick="saveLog()">Save Entry</button>
     <button id="cancelEditBtn" onclick="cancelEdit()" style="display:none; background:var(--border); color:var(--text); margin-top:-4px;">Cancel Edit</button>
   </div>
 
-  <div style="display: flex; justify-content: space-between; align-items: center;">
-    <h3 style="margin: 0;">Log History</h3>
+  <!-- Timeline Search & Header -->
+  <div style="margin-bottom: 8px;">
+    <input type="text" id="searchFilter" placeholder="🔍 Search logs by tag or text..." oninput="render()" class="input-compact" style="margin-bottom: 12px;">
   </div>
-  
+
   <div id="logsContainer"></div>
 
-  <button class="btn-export" onclick="exportCSV()">Export All Data (CSV)</button>
+  <button class="btn-themed" onclick="exportCSV()" style="margin-top: 16px;">Export All Data (CSV)</button>
+
+  <!-- Full-Screen Settings Overlay -->
+  <div id="settingsView" class="settings-view">
+    <div class="top-bar">
+      <h2>Settings ⚙️</h2>
+      <button class="btn-icon-head" onclick="closeSettings()">✕</button>
+    </div>
+
+    <div class="card">
+      <label for="themeSelect">Color Palette Theme</label>
+      <select id="themeSelect" onchange="changeTheme(this.value)">
+        <option value="lavender">Lavender (Light)</option>
+        <option value="hotpink">Hot Pink (Dark)</option>
+        <option value="matcha">Matcha Cream (Light)</option>
+        <option value="monochrome">High Contrast (Dark)</option>
+      </select>
+
+      <label>Custom Wallpaper</label>
+      <div class="bg-options">
+        <input type="file" id="bgPicker" accept="image/*" style="display:none;" onchange="uploadBackground(event)">
+        <button onclick="document.getElementById('bgPicker').click()">Choose Photo</button>
+        <button onclick="removeBackground()" style="background:var(--border); color:var(--text);">Remove</button>
+      </div>
+
+      <label for="bgFitSelect">Wallpaper Sizing</label>
+      <select id="bgFitSelect" onchange="changeBgFit(this.value)">
+        <option value="contain">Fit Screen (Sharp / Uncropped)</option>
+        <option value="cover">Fill Screen (Cropped to Edge)</option>
+      </select>
+
+      <label for="dimmerSlider" style="margin-top: 6px;">Wallpaper Dimmer / Contrast</label>
+      <input type="range" id="dimmerSlider" min="0" max="80" value="30" oninput="updateOverlay(this.value)">
+    </div>
+
+    <div class="card" style="border: 1px solid var(--danger);">
+      <label style="color: var(--danger);">Data Management</label>
+      <button class="btn-danger" onclick="deleteAllLogs()">Clear All Logs (Reset)</button>
+    </div>
+  </div>
 
   <script>
     function getNowForInput() {
@@ -337,9 +406,17 @@
       document.getElementById('customDatetime').value = getNowForInput();
     }
 
-    function toggleSettings() {
-      const drawer = document.getElementById('settingsDrawer');
-      drawer.style.display = (drawer.style.display === 'block') ? 'none' : 'block';
+    function toggleEntryForm() {
+      const card = document.getElementById('entryCard');
+      card.style.display = (card.style.display === 'none') ? 'block' : 'none';
+    }
+
+    function openSettings() {
+      document.getElementById('settingsView').style.display = 'block';
+    }
+
+    function closeSettings() {
+      document.getElementById('settingsView').style.display = 'none';
     }
 
     function changeTheme(themeName) {
@@ -353,8 +430,17 @@
       document.getElementById('themeSelect').value = savedTheme;
     }
 
+    function changeBgFit(fitVal) {
+      document.documentElement.style.setProperty('--bg-fit', fitVal);
+      localStorage.setItem('custom_bg_fit', fitVal);
+    }
+
     function loadSavedBackground() {
       const savedBg = localStorage.getItem('custom_bg');
+      const savedFit = localStorage.getItem('custom_bg_fit') || 'contain';
+      document.documentElement.style.setProperty('--bg-fit', savedFit);
+      document.getElementById('bgFitSelect').value = savedFit;
+
       if (savedBg) {
         document.body.style.backgroundImage = `url('${savedBg}')`;
       } else {
@@ -393,6 +479,59 @@
       if (slider) slider.value = savedDim * 100;
     }
 
+    function selectEmoji(el, emojiChar) {
+      document.querySelectorAll('.emoji-opt').forEach(e => e.classList.remove('selected'));
+      const hiddenInput = document.getElementById('selectedEmoji');
+
+      if (hiddenInput.value === emojiChar) {
+        hiddenInput.value = '';
+      } else {
+        el.classList.add('selected');
+        hiddenInput.value = emojiChar;
+      }
+    }
+
+    function handleTagTyping(e) {
+      const input = document.getElementById('tags');
+      let val = input.value;
+
+      // Auto-add # on Space or single word completion
+      if (e.key === ' ' || e.code === 'Space') {
+        const words = val.split(' ').map(w => {
+          if (!w) return '';
+          return w.startsWith('#') ? w : '#' + w;
+        });
+        input.value = words.join(' ');
+      }
+    }
+
+    function appendQuickTag(tagStr) {
+      const input = document.getElementById('tags');
+      const current = input.value.trim();
+      if (!current.includes(tagStr)) {
+        input.value = current ? `${current} ${tagStr}` : tagStr;
+      }
+    }
+
+    function renderQuickTags() {
+      const logs = getLogs();
+      const tagCounts = {};
+      logs.forEach(l => {
+        (l.tags || []).forEach(t => {
+          tagCounts[t] = (tagCounts[t] || 0) + 1;
+        });
+      });
+
+      // Default tags + user's most used
+      const defaults = ['#food', '#symptom', '#exercise', '#mood', '#meds', '#water'];
+      const combined = Array.from(new Set([...defaults, ...Object.keys(tagCounts)]));
+
+      const container = document.getElementById('quickTagBar');
+      container.innerHTML = combined.map(t => `
+        <span class="tag-chip" onclick="appendQuickTag('${t}')">${t}</span>
+      `).join('');
+    }
+
     function getLogs() {
       return JSON.parse(localStorage.getItem('my_pwa_logs') || '[]');
     }
@@ -401,10 +540,13 @@
       const tagsInput = document.getElementById('tags').value.trim();
       const noteInput = document.getElementById('note').value.trim();
       const datetimeInput = document.getElementById('customDatetime').value;
+      const emojiInput = document.getElementById('selectedEmoji').value;
       const editingId = document.getElementById('editingId').value;
 
       if (!noteInput) return alert('Please enter entry details.');
 
+      // Auto-format tags if missing #
+      const formattedTags = tagsInput ? tagsInput.split(' ').map(t => t.startsWith('#') ? t : '#' + t) : [];
       const finalTimestamp = datetimeInput ? new Date(datetimeInput).toISOString() : new Date().toISOString();
       let logs = getLogs();
 
@@ -414,7 +556,8 @@
             return {
               ...log,
               timestamp: finalTimestamp,
-              tags: tagsInput ? tagsInput.split(' ') : [],
+              emoji: emojiInput,
+              tags: formattedTags,
               note: noteInput
             };
           }
@@ -425,7 +568,8 @@
           id: Date.now(),
           created_at: new Date().toISOString(),
           timestamp: finalTimestamp,
-          tags: tagsInput ? tagsInput.split(' ') : [],
+          emoji: emojiInput,
+          tags: formattedTags,
           note: noteInput
         };
         logs.push(newEntry);
@@ -435,6 +579,7 @@
       localStorage.setItem('my_pwa_logs', JSON.stringify(logs));
       resetForm();
       render();
+      renderQuickTags();
     }
 
     function editLog(id) {
@@ -443,8 +588,15 @@
       if (!log) return;
 
       document.getElementById('editingId').value = log.id;
-      document.getElementById('tags').value = log.tags.join(' ');
+      document.getElementById('tags').value = (log.tags || []).join(' ');
       document.getElementById('note').value = log.note;
+      document.getElementById('selectedEmoji').value = log.emoji || '';
+
+      // Highlight saved emoji
+      document.querySelectorAll('.emoji-opt').forEach(e => {
+        if (e.innerText === log.emoji) e.classList.add('selected');
+        else e.classList.remove('selected');
+      });
 
       const localDate = new Date(log.timestamp);
       localDate.setMinutes(localDate.getMinutes() - localDate.getTimezoneOffset());
@@ -452,6 +604,7 @@
 
       document.getElementById('saveBtn').innerText = 'Update Entry';
       document.getElementById('cancelEditBtn').style.display = 'block';
+      document.getElementById('entryCard').style.display = 'block';
 
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
@@ -462,6 +615,20 @@
       logs = logs.filter(l => l.id != id);
       localStorage.setItem('my_pwa_logs', JSON.stringify(logs));
       render();
+      renderQuickTags();
+    }
+
+    function deleteAllLogs() {
+      // Double Confirmation
+      if (confirm('FIRST WARNING: Are you sure you want to delete ALL logged entries? This cannot be undone.')) {
+        if (confirm('FINAL CONFIRMATION: Tap OK to permanently wipe all stored data.')) {
+          localStorage.removeItem('my_pwa_logs');
+          render();
+          renderQuickTags();
+          closeSettings();
+          alert('All logs have been erased.');
+        }
+      }
     }
 
     function cancelEdit() {
@@ -472,6 +639,8 @@
       document.getElementById('editingId').value = '';
       document.getElementById('tags').value = '';
       document.getElementById('note').value = '';
+      document.getElementById('selectedEmoji').value = '';
+      document.querySelectorAll('.emoji-opt').forEach(e => e.classList.remove('selected'));
       setCurrentDatetime();
       document.getElementById('saveBtn').innerText = 'Save Entry';
       document.getElementById('cancelEditBtn').style.display = 'none';
@@ -480,15 +649,23 @@
     function render() {
       const logs = getLogs();
       const container = document.getElementById('logsContainer');
+      const searchQuery = (document.getElementById('searchFilter').value || '').toLowerCase();
 
-      if (logs.length === 0) {
-        container.innerHTML = '<p style="color:var(--subtext); margin-top:12px;">No logs recorded yet.</p>';
+      // Filter by Search Query
+      const filteredLogs = logs.filter(l => {
+        const textMatch = l.note.toLowerCase().includes(searchQuery);
+        const tagMatch = (l.tags || []).some(t => t.toLowerCase().includes(searchQuery));
+        return textMatch || tagMatch;
+      });
+
+      if (filteredLogs.length === 0) {
+        container.innerHTML = '<p style="color:var(--subtext); margin-top:12px;">No matching logs found.</p>';
         return;
       }
 
       const grouped = {};
 
-      logs.forEach(log => {
+      filteredLogs.forEach(log => {
         const d = new Date(log.timestamp);
         const year = d.getFullYear();
         const month = d.toLocaleString('default', { month: 'long' });
@@ -514,6 +691,7 @@
             `;
             grouped[year][month][dateStr].forEach(l => {
               const timeStr = new Date(l.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+              const emojiDisplay = l.emoji ? `<span style="margin-right:6px; font-size:16px;">${l.emoji}</span>` : '';
               html += `
                 <div class="log-entry">
                   <div class="log-header-row">
@@ -523,8 +701,8 @@
                       <button class="btn-icon" onclick="deleteLog(${l.id})">🗑️</button>
                     </div>
                   </div>
-                  <div style="margin-top: 2px;"><strong>${l.note}</strong></div>
-                  <div>${l.tags.map(t => `<span class="tag">${t}</span>`).join('')}</div>
+                  <div style="margin-top: 4px;">${emojiDisplay}<strong>${l.note}</strong></div>
+                  <div>${(l.tags || []).map(t => `<span class="tag">${t}</span>`).join('')}</div>
                 </div>
               `;
             });
@@ -536,10 +714,51 @@
       container.innerHTML = html;
     }
 
+    async function exportCSV() {
+      const logs = getLogs();
+      if (logs.length === 0) return alert('No data to export.');
+
+      let csv = "EventTimestamp,RecordedTimestamp,Emoji,Tags,Note\n";
+      logs.forEach(l => {
+        const recorded = l.created_at || l.timestamp;
+        const emoji = l.emoji || '';
+        const tags = (l.tags || []).join(' ');
+        csv += `"${l.timestamp}","${recorded}","${emoji}","${tags}","${l.note.replace(/"/g, '""')}"\n`;
+      });
+
+      const fileName = `tracker_export_${new Date().toISOString().slice(0,10)}.csv`;
+      const blob = new Blob([csv], { type: 'text/csv' });
+
+      // Native Web Share API (Triggers iOS Share Sheet for native file saving)
+      if (navigator.canShare && navigator.canShare({ files: [new File([blob], fileName, { type: 'text/csv' })] })) {
+        try {
+          const file = new File([blob], fileName, { type: 'text/csv' });
+          await navigator.share({
+            title: 'Quick Tracker Data Export',
+            files: [file]
+          });
+        } catch (err) {
+          if (err.name !== 'AbortError') fallbackDownload(blob, fileName);
+        }
+      } else {
+        fallbackDownload(blob, fileName);
+      }
+    }
+
+    function fallbackDownload(blob, fileName) {
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = fileName;
+      a.click();
+    }
+
+    // Startup Initialization
     loadSavedTheme();
     loadSavedBackground();
     loadDimmerSetting();
     setCurrentDatetime();
+    renderQuickTags();
     render();
   </script>
 </body>
