@@ -7,16 +7,16 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <title>Quick Log</title>
   <style>
-    /* Default / Lavender Theme (Soft Purples & Soft Butter Yellow) */
+    /* Lavender Theme with Very Pale Buttercream Yellow */
     :root, [data-theme="lavender"] {
       --bg: #e6def8;
       --card: rgba(216, 204, 241, 0.92);
       --text: #2d1e3e;
       --subtext: #6b5288;
       --border: #c9b8e8;
-      --accent: #ffe875;
+      --accent: #f7f0a8;       /* Pale Buttercream Accent */
       --accent-text: #4a3c00;
-      --tag-bg: #fff099;
+      --tag-bg: #fceea1;       /* Extra Pale Chiffon for Tags */
       --tag-text: #594800;
       --header-accent: #7b599c;
       --danger: #ff3b30;
@@ -80,8 +80,28 @@
       -webkit-tap-highlight-color: transparent;
     }
 
-    h2 { font-size: 22px; margin-top: 0; margin-bottom: 12px; }
-    
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .top-bar h2 {
+      margin: 0;
+      font-size: 22px;
+    }
+
+    .settings-btn {
+      background: none;
+      border: none;
+      font-size: 22px;
+      cursor: pointer;
+      padding: 4px;
+      margin: 0;
+      width: auto;
+    }
+
     .card {
       background: var(--card);
       backdrop-filter: blur(10px);
@@ -91,6 +111,11 @@
       box-shadow: 0 4px 12px rgba(45, 30, 62, 0.08);
       margin-bottom: 16px;
       border: 1px solid var(--border);
+    }
+
+    .settings-drawer {
+      display: none;
+      border-left: 3px solid var(--accent);
     }
 
     label {
@@ -103,7 +128,7 @@
       letter-spacing: 0.5px;
     }
 
-    input, select, button {
+    input, select, textarea, button {
       width: 100%;
       padding: 12px;
       font-size: 16px;
@@ -113,6 +138,17 @@
       color: var(--text);
       box-sizing: border-box;
       margin-bottom: 10px;
+      font-family: inherit;
+    }
+
+    textarea {
+      min-height: 80px;
+      resize: vertical;
+    }
+
+    .input-compact {
+      padding: 8px 10px;
+      font-size: 14px;
     }
 
     button {
@@ -228,7 +264,6 @@
       margin-top: 4px;
     }
 
-    /* Dark dimming overlay sitting behind cards & in front of background */
     body::before {
       content: "";
       position: fixed;
@@ -241,9 +276,13 @@
 </head>
 <body>
 
-  <h2>Quick Tracker ✨</h2>
+  <div class="top-bar">
+    <h2>Quick Tracker ✨</h2>
+    <button class="settings-btn" onclick="toggleSettings()">⚙️</button>
+  </div>
   
-  <div class="card">
+  <!-- Hidden Settings Drawer -->
+  <div id="settingsDrawer" class="card settings-drawer">
     <label for="themeSelect">Color Palette Theme</label>
     <select id="themeSelect" onchange="changeTheme(this.value)">
       <option value="lavender">Lavender (Light)</option>
@@ -261,15 +300,18 @@
 
     <label for="dimmerSlider" style="margin-top: 6px;">Wallpaper Dimmer / Contrast</label>
     <input type="range" id="dimmerSlider" min="0" max="80" value="30" oninput="updateOverlay(this.value)">
+  </div>
 
-    <label for="customDatetime">Date & Time (Optional)</label>
-    <input type="datetime-local" id="customDatetime">
+  <!-- Entry Form Card -->
+  <div class="card">
+    <label for="customDatetime">Date</label>
+    <input type="datetime-local" id="customDatetime" class="input-compact">
+
+    <label for="note">Entry Details</label>
+    <textarea id="note" placeholder="What would you like to log today?"></textarea>
 
     <label for="tags">Tags</label>
     <input type="text" id="tags" placeholder="#food #lunch">
-
-    <label for="note">Entry Details</label>
-    <input type="text" id="note" placeholder="Log entry details...">
 
     <input type="hidden" id="editingId" value="">
     <button id="saveBtn" onclick="saveLog()">Save Entry</button>
@@ -285,6 +327,21 @@
   <button class="btn-export" onclick="exportCSV()">Export All Data (CSV)</button>
 
   <script>
+    function getNowForInput() {
+      const now = new Date();
+      now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+      return now.toISOString().slice(0, 16);
+    }
+
+    function setCurrentDatetime() {
+      document.getElementById('customDatetime').value = getNowForInput();
+    }
+
+    function toggleSettings() {
+      const drawer = document.getElementById('settingsDrawer');
+      drawer.style.display = (drawer.style.display === 'block') ? 'none' : 'block';
+    }
+
     function changeTheme(themeName) {
       document.documentElement.setAttribute('data-theme', themeName);
       localStorage.setItem('selected_theme', themeName);
@@ -415,7 +472,7 @@
       document.getElementById('editingId').value = '';
       document.getElementById('tags').value = '';
       document.getElementById('note').value = '';
-      document.getElementById('customDatetime').value = '';
+      setCurrentDatetime();
       document.getElementById('saveBtn').innerText = 'Save Entry';
       document.getElementById('cancelEditBtn').style.display = 'none';
     }
@@ -479,28 +536,10 @@
       container.innerHTML = html;
     }
 
-    function exportCSV() {
-      const logs = getLogs();
-      if (logs.length === 0) return alert('No data to export.');
-
-      let csv = "EventTimestamp,RecordedTimestamp,Tags,Note\n";
-      logs.forEach(l => {
-        const recorded = l.created_at || l.timestamp;
-        csv += `"${l.timestamp}","${recorded}","${l.tags.join(' ')}","${l.note.replace(/"/g, '""')}"\n`;
-      });
-
-      const blob = new Blob([csv], { type: 'text/csv' });
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `tracker_export_${new Date().toISOString().slice(0,10)}.csv`;
-      a.click();
-    }
-
-    // Initialize saved settings on startup
     loadSavedTheme();
     loadSavedBackground();
     loadDimmerSetting();
+    setCurrentDatetime();
     render();
   </script>
 </body>
