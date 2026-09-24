@@ -10,7 +10,7 @@
     /* Lavender Theme (Default Light) */
     :root, [data-theme="lavender"] {
       --bg: #e6def8;
-      --card: rgba(216, 204, 241, 0.92);
+      --card: #d8ccf1;
       --text: #2d1e3e;
       --subtext: #6b5288;
       --border: #c9b8e8;
@@ -20,13 +20,13 @@
       --tag-text: #594800;
       --header-accent: #7b599c;
       --danger: #ff3b30;
-      --btn-secondary: rgba(107, 82, 136, 0.15);
+      --btn-secondary: rgba(107, 82, 136, 0.18);
     }
 
     /* Hot Pink Theme (Dark) */
     [data-theme="hotpink"] {
       --bg: #160a18;
-      --card: rgba(38, 18, 43, 0.85);
+      --card: #26122b;
       --text: #fce4ec;
       --subtext: #b388ff;
       --border: #4a2154;
@@ -42,7 +42,7 @@
     /* Matcha Cream Theme (Light) */
     [data-theme="matcha"] {
       --bg: #f4f6f0;
-      --card: rgba(225, 233, 220, 0.92);
+      --card: #e1e9dc;
       --text: #1c2b18;
       --subtext: #6b8e62;
       --border: #d4e0d0;
@@ -52,13 +52,13 @@
       --tag-text: #3a5a40;
       --header-accent: #588157;
       --danger: #e63946;
-      --btn-secondary: rgba(107, 142, 98, 0.15);
+      --btn-secondary: rgba(107, 142, 98, 0.18);
     }
 
     /* Monochrome High-Contrast Theme */
     [data-theme="monochrome"] {
       --bg: #000000;
-      --card: rgba(20, 20, 20, 0.95);
+      --card: #141414;
       --text: #ffffff;
       --subtext: #a0a0a0;
       --border: #333333;
@@ -74,10 +74,6 @@
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
       background-color: var(--bg);
-      background-repeat: no-repeat;
-      background-position: center center;
-      background-attachment: fixed;
-      background-size: var(--bg-fit, contain);
       color: var(--text);
       margin: 0;
       padding: 16px;
@@ -92,32 +88,37 @@
       margin-bottom: 12px;
     }
 
-    .top-bar h2 { margin: 0; font-size: 22px; }
+    .top-bar h2 { margin: 0; font-size: 20px; }
+
+    .nav-actions {
+      display: flex;
+      gap: 4px;
+    }
 
     .btn-icon-head {
-      background: none;
-      border: none;
-      font-size: 22px;
+      background: var(--btn-secondary);
+      border: 1px solid var(--border);
+      color: var(--text);
+      font-size: 16px;
       cursor: pointer;
-      padding: 4px;
+      padding: 6px 10px;
+      border-radius: 10px;
       margin: 0;
       width: auto;
     }
 
     .card {
       background: var(--card);
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
       padding: 16px;
       border-radius: 16px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
       margin-bottom: 16px;
       border: 1px solid var(--border);
       box-sizing: border-box;
     }
 
-    /* Full screen settings overlay */
-    .settings-view {
+    /* Full screen modal views */
+    .overlay-view {
       display: none;
       position: fixed;
       top: 0; left: 0; right: 0; bottom: 0;
@@ -126,6 +127,21 @@
       padding: 20px;
       overflow-y: auto;
       box-sizing: border-box;
+    }
+
+    .btn-close-view {
+      background: var(--btn-secondary);
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: 50%;
+      width: 32px;
+      height: 32px;
+      font-size: 16px;
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
     }
 
     label {
@@ -153,7 +169,6 @@
 
     textarea { min-height: 75px; resize: vertical; }
 
-    /* Compact Datetime Field Fix */
     .input-compact {
       padding: 8px 10px;
       font-size: 14px;
@@ -178,13 +193,10 @@
     .btn-danger {
       background: var(--danger);
       color: #ffffff;
-      margin-top: 16px;
+      margin-top: 10px;
     }
 
-    .bg-options { display: flex; gap: 8px; margin-bottom: 8px; }
-    .bg-options button { padding: 8px 10px; font-size: 13px; margin-bottom: 0; }
-
-    /* Emoji Picker Bar */
+    /* Emoji Bar */
     .emoji-bar {
       display: flex;
       gap: 8px;
@@ -211,7 +223,7 @@
       background: var(--card);
     }
 
-    /* Quick Tag Scrollbar */
+    /* Tag Quick-Bar */
     .tag-scroll-bar {
       display: flex;
       gap: 6px;
@@ -233,7 +245,7 @@
       flex-shrink: 0;
     }
 
-    /* Timeline Styles */
+    /* Timeline & Cards */
     .year-header {
       font-size: 20px;
       font-weight: 700;
@@ -256,8 +268,6 @@
 
     .date-card {
       background: var(--card);
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
       border-radius: 12px;
       padding: 12px;
       margin-bottom: 10px;
@@ -302,24 +312,115 @@
       margin-top: 4px;
     }
 
-    body::before {
-      content: "";
-      position: fixed;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background-color: rgba(0, 0, 0, var(--bg-dim, 0.3));
-      z-index: -1;
-      pointer-events: none;
+    /* Calendar Grid Styles */
+    .cal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .cal-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 4px;
+      text-align: center;
+    }
+
+    .cal-day-label {
+      font-size: 11px;
+      font-weight: bold;
+      color: var(--subtext);
+      padding-bottom: 4px;
+    }
+
+    .cal-cell {
+      aspect-ratio: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      font-size: 13px;
+      background: var(--bg);
+      cursor: pointer;
+      position: relative;
+    }
+
+    .cal-cell.empty { border: none; background: transparent; }
+    .cal-cell.has-logs {
+      background: var(--accent);
+      color: var(--accent-text);
+      font-weight: bold;
+      border-color: var(--header-accent);
+    }
+
+    .cal-cell .badge {
+      font-size: 9px;
+      position: absolute;
+      bottom: 2px;
+    }
+
+    /* Stats Dashboard Styles */
+    .stat-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .stat-card {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 10px;
+      text-align: center;
+    }
+
+    .stat-val {
+      font-size: 20px;
+      font-weight: bold;
+      color: var(--header-accent);
+    }
+
+    .stat-lbl {
+      font-size: 11px;
+      color: var(--subtext);
+      margin-top: 2px;
+    }
+
+    /* SVG Chart */
+    .chart-container {
+      width: 100%;
+      height: 160px;
+      margin-top: 10px;
+    }
+
+    polyline {
+      fill: none;
+      stroke: var(--header-accent);
+      stroke-width: 3;
+      stroke-linecap: round;
+    }
+
+    circle {
+      fill: var(--accent);
+      stroke: var(--header-accent);
+      stroke-width: 2;
     }
   </style>
 </head>
 <body>
 
-  <!-- App Header -->
+  <!-- Top Navigation Header -->
   <div class="top-bar">
     <h2>Quick Tracker ✨</h2>
-    <div>
-      <button class="btn-icon-head" onclick="toggleEntryForm()" title="Toggle Entry Form">📓</button>
-      <button class="btn-icon-head" onclick="openSettings()" title="Settings">⚙️</button>
+    <div class="nav-actions">
+      <button class="btn-icon-head" onclick="toggleEntryForm()" title="New Log">📓</button>
+      <button class="btn-icon-head" onclick="openView('calendarView')" title="Calendar">📅</button>
+      <button class="btn-icon-head" onclick="openView('statsView')" title="Stats">📊</button>
+      <button class="btn-icon-head" onclick="openView('settingsView')" title="Settings">⚙️</button>
     </div>
   </div>
 
@@ -354,21 +455,100 @@
     <button id="cancelEditBtn" onclick="cancelEdit()" style="display:none; background:var(--border); color:var(--text); margin-top:-4px;">Cancel Edit</button>
   </div>
 
-  <!-- Timeline Search -->
+  <!-- Timeline Controls & History Feed -->
   <div style="margin-bottom: 8px;">
-    <input type="text" id="searchFilter" placeholder="🔍 Search logs by tag or text..." oninput="render()" class="input-compact" style="margin-bottom: 12px;">
+    <input type="text" id="searchFilter" placeholder="🔍 Search logs by tag or text..." oninput="render()" class="input-compact" style="margin-bottom: 8px;">
+    <!-- Filtered Export Button (Only shows when actively searching) -->
+    <button id="filteredExportBtn" class="btn-themed input-compact" onclick="exportCSV(true)" style="display: none; margin-bottom: 12px; font-weight: 600;"></button>
   </div>
 
   <div id="logsContainer"></div>
 
-  <!-- Dynamic CSV Export Button -->
-  <button id="exportBtn" class="btn-themed" onclick="exportCSV()" style="margin-top: 16px;">Export All Data (CSV)</button>
 
-  <!-- Full-Screen Settings Overlay -->
-  <div id="settingsView" class="settings-view">
+  <!-- ==================== CALENDAR VIEW OVERLAY ==================== -->
+  <div id="calendarView" class="overlay-view">
+    <div class="top-bar">
+      <h2 id="lbl-cal-title">Calendar 📅</h2>
+      <button class="btn-close-view" onclick="closeView('calendarView')">✕</button>
+    </div>
+
+    <div class="card">
+      <div class="cal-header">
+        <button class="btn-themed" style="width: auto; padding: 6px 12px;" onclick="changeCalMonth(-1)">❮</button>
+        <span id="calMonthLabel" style="font-weight: bold; font-size: 16px;"></span>
+        <button class="btn-themed" style="width: auto; padding: 6px 12px;" onclick="changeCalMonth(1)">❯</button>
+      </div>
+
+      <div class="cal-grid" id="calDaysHeader">
+        <div class="cal-day-label">S</div><div class="cal-day-label">M</div><div class="cal-day-label">T</div>
+        <div class="cal-day-label">W</div><div class="cal-day-label">T</div><div class="cal-day-label">F</div><div class="cal-day-label">S</div>
+      </div>
+      <div class="cal-grid" id="calGrid"></div>
+    </div>
+
+    <!-- Inspector card for selected calendar date -->
+    <div id="calDayInspector" class="card" style="display: none;">
+      <h3 id="calInspectDateTitle" style="margin-top: 0; font-size: 16px; border-bottom: 1px solid var(--border); padding-bottom: 6px;"></h3>
+      <div id="calInspectLogs"></div>
+    </div>
+  </div>
+
+
+  <!-- ==================== STATS DASHBOARD OVERLAY ==================== -->
+  <div id="statsView" class="overlay-view">
+    <div class="top-bar">
+      <h2 id="lbl-stats-title">Analytics & Stats 📊</h2>
+      <button class="btn-close-view" onclick="closeView('statsView')">✕</button>
+    </div>
+
+    <div class="stat-grid">
+      <div class="stat-card">
+        <div class="stat-val" id="st-streak">0</div>
+        <div class="stat-lbl" id="lbl-st-streak">Day Streak 🔥</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-val" id="st-total">0</div>
+        <div class="stat-lbl" id="lbl-st-total">Total Logs</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-val" id="st-avg">0</div>
+        <div class="stat-lbl" id="lbl-st-avg">Avg / Day</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-val" id="st-peak">-</div>
+        <div class="stat-lbl" id="lbl-st-peak">Peak Hour</div>
+      </div>
+    </div>
+
+    <!-- Top Tags & Emoji Breakdown -->
+    <div class="card">
+      <label id="lbl-st-toptags">Top 5 Most Used Tags</label>
+      <div id="topTagsList" style="margin-top: 6px; font-size: 14px;"></div>
+    </div>
+
+    <!-- Interactive Frequency Chart -->
+    <div class="card">
+      <label id="lbl-st-charttitle">Tag Frequency Chart</label>
+      
+      <div style="display: flex; gap: 8px; margin-top: 6px;">
+        <select id="chartTagSelect" onchange="renderChart()" class="input-compact"></select>
+        <select id="chartGrainSelect" onchange="renderChart()" class="input-compact">
+          <option value="daily">Daily</option>
+          <option value="weekly">Weekly</option>
+          <option value="monthly">Monthly</option>
+        </select>
+      </div>
+
+      <div class="chart-container" id="svgChartBox"></div>
+    </div>
+  </div>
+
+
+  <!-- ==================== SETTINGS OVERLAY ==================== -->
+  <div id="settingsView" class="overlay-view">
     <div class="top-bar">
       <h2 id="lbl-settings-title">Settings ⚙️</h2>
-      <button class="btn-icon-head" onclick="closeSettings()">✕</button>
+      <button class="btn-close-view" onclick="closeView('settingsView')">✕</button>
     </div>
 
     <div class="card">
@@ -385,32 +565,22 @@
         <option value="matcha">Matcha Cream (Light)</option>
         <option value="monochrome">High Contrast (Dark)</option>
       </select>
+    </div>
 
-      <label id="lbl-wallpaper">Custom Wallpaper</label>
-      <div class="bg-options">
-        <input type="file" id="bgPicker" accept="image/*" style="display:none;" onchange="uploadBackground(event)">
-        <button id="btn-choose-photo" onclick="document.getElementById('bgPicker').click()">Choose Photo</button>
-        <button id="btn-remove-photo" onclick="removeBackground()" style="background:var(--border); color:var(--text);">Remove</button>
-      </div>
-
-      <label for="bgFitSelect" id="lbl-bgfit">Wallpaper Sizing</label>
-      <select id="bgFitSelect" onchange="changeBgFit(this.value)">
-        <option value="contain" id="opt-fit">Fit Screen (Sharp / Uncropped)</option>
-        <option value="cover" id="opt-cover">Fill Screen (Cropped to Edge)</option>
-      </select>
-
-      <label for="dimmerSlider" id="lbl-dimmer" style="margin-top: 6px;">Wallpaper Dimmer / Contrast</label>
-      <input type="range" id="dimmerSlider" min="0" max="80" value="30" oninput="updateOverlay(this.value)">
+    <div class="card">
+      <label id="lbl-exportmgmt">Data Export</label>
+      <button id="btn-export-all" class="btn-themed" onclick="exportCSV(false)">Export All Data (CSV)</button>
     </div>
 
     <div class="card" style="border: 1px solid var(--danger);">
-      <label id="lbl-datamgmt" style="color: var(--danger);">Data Management</label>
+      <label id="lbl-datamgmt" style="color: var(--danger);">Danger Zone</label>
       <button id="btn-delete-all" class="btn-danger" onclick="deleteAllLogs()">Clear All Logs (Reset)</button>
     </div>
   </div>
 
+
+  <!-- JavaScript Logic -->
   <script>
-    // Dictionary for Multilingual Translations
     const translations = {
       en: {
         date: "Date",
@@ -425,19 +595,21 @@
         export_all: "Export All Data (CSV)",
         export_filtered: "Export Filtered Logs (CSV)",
         settings_title: "Settings ⚙️",
+        cal_title: "Calendar 📅",
+        stats_title: "Analytics & Stats 📊",
         language: "Language",
         theme: "Color Palette Theme",
-        wallpaper: "Custom Wallpaper",
-        choose_photo: "Choose Photo",
-        remove_photo: "Remove",
-        bgfit: "Wallpaper Sizing",
-        fit_screen: "Fit Screen (Sharp / Uncropped)",
-        fill_screen: "Fill Screen (Cropped to Edge)",
-        dimmer: "Wallpaper Dimmer / Contrast",
-        datamgmt: "Data Management",
+        exportmgmt: "Data Export",
+        datamgmt: "Danger Zone",
         delete_all: "Clear All Logs (Reset)",
         no_logs: "No logs recorded yet.",
-        no_matches: "No matching logs found."
+        no_matches: "No matching logs found.",
+        streak: "Day Streak 🔥",
+        totallogs: "Total Logs",
+        avgday: "Avg / Day",
+        peakhour: "Peak Hour",
+        toptags: "Top 5 Most Used Tags",
+        charttitle: "Tag Frequency Chart"
       },
       es: {
         date: "Fecha",
@@ -452,23 +624,26 @@
         export_all: "Exportar Todos los Datos (CSV)",
         export_filtered: "Exportar Registros Filtrados (CSV)",
         settings_title: "Ajustes ⚙️",
+        cal_title: "Calendario 📅",
+        stats_title: "Estadísticas y Análisis 📊",
         language: "Idioma",
         theme: "Paleta de Colores",
-        wallpaper: "Fondo de Pantalla Personalizado",
-        choose_photo: "Elegir Foto",
-        remove_photo: "Quitar",
-        bgfit: "Tamaño de Fondo",
-        fit_screen: "Ajustar a Pantalla (Sin Recortar)",
-        fill_screen: "Llenar Pantalla (Recortado)",
-        dimmer: "Atenuador de Fondo / Contraste",
-        datamgmt: "Gestión de Datos",
+        exportmgmt: "Exportar Datos",
+        datamgmt: "Zona de Peligro",
         delete_all: "Borrar Todos los Registros (Reiniciar)",
         no_logs: "Aún no hay registros guardados.",
-        no_matches: "No se encontraron registros coincidentes."
+        no_matches: "No se encontraron registros coincidentes.",
+        streak: "Racha de Días 🔥",
+        totallogs: "Total de Registros",
+        avgday: "Prom. / Día",
+        peakhour: "Hora Pico",
+        toptags: "Top 5 Etiquetas Más Usadas",
+        charttitle: "Gráfico de Frecuencia"
       }
     };
 
     let currentLang = 'en';
+    let calCurrentDate = new Date();
 
     function changeLanguage(lang) {
       currentLang = lang || 'en';
@@ -493,23 +668,26 @@
       document.getElementById('cancelEditBtn').innerText = t.cancel;
 
       document.getElementById('lbl-settings-title').innerText = t.settings_title;
+      document.getElementById('lbl-cal-title').innerText = t.cal_title;
+      document.getElementById('lbl-stats-title').innerText = t.stats_title;
       document.getElementById('lbl-language').innerText = t.language;
       document.getElementById('lbl-theme').innerText = t.theme;
-      document.getElementById('lbl-wallpaper').innerText = t.wallpaper;
-      document.getElementById('btn-choose-photo').innerText = t.choose_photo;
-      document.getElementById('btn-remove-photo').innerText = t.remove_photo;
-      document.getElementById('lbl-bgfit').innerText = t.bgfit;
-      document.getElementById('opt-fit').innerText = t.fit_screen;
-      document.getElementById('opt-cover').innerText = t.fill_screen;
-      document.getElementById('lbl-dimmer').innerText = t.dimmer;
+      document.getElementById('lbl-exportmgmt').innerText = t.exportmgmt;
+      document.getElementById('btn-export-all').innerText = t.export_all;
       document.getElementById('lbl-datamgmt').innerText = t.datamgmt;
       document.getElementById('btn-delete-all').innerText = t.delete_all;
+
+      document.getElementById('lbl-st-streak').innerText = t.streak;
+      document.getElementById('lbl-st-total').innerText = t.totallogs;
+      document.getElementById('lbl-st-avg').innerText = t.avgday;
+      document.getElementById('lbl-st-peak').innerText = t.peakhour;
+      document.getElementById('lbl-st-toptags').innerText = t.toptags;
+      document.getElementById('lbl-st-charttitle').innerText = t.charttitle;
     }
 
     function detectUserLanguage() {
       const savedLang = localStorage.getItem('selected_lang');
       if (savedLang) return savedLang;
-      // Auto-detect browser/system language
       const sysLang = (navigator.language || 'en').slice(0, 2);
       return translations[sysLang] ? sysLang : 'en';
     }
@@ -529,8 +707,15 @@
       card.style.display = (card.style.display === 'none') ? 'block' : 'none';
     }
 
-    function openSettings() { document.getElementById('settingsView').style.display = 'block'; }
-    function closeSettings() { document.getElementById('settingsView').style.display = 'none'; }
+    function openView(viewId) {
+      document.getElementById(viewId).style.display = 'block';
+      if (viewId === 'calendarView') renderCalendar();
+      if (viewId === 'statsView') renderStats();
+    }
+
+    function closeView(viewId) {
+      document.getElementById(viewId).style.display = 'none';
+    }
 
     function changeTheme(themeName) {
       document.documentElement.setAttribute('data-theme', themeName);
@@ -541,55 +726,6 @@
       const savedTheme = localStorage.getItem('selected_theme') || 'lavender';
       document.documentElement.setAttribute('data-theme', savedTheme);
       document.getElementById('themeSelect').value = savedTheme;
-    }
-
-    function changeBgFit(fitVal) {
-      document.documentElement.style.setProperty('--bg-fit', fitVal);
-      localStorage.setItem('custom_bg_fit', fitVal);
-    }
-
-    function loadSavedBackground() {
-      const savedBg = localStorage.getItem('custom_bg');
-      const savedFit = localStorage.getItem('custom_bg_fit') || 'contain';
-      document.documentElement.style.setProperty('--bg-fit', savedFit);
-      document.getElementById('bgFitSelect').value = savedFit;
-
-      if (savedBg) {
-        document.body.style.backgroundImage = `url('${savedBg}')`;
-      } else {
-        document.body.style.backgroundImage = 'none';
-      }
-    }
-
-    function uploadBackground(event) {
-      const file = event.target.files[0];
-      if (!file) return;
-
-      const reader = new FileReader();
-      reader.onload = function(e) {
-        const base64Image = e.target.result;
-        localStorage.setItem('custom_bg', base64Image);
-        loadSavedBackground();
-      };
-      reader.readAsDataURL(file);
-    }
-
-    function removeBackground() {
-      localStorage.removeItem('custom_bg');
-      loadSavedBackground();
-    }
-
-    function updateOverlay(val) {
-      const opacity = val / 100;
-      document.documentElement.style.setProperty('--bg-dim', opacity);
-      localStorage.setItem('custom_bg_dim', opacity);
-    }
-
-    function loadDimmerSetting() {
-      const savedDim = localStorage.getItem('custom_bg_dim') || '0.3';
-      document.documentElement.style.setProperty('--bg-dim', savedDim);
-      const slider = document.getElementById('dimmerSlider');
-      if (slider) slider.value = savedDim * 100;
     }
 
     function selectEmoji(el, emojiChar) {
@@ -649,7 +785,7 @@
 
     function getFilteredLogs() {
       const logs = getLogs();
-      const searchQuery = (document.getElementById('searchFilter').value || '').toLowerCase();
+      const searchQuery = (document.getElementById('searchFilter').value || '').toLowerCase().trim();
       if (!searchQuery) return logs;
 
       return logs.filter(l => {
@@ -728,6 +864,11 @@
       document.getElementById('cancelEditBtn').style.display = 'block';
       document.getElementById('entryCard').style.display = 'block';
 
+      // Close overlays if open
+      closeView('calendarView');
+      closeView('statsView');
+      closeView('settingsView');
+
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
@@ -746,7 +887,7 @@
           localStorage.removeItem('my_pwa_logs');
           render();
           renderQuickTags();
-          closeSettings();
+          closeView('settingsView');
           alert('All logs have been erased.');
         }
       }
@@ -772,10 +913,13 @@
       const filteredLogs = getFilteredLogs();
       const t = translations[currentLang] || translations.en;
 
-      // Update Export Button Label dynamically depending on filter
-      const exportBtn = document.getElementById('exportBtn');
-      if (exportBtn) {
-        exportBtn.innerText = searchQuery ? t.export_filtered : t.export_all;
+      // Handle Filtered Export Button visibility above timeline
+      const filterBtn = document.getElementById('filteredExportBtn');
+      if (searchQuery) {
+        filterBtn.innerText = `${t.export_filtered} (${filteredLogs.length})`;
+        filterBtn.style.display = 'block';
+      } else {
+        filterBtn.style.display = 'none';
       }
 
       if (filteredLogs.length === 0) {
@@ -834,8 +978,216 @@
       container.innerHTML = html;
     }
 
-    async function exportCSV() {
-      const logsToExport = getFilteredLogs();
+    // ================= CALENDAR FUNCTIONS =================
+    function changeCalMonth(delta) {
+      calCurrentDate.setMonth(calCurrentDate.getMonth() + delta);
+      renderCalendar();
+    }
+
+    function renderCalendar() {
+      const year = calCurrentDate.getFullYear();
+      const month = calCurrentDate.getMonth();
+
+      document.getElementById('calMonthLabel').innerText = new Date(year, month).toLocaleString(currentLang, { month: 'long', year: 'numeric' });
+
+      const firstDay = new Date(year, month, 1).getDay();
+      const totalDays = new Date(year, month + 1, 0).getDate();
+      const logs = getLogs();
+
+      // Map logs to day buckets (YYYY-MM-DD)
+      const dayLogs = {};
+      logs.forEach(l => {
+        const d = new Date(l.timestamp);
+        const key = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+        if (!dayLogs[key]) dayLogs[key] = [];
+        dayLogs[key].push(l);
+      });
+
+      const grid = document.getElementById('calGrid');
+      grid.innerHTML = '';
+
+      // Blank padding cells
+      for (let i = 0; i < firstDay; i++) {
+        grid.innerHTML += `<div class="cal-cell empty"></div>`;
+      }
+
+      // Day cells
+      for (let day = 1; day <= totalDays; day++) {
+        const dateKey = `${year}-${String(month+1).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
+        const hasLogs = dayLogs[dateKey] && dayLogs[dateKey].length > 0;
+        const count = hasLogs ? dayLogs[dateKey].length : 0;
+
+        const cell = document.createElement('div');
+        cell.className = `cal-cell ${hasLogs ? 'has-logs' : ''}`;
+        cell.innerHTML = `<span>${day}</span>${hasLogs ? `<span class="badge">${count} ●</span>` : ''}`;
+        cell.onclick = () => inspectCalDay(dateKey, dayLogs[dateKey] || []);
+
+        grid.appendChild(cell);
+      }
+    }
+
+    function inspectCalDay(dateKey, logs) {
+      const inspector = document.getElementById('calDayInspector');
+      const title = document.getElementById('calInspectDateTitle');
+      const container = document.getElementById('calInspectLogs');
+
+      inspector.style.display = 'block';
+      title.innerText = new Date(dateKey + 'T00:00:00').toLocaleDateString(currentLang, { weekday: 'long', month: 'short', day: 'numeric', year: 'numeric' });
+
+      if (logs.length === 0) {
+        container.innerHTML = `<p style="color:var(--subtext); font-size:13px; margin:8px 0;">No logs on this date.</p>`;
+        return;
+      }
+
+      container.innerHTML = logs.map(l => {
+        const timeStr = new Date(l.timestamp).toLocaleTimeString(currentLang, { hour: '2-digit', minute: '2-digit' });
+        const emoji = l.emoji ? `${l.emoji} ` : '';
+        return `
+          <div style="padding: 6px 0; border-bottom: 1px solid var(--border);">
+            <small style="color:var(--subtext);">${timeStr}</small><br>
+            <strong>${emoji}${l.note}</strong>
+            <div>${(l.tags || []).map(t => `<span class="tag">${t}</span>`).join('')}</div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // ================= STATS FUNCTIONS =================
+    function renderStats() {
+      const logs = getLogs();
+      if (logs.length === 0) {
+        document.getElementById('st-streak').innerText = '0';
+        document.getElementById('st-total').innerText = '0';
+        document.getElementById('st-avg').innerText = '0';
+        document.getElementById('st-peak').innerText = '-';
+        document.getElementById('topTagsList').innerHTML = '<p style="color:var(--subtext);">No data recorded yet.</p>';
+        document.getElementById('svgChartBox').innerHTML = '';
+        return;
+      }
+
+      // 1. Total Logs
+      document.getElementById('st-total').innerText = logs.length;
+
+      // 2. Day Streak & Unique Active Days
+      const uniqueDates = Array.from(new Set(logs.map(l => l.timestamp.slice(0,10)))).sort().reverse();
+      
+      let streak = 0;
+      const todayStr = new Date().toISOString().slice(0,10);
+      const yesterdayStr = new Date(Date.now() - 86400000).toISOString().slice(0,10);
+
+      if (uniqueDates.includes(todayStr) || uniqueDates.includes(yesterdayStr)) {
+        let checkDate = new Date(uniqueDates.includes(todayStr) ? todayStr : yesterdayStr);
+        while (true) {
+          const key = checkDate.toISOString().slice(0,10);
+          if (uniqueDates.includes(key)) {
+            streak++;
+            checkDate.setDate(checkDate.getDate() - 1);
+          } else break;
+        }
+      }
+      document.getElementById('st-streak').innerText = streak;
+
+      // 3. Average per active day
+      const avg = (logs.length / Math.max(1, uniqueDates.length)).toFixed(1);
+      document.getElementById('st-avg').innerText = avg;
+
+      // 4. Peak Hour
+      const hours = {};
+      logs.forEach(l => {
+        const h = new Date(l.timestamp).getHours();
+        hours[h] = (hours[h] || 0) + 1;
+      });
+      const peakHour = Object.keys(hours).reduce((a, b) => hours[a] > hours[b] ? a : b, 12);
+      const ampm = peakHour >= 12 ? 'PM' : 'AM';
+      document.getElementById('st-peak').innerText = `${peakHour % 12 || 12}${ampm}`;
+
+      // 5. Top Tags
+      const tagCounts = {};
+      logs.forEach(l => {
+        (l.tags || []).forEach(t => tagCounts[t] = (tagCounts[t] || 0) + 1);
+      });
+
+      const sortedTags = Object.entries(tagCounts).sort((a,b) => b[1] - a[1]);
+      const top5 = sortedTags.slice(0, 5);
+
+      document.getElementById('topTagsList').innerHTML = top5.length ? top5.map(([tag, count], i) => `
+        <div style="display:flex; justify-content:space-between; padding: 4px 0; border-bottom: 1px dashed var(--border);">
+          <span><strong>${i+1}. ${tag}</strong></span>
+          <span style="color:var(--subtext);">${count} logs</span>
+        </div>
+      `).join('') : '<p style="color:var(--subtext);">No tags used yet.</p>';
+
+      // Populate Tag Chart Select Dropdown
+      const chartSelect = document.getElementById('chartTagSelect');
+      chartSelect.innerHTML = sortedTags.map(([tag]) => `<option value="${tag}">${tag}</option>`).join('');
+      if (sortedTags.length === 0) {
+        chartSelect.innerHTML = '<option value="">No tags</option>';
+      }
+
+      renderChart();
+    }
+
+    function renderChart() {
+      const selectedTag = document.getElementById('chartTagSelect').value;
+      const grain = document.getElementById('chartGrainSelect').value;
+      const box = document.getElementById('svgChartBox');
+
+      if (!selectedTag) {
+        box.innerHTML = '<p style="color:var(--subtext); text-align:center; padding-top:40px;">No tag selected.</p>';
+        return;
+      }
+
+      const logs = getLogs().filter(l => (l.tags || []).includes(selectedTag));
+      const buckets = {};
+
+      // Bucket data points based on timeframe selection
+      logs.forEach(l => {
+        const d = new Date(l.timestamp);
+        let key;
+        if (grain === 'daily') key = d.toISOString().slice(5, 10); // MM-DD
+        else if (grain === 'monthly') key = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;
+        else key = `W${Math.ceil(d.getDate()/7)} ${d.toLocaleString('default',{month:'short'})}`;
+
+        buckets[key] = (buckets[key] || 0) + 1;
+      });
+
+      const keys = Object.keys(buckets).slice(-7); // Last 7 points
+      const values = keys.map(k => buckets[k]);
+
+      if (keys.length === 0) {
+        box.innerHTML = '<p style="color:var(--subtext); text-align:center; padding-top:40px;">No log history for this tag.</p>';
+        return;
+      }
+
+      // Generate SVG Chart
+      const maxVal = Math.max(...values, 1);
+      const width = 280;
+      const height = 120;
+      const padding = 20;
+
+      const points = values.map((val, idx) => {
+        const x = padding + (idx / Math.max(1, keys.length - 1)) * (width - 2 * padding);
+        const y = height - padding - (val / maxVal) * (height - 2 * padding);
+        return { x, y, val, label: keys[idx] };
+      });
+
+      const polylineStr = points.map(p => `${p.x},${p.y}`).join(' ');
+
+      box.innerHTML = `
+        <svg viewBox="0 0 ${width} ${height}" style="width:100%; height:100%;">
+          <polyline points="${polylineStr}" />
+          ${points.map(p => `
+            <circle cx="${p.x}" cy="${p.y}" r="4" />
+            <text x="${p.x}" y="${height - 2}" font-size="8" fill="var(--subtext)" text-anchor="middle">${p.label}</text>
+            <text x="${p.x}" y="${p.y - 7}" font-size="9" font-weight="bold" fill="var(--text)" text-anchor="middle">${p.val}</text>
+          `).join('')}
+        </svg>
+      `;
+    }
+
+    // ================= CSV EXPORT =================
+    async function exportCSV(onlyFiltered = false) {
+      const logsToExport = onlyFiltered ? getFilteredLogs() : getLogs();
       if (logsToExport.length === 0) return alert('No data to export.');
 
       let csv = "EventTimestamp,RecordedTimestamp,Emoji,Tags,Note\n";
@@ -846,8 +1198,7 @@
         csv += `"${l.timestamp}","${recorded}","${emoji}","${tags}","${l.note.replace(/"/g, '""')}"\n`;
       });
 
-      const isFiltered = (document.getElementById('searchFilter').value || '').trim() !== '';
-      const prefix = isFiltered ? 'filtered_logs' : 'tracker_export';
+      const prefix = onlyFiltered ? 'filtered_logs' : 'tracker_export';
       const fileName = `${prefix}_${new Date().toISOString().slice(0,10)}.csv`;
       const blob = new Blob([csv], { type: 'text/csv' });
 
@@ -874,12 +1225,10 @@
       a.click();
     }
 
-    // Startup Initialization
+    // App Initialization
     currentLang = detectUserLanguage();
     applyLanguage();
     loadSavedTheme();
-    loadSavedBackground();
-    loadDimmerSetting();
     setCurrentDatetime();
     renderQuickTags();
     render();
