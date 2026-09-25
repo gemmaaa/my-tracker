@@ -5,9 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
-  <title>Quick Log</title>
+  <title>Quick Tracker ✨ ★★★★★</title>
   <style>
-    /* Default: Lavender Theme (Light) */
+    /* Lavender Theme (Default Light) */
     :root, [data-theme="lavender"] {
       --bg: #e6def8;
       --card: #d8ccf1;
@@ -21,6 +21,9 @@
       --header-accent: #7b599c;
       --danger: #ff3b30;
       --btn-secondary: rgba(107, 82, 136, 0.18);
+      --cal-main: #b388ff;
+      --cal-media: #ffd54f;
+      --cal-both: #ff4081;
     }
 
     /* Hot Pink Theme (Dark) */
@@ -37,6 +40,9 @@
       --header-accent: #ff80ab;
       --danger: #ff453a;
       --btn-secondary: rgba(179, 136, 255, 0.2);
+      --cal-main: #e040fb;
+      --cal-media: #ff9100;
+      --cal-both: #00e676;
     }
 
     /* Matcha Cream Theme (Light) */
@@ -53,6 +59,9 @@
       --header-accent: #588157;
       --danger: #e63946;
       --btn-secondary: rgba(107, 142, 98, 0.18);
+      --cal-main: #588157;
+      --cal-media: #dda15e;
+      --cal-both: #bc6c25;
     }
 
     /* Monochrome High-Contrast Theme */
@@ -69,6 +78,9 @@
       --header-accent: #ffffff;
       --danger: #ff453a;
       --btn-secondary: #222222;
+      --cal-main: #ffffff;
+      --cal-media: #888888;
+      --cal-both: #ff3b30;
     }
 
     body {
@@ -77,49 +89,49 @@
       color: var(--text);
       margin: 0;
       padding: 16px;
-      padding-bottom: 40px;
+      padding-bottom: 50px;
       -webkit-tap-highlight-color: transparent;
     }
 
-    /* Two-line header layout */
-    .app-header {
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
       margin-bottom: 16px;
     }
 
-    .app-title-row {
-      text-align: center;
-      margin-bottom: 8px;
-    }
-
-    .app-title-row h2 {
+    .app-title-left {
       margin: 0;
-      font-size: 22px;
+      font-size: 18px;
       font-weight: 800;
       color: var(--header-accent);
-      letter-spacing: 0.5px;
+      letter-spacing: -0.3px;
     }
 
-    .nav-actions {
+    .app-title-stars {
+      color: #ffcc00;
+      font-size: 14px;
+      margin-left: 2px;
+    }
+
+    .nav-actions-right {
       display: flex;
-      justify-content: center;
-      gap: 6px;
-      flex-wrap: wrap;
+      gap: 4px;
     }
 
     .btn-icon-head {
       background: var(--btn-secondary);
       border: 1px solid var(--border);
       color: var(--text);
-      font-size: 14px;
-      font-weight: 600;
+      font-size: 16px;
       cursor: pointer;
-      padding: 6px 12px;
+      padding: 6px 9px;
       border-radius: 12px;
       margin: 0;
       width: auto;
-      display: flex;
+      display: inline-flex;
       align-items: center;
-      gap: 4px;
+      justify-content: center;
     }
 
     .card {
@@ -167,7 +179,9 @@
       cursor: pointer;
     }
 
+    /* Floating Scroll-To-Top Button */
     .btn-back-top {
+      display: none;
       position: fixed;
       bottom: 20px;
       right: 20px;
@@ -178,7 +192,7 @@
       border-radius: 20px;
       font-size: 12px;
       font-weight: bold;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
       cursor: pointer;
       z-index: 1000;
     }
@@ -209,7 +223,7 @@
 
     .btn-danger { background: var(--danger); color: #ffffff; margin-top: 6px; }
 
-    /* Star Rating Selector */
+    /* Star Rating Controls */
     .star-rating {
       display: flex; gap: 8px; font-size: 24px;
       cursor: pointer; margin-bottom: 10px; user-select: none;
@@ -236,7 +250,6 @@
       font-size: 12px; font-weight: 600; white-space: nowrap; cursor: pointer; flex-shrink: 0;
     }
 
-    /* Timeline & Entry Displays */
     .year-header { font-size: 20px; font-weight: 700; color: var(--header-accent); margin-top: 16px; margin-bottom: 8px; border-bottom: 2px solid var(--header-accent); padding-bottom: 4px; }
     .month-header { font-size: 15px; font-weight: 600; color: var(--subtext); margin-top: 12px; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
 
@@ -256,14 +269,28 @@
 
     .tag { background: var(--tag-bg); color: var(--tag-text); padding: 2px 8px; border-radius: 12px; font-size: 11px; font-weight: 600; margin-right: 4px; display: inline-block; margin-top: 4px; }
 
-    /* Calendar Grid */
+    /* Calendar Colors & Legend */
     .cal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
     .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; text-align: center; }
     .cal-day-label { font-size: 11px; font-weight: bold; color: var(--subtext); padding-bottom: 4px; }
-    .cal-cell { aspect-ratio: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; border-radius: 8px; border: 1px solid var(--border); font-size: 13px; background: var(--bg); cursor: pointer; position: relative; }
+    .cal-cell {
+      aspect-ratio: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
+      border-radius: 8px; border: 1px solid var(--border); font-size: 13px; background: var(--bg);
+      cursor: pointer; position: relative; font-weight: 500;
+    }
     .cal-cell.empty { border: none; background: transparent; }
-    .cal-cell.has-logs { background: var(--accent); color: var(--accent-text); font-weight: bold; border-color: var(--header-accent); }
+    
+    .cal-cell.has-main { background: var(--cal-main); color: #fff; font-weight: bold; border-color: var(--header-accent); }
+    .cal-cell.has-media { background: var(--cal-media); color: #000; font-weight: bold; border-color: var(--header-accent); }
+    .cal-cell.has-both { background: var(--cal-both); color: #fff; font-weight: bold; border-color: var(--header-accent); }
     .cal-cell .badge { font-size: 9px; position: absolute; bottom: 2px; }
+
+    .cal-legend {
+      display: flex; justify-content: space-around; font-size: 11px; font-weight: 600;
+      margin-top: 12px; padding-top: 10px; border-top: 1px dashed var(--border);
+    }
+    .legend-item { display: flex; align-items: center; gap: 6px; }
+    .legend-box { width: 12px; height: 12px; border-radius: 3px; }
 
     /* Stats Grid & Charts */
     .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px; }
@@ -284,38 +311,30 @@
     .vocab-phonetic { font-size: 13px; color: var(--subtext); margin-bottom: 6px; }
     .vocab-sentence { font-style: italic; margin-top: 6px; font-size: 13px; padding-left: 8px; border-left: 2px solid var(--header-accent); }
 
-    /* Media Expandable Cards */
     .media-type-badge { font-size: 10px; font-weight: bold; text-transform: uppercase; background: var(--tag-bg); color: var(--tag-text); padding: 2px 6px; border-radius: 4px; }
     .media-cover-img { width: 100%; max-height: 180px; object-fit: contain; border-radius: 8px; margin-top: 8px; background: rgba(0,0,0,0.05); }
 
-    .top-media-list {
-      font-size: 13px;
-      line-height: 1.5;
-    }
     .top-media-item {
-      padding: 4px 0;
-      border-bottom: 1px dashed var(--border);
+      padding: 4px 0; border-bottom: 1px dashed var(--border); font-size: 13px;
     }
   </style>
 </head>
 <body>
 
-  <!-- App Header - Line 1: Title, Line 2: Navigation Buttons -->
-  <header class="app-header">
-    <div class="app-title-row">
-      <h2>Quick Tracker ✨</h2>
+  <!-- Top Navigation Header -->
+  <div class="top-bar">
+    <h2 class="app-title-left">Quick Tracker ✨ <span class="app-title-stars">★★★★★</span></h2>
+    <div class="nav-actions-right">
+      <button class="btn-icon-head" onclick="toggleEntryForm()" title="New Log">📓</button>
+      <button class="btn-icon-head" onclick="openView('mediaView')" title="Media">🎬</button>
+      <button class="btn-icon-head" onclick="openView('vocabView')" title="Vocab">🗣️</button>
+      <button class="btn-icon-head" onclick="openView('calendarView')" title="Calendar">📅</button>
+      <button class="btn-icon-head" onclick="openView('statsView')" title="Stats">📊</button>
+      <button class="btn-icon-head" onclick="openView('settingsView')" title="Settings">⚙️</button>
     </div>
-    <nav class="nav-actions">
-      <button class="btn-icon-head" onclick="toggleEntryForm()" title="New Log">📓 <span>Log</span></button>
-      <button class="btn-icon-head" onclick="openView('mediaView')" title="Media">🎬 <span>Media</span></button>
-      <button class="btn-icon-head" onclick="openView('vocabView')" title="Vocab">🗣️ <span>Vocab</span></button>
-      <button class="btn-icon-head" onclick="openView('calendarView')" title="Calendar">📅 <span>Cal</span></button>
-      <button class="btn-icon-head" onclick="openView('statsView')" title="Stats">📊 <span>Stats</span></button>
-      <button class="btn-icon-head" onclick="openView('settingsView')" title="Settings">⚙️ <span>Opts</span></button>
-    </nav>
-  </header>
+  </div>
 
-  <!-- Collapsible Logger Card (Hidden by default) -->
+  <!-- Collapsible Main Logger Card (Hidden by default) -->
   <div id="entryCard" class="card" style="display: none;">
     <label for="customDatetime" id="lbl-date">Date</label>
     <input type="datetime-local" id="customDatetime" class="input-compact">
@@ -364,38 +383,38 @@
 
   <div id="logsContainer"></div>
 
-
   <!-- ==================== MEDIA TRACKER OVERLAY ==================== -->
-  <div id="mediaView" class="overlay-view">
+  <div id="mediaView" class="overlay-view" onscroll="handleScroll(this)">
     <div class="overlay-header">
       <h2>Media Tracker 🎬</h2>
       <button class="btn-close-view" onclick="closeView('mediaView')">✕</button>
     </div>
 
-    <!-- Toggle Action to Add Media -->
-    <div style="display: flex; gap: 8px; margin-bottom: 12px;">
+    <!-- Media Controls Row -->
+    <div id="mediaControlsRow" style="display: flex; gap: 8px; margin-bottom: 12px;">
       <button onclick="toggleMediaForm()" style="margin-bottom: 0;">＋ Add Media Entry</button>
     </div>
 
-    <!-- Collapsible Media Entry Form Card (Hidden by default) -->
+    <!-- Collapsible Media Entry / Edit Form Card -->
     <div id="mediaFormCard" class="card" style="display: none;">
       <label>Add / Edit Media Entry</label>
-      <select id="mediaType" class="input-compact">
+      <select id="mediaType" class="input-compact" onchange="toggleAuthorField()">
         <option value="Movie">🎬 Movie</option>
         <option value="Book">📚 Book</option>
         <option value="TV Series">📺 TV Series</option>
       </select>
 
       <input type="text" id="mediaTitle" placeholder="Title (e.g. Inception / Dune)" class="input-compact">
+      <input type="text" id="mediaAuthor" placeholder="Author Name (for Books)" class="input-compact" style="display: none;">
 
       <div style="display: flex; gap: 8px;">
         <div style="flex:1;">
           <label style="font-size:10px;">Start Date</label>
-          <input type="datetime-local" id="mediaStartDate" class="input-compact">
+          <input type="date" id="mediaStartDate" class="input-compact">
         </div>
         <div style="flex:1;">
           <label style="font-size:10px;">End Date (Optional)</label>
-          <input type="datetime-local" id="mediaEndDate" class="input-compact">
+          <input type="date" id="mediaEndDate" class="input-compact">
         </div>
       </div>
 
@@ -409,6 +428,9 @@
       </div>
       <input type="hidden" id="selectedMediaRating" value="0">
 
+      <label for="mediaTags">Tags</label>
+      <input type="text" id="mediaTags" placeholder="#scifi #fantasy" onkeyup="handleMediaTagTyping(event)" class="input-compact">
+
       <textarea id="mediaNotes" placeholder="Review, favorite quotes, or thoughts..."></textarea>
 
       <input type="hidden" id="editingMediaId" value="">
@@ -416,35 +438,32 @@
       <button id="cancelMediaEditBtn" onclick="cancelMediaEdit()" style="display:none; background:var(--border); color:var(--text); margin-top:-4px;">Cancel Edit</button>
     </div>
 
-    <!-- Search Input directly above Media Logs -->
-    <input type="text" id="mediaSearchFilter" placeholder="🔍 Search media by title, note, or type..." oninput="renderMediaList()" class="input-compact" style="margin-bottom: 12px;">
+    <!-- Search Input Directly Above Media Feed -->
+    <div id="mediaFeedSearchWrapper">
+      <input type="text" id="mediaSearchFilter" placeholder="🔍 Search media by title, author, tag, or note..." oninput="renderMediaList()" class="input-compact" style="margin-bottom: 12px;">
+    </div>
 
-    <!-- Media Logs List -->
+    <!-- Media Feed Container -->
     <div id="mediaContainer"></div>
 
-    <button class="btn-back-top" onclick="scrollToTop('mediaView')">↑ Top</button>
+    <button id="topBtn-mediaView" class="btn-back-top" onclick="scrollToTop('mediaView')">↑ Top</button>
   </div>
 
-
   <!-- ==================== VOCABULARY OVERLAY ==================== -->
-  <div id="vocabView" class="overlay-view">
+  <div id="vocabView" class="overlay-view" onscroll="handleScroll(this)">
     <div class="overlay-header">
       <h2>Daily Vocabulary 🗣️</h2>
       <button class="btn-close-view" onclick="closeView('vocabView')">✕</button>
     </div>
 
-    <p style="font-size: 13px; color: var(--subtext); margin-top: -6px; margin-bottom: 16px;">
-      Explore today's curated word for each target language. Tap <strong>＋ Log This Word</strong> to copy it into your tracker!
-    </p>
-
     <div id="vocabListContainer"></div>
 
-    <button class="btn-back-top" onclick="scrollToTop('vocabView')">↑ Top</button>
+    <button id="topBtn-vocabView" class="btn-back-top" onclick="scrollToTop('vocabView')">↑ Top</button>
   </div>
 
 
   <!-- ==================== CALENDAR OVERLAY ==================== -->
-  <div id="calendarView" class="overlay-view">
+  <div id="calendarView" class="overlay-view" onscroll="handleScroll(this)">
     <div class="overlay-header">
       <h2 id="lbl-cal-title">Calendar 📅</h2>
       <button class="btn-close-view" onclick="closeView('calendarView')">✕</button>
@@ -462,6 +481,13 @@
         <div class="cal-day-label">W</div><div class="cal-day-label">T</div><div class="cal-day-label">F</div><div class="cal-day-label">S</div>
       </div>
       <div class="cal-grid" id="calGrid"></div>
+
+      <!-- Theme-Dynamic Calendar Legend -->
+      <div class="cal-legend">
+        <div class="legend-item"><div class="legend-box" style="background:var(--cal-main);"></div><span>Main Log</span></div>
+        <div class="legend-item"><div class="legend-box" style="background:var(--cal-media);"></div><span>Media</span></div>
+        <div class="legend-item"><div class="legend-box" style="background:var(--cal-both);"></div><span>Both</span></div>
+      </div>
     </div>
 
     <div id="calDayInspector" class="card" style="display: none;">
@@ -469,18 +495,18 @@
       <div id="calInspectLogs"></div>
     </div>
 
-    <button class="btn-back-top" onclick="scrollToTop('calendarView')">↑ Top</button>
+    <button id="topBtn-calendarView" class="btn-back-top" onclick="scrollToTop('calendarView')">↑ Top</button>
   </div>
 
 
   <!-- ==================== STATS OVERLAY ==================== -->
-  <div id="statsView" class="overlay-view">
+  <div id="statsView" class="overlay-view" onscroll="handleScroll(this)">
     <div class="overlay-header">
       <h2 id="lbl-stats-title">Analytics & Stats 📊</h2>
       <button class="btn-close-view" onclick="closeView('statsView')">✕</button>
     </div>
 
-    <!-- MAIN LOG STATS SECTION -->
+    <!-- MAIN LOG STATS -->
     <div class="stat-grid">
       <div class="stat-card">
         <div class="stat-val" id="st-streak">0</div>
@@ -506,7 +532,7 @@
     </div>
 
     <div class="card">
-      <label id="lbl-st-charttitle">Tag Frequency Chart</label>
+      <label id="lbl-st-charttitle">Main Log Tag Frequency Chart</label>
       <div style="display: flex; gap: 8px; margin-top: 6px;">
         <select id="chartTagSelect" onchange="renderChart()" class="input-compact"></select>
         <select id="chartGrainSelect" onchange="renderChart()" class="input-compact">
@@ -518,13 +544,13 @@
       <div class="chart-container" id="svgChartBox"></div>
     </div>
 
-    <!-- MEDIA TRACKER STATS SECTION (INTEGRATED BELOW MAIN STATS) -->
+    <!-- INTEGRATED MEDIA TRACKER STATS -->
     <h3 style="margin-top: 24px; margin-bottom: 12px; font-size: 18px; color: var(--header-accent);">Media Tracker Analytics 🎬</h3>
 
     <div class="stat-grid">
       <div class="stat-card">
         <div class="stat-val" id="mst-total">0</div>
-        <div class="stat-lbl">Total Media Logged</div>
+        <div class="stat-lbl">Total Logged</div>
       </div>
       <div class="stat-card">
         <div class="stat-val" id="mst-finished">0</div>
@@ -540,24 +566,38 @@
       </div>
     </div>
 
-    <!-- Top Rated Lists (Up to 3 each) -->
+    <!-- Media Tag Frequency Chart -->
     <div class="card">
-      <label>Top Rated Movies (Top 3)</label>
-      <div id="topMoviesList" class="top-media-list"></div>
-
-      <label style="margin-top: 12px;">Top Rated Books (Top 3)</label>
-      <div id="topBooksList" class="top-media-list"></div>
-
-      <label style="margin-top: 12px;">Top Rated TV Series (Top 3)</label>
-      <div id="topSeriesList" class="top-media-list"></div>
+      <label>Media Tag Frequency Chart</label>
+      <div style="display: flex; gap: 8px; margin-top: 6px;">
+        <select id="mediaChartTagSelect" onchange="renderMediaChart()" class="input-compact"></select>
+        <select id="mediaChartGrainSelect" onchange="renderMediaChart()" class="input-compact">
+          <option value="daily">Daily</option>
+          <option value="weekly">Weekly</option>
+          <option value="monthly">Monthly</option>
+        </select>
+      </div>
+      <div class="chart-container" id="svgMediaChartBox"></div>
     </div>
 
-    <button class="btn-back-top" onclick="scrollToTop('statsView')">↑ Top</button>
+    <!-- Top Rated Media Lists -->
+    <div class="card">
+      <label>Top Rated Movies (Top 3)</label>
+      <div id="topMoviesList" style="font-size: 13px; margin-bottom: 10px;"></div>
+
+      <label>Top Rated Books (Top 3)</label>
+      <div id="topBooksList" style="font-size: 13px; margin-bottom: 10px;"></div>
+
+      <label>Top Rated TV Series (Top 3)</label>
+      <div id="topSeriesList" style="font-size: 13px;"></div>
+    </div>
+
+    <button id="topBtn-statsView" class="btn-back-top" onclick="scrollToTop('statsView')">↑ Top</button>
   </div>
 
 
   <!-- ==================== SETTINGS OVERLAY ==================== -->
-  <div id="settingsView" class="overlay-view">
+  <div id="settingsView" class="overlay-view" onscroll="handleScroll(this)">
     <div class="overlay-header">
       <h2 id="lbl-settings-title">Settings ⚙️</h2>
       <button class="btn-close-view" onclick="closeView('settingsView')">✕</button>
@@ -566,9 +606,10 @@
     <div class="card">
       <label for="defaultViewSelect">Default Screen on App Open</label>
       <select id="defaultViewSelect" onchange="changeDefaultView(this.value)">
-        <option value="main">Main Feed</option>
-        <option value="main_form">Main Feed + Open New Entry Form</option>
-        <option value="media">Media Tracker</option>
+        <option value="main">Main Log</option>
+        <option value="main_form">Main Log Entry</option>
+        <option value="media">Media Log</option>
+        <option value="media_form">Media Log Entry</option>
       </select>
 
       <label for="langSelect" id="lbl-language" style="margin-top: 10px;">Language</label>
@@ -587,127 +628,71 @@
       </select>
     </div>
 
-    <!-- Main Log Management -->
     <div class="card">
       <label>Main Log Management</label>
       <button class="btn-themed" onclick="exportCSV(false)">Export Main Log (CSV)</button>
       <button class="btn-danger" onclick="deleteAllLogs()">Clear Main Log Data (Reset)</button>
     </div>
 
-    <!-- Media Log Management -->
     <div class="card">
       <label>Media Log Management</label>
       <button class="btn-themed" onclick="exportMediaCSV()">Export Media Log (CSV)</button>
       <button class="btn-danger" onclick="deleteMediaData()">Clear Media Log Data (Reset)</button>
     </div>
 
-    <button class="btn-back-top" onclick="scrollToTop('settingsView')">↑ Top</button>
+    <button id="topBtn-settingsView" class="btn-back-top" onclick="scrollToTop('settingsView')">↑ Top</button>
   </div>
 
+  <button id="topBtn-body" class="btn-back-top" onclick="scrollToWindowTop()">↑ Top</button>
 
   <!-- JavaScript Logic -->
   <script>
+    /* Global Translations Dictionary */
     const translations = {
       en: {
-        date: "Date",
-        rating: "Rating (Optional)",
-        emoji: "Category Emoji",
-        details: "Entry Details",
-        tags: "Tags",
-        placeholder_note: "What would you like to log today?",
-        placeholder_search: "🔍 Search logs by tag or text...",
-        save: "Save Entry",
-        update: "Update Entry",
-        cancel: "Cancel Edit",
-        export_all: "Export All Data (CSV)",
-        export_filtered: "Export Filtered Logs (CSV)",
-        settings_title: "Settings ⚙️",
-        cal_title: "Calendar 📅",
-        stats_title: "Analytics & Stats 📊",
-        language: "Language",
-        theme: "Color Palette Theme",
-        no_logs: "No logs recorded yet.",
-        no_matches: "No matching logs found.",
-        streak: "Day Streak 🔥",
-        totallogs: "Total Logs",
-        avgday: "Avg / Day",
-        peakhour: "Peak Hour",
-        toptags: "Top 5 Most Used Tags",
-        charttitle: "Tag Frequency Chart"
+        date: "Date", rating: "Rating (Optional)", emoji: "Category Emoji", details: "Entry Details",
+        tags: "Tags", placeholder_note: "What would you like to log today?", placeholder_search: "🔍 Search logs by tag or text...",
+        save: "Save Entry", update: "Update Entry", cancel: "Cancel Edit", export_all: "Export All Data (CSV)",
+        export_filtered: "Export Filtered Logs (CSV)", settings_title: "Settings ⚙️", cal_title: "Calendar 📅",
+        stats_title: "Analytics & Stats 📊", language: "Language", theme: "Color Palette Theme",
+        no_logs: "No logs recorded yet.", no_matches: "No matching logs found.", streak: "Day Streak 🔥",
+        totallogs: "Total Logs", avgday: "Avg / Day", peakhour: "Peak Hour", toptags: "Top 5 Most Used Tags", charttitle: "Main Log Tag Frequency Chart"
       },
       es: {
-        date: "Fecha",
-        rating: "Calificación (Opcional)",
-        emoji: "Emoji de Categoría",
-        details: "Detalles de la Entrada",
-        tags: "Etiquetas",
-        placeholder_note: "¿Qué te gustaría registrar hoy?",
-        placeholder_search: "🔍 Buscar registros por etiqueta o texto...",
-        save: "Guardar Entrada",
-        update: "Actualizar Entrada",
-        cancel: "Cancelar Edición",
-        export_all: "Exportar Todos los Datos (CSV)",
-        export_filtered: "Exportar Registros Filtrados (CSV)",
-        settings_title: "Ajustes ⚙️",
-        cal_title: "Calendario 📅",
-        stats_title: "Estadísticas y Análisis 📊",
-        language: "Idioma",
-        theme: "Paleta de Colores",
-        no_logs: "Aún no hay registros guardados.",
-        no_matches: "No se encontraron registros coincidentes.",
-        streak: "Racha de Días 🔥",
-        totallogs: "Total de Registros",
-        avgday: "Prom. / Día",
-        peakhour: "Hora Pico",
-        toptags: "Top 5 Etiquetas Más Usadas",
-        charttitle: "Gráfico de Frecuencia"
+        date: "Fecha", rating: "Calificación (Opcional)", emoji: "Emoji de Categoría", details: "Detalles de la Entrada",
+        tags: "Etiquetas", placeholder_note: "¿Qué te gustaría registrar hoy?", placeholder_search: "🔍 Buscar registros por etiqueta o texto...",
+        save: "Guardar Entrada", update: "Actualizar Entrada", cancel: "Cancelar Edición", export_all: "Exportar Todos los Datos (CSV)",
+        export_filtered: "Exportar Registros Filtrados (CSV)", settings_title: "Ajustes ⚙️", cal_title: "Calendario 📅",
+        stats_title: "Estadísticas y Análisis 📊", language: "Idioma", theme: "Paleta de Colores",
+        no_logs: "Aún no hay registros guardados.", no_matches: "No se encontraron registros coincidentes.", streak: "Racha de Días 🔥",
+        totallogs: "Total de Registros", avgday: "Prom. / Día", peakhour: "Hora Pico", toptags: "Top 5 Etiquetas Más Usadas", charttitle: "Gráfico de Frecuencia (Principal)"
       },
       ca: {
-        date: "Data",
-        rating: "Qualificació (Opcional)",
-        emoji: "Emoji de Categoria",
-        details: "Detalls de l'Entrada",
-        tags: "Etiquetes",
-        placeholder_note: "Què t'agradaria registrar avui?",
-        placeholder_search: "🔍 Cerca registres per etiqueta o text...",
-        save: "Desar Entrada",
-        update: "Actualitzar Entrada",
-        cancel: "Cancel·lar Edició",
-        export_all: "Exportar Totes les Dades (CSV)",
-        export_filtered: "Exportar Registros Filtrats (CSV)",
-        settings_title: "Ajustos ⚙️",
-        cal_title: "Calendari 📅",
-        stats_title: "Estadístiques i Anàlisi 📊",
-        language: "Idioma",
-        theme: "Paleta de Colors",
-        no_logs: "Encara no hi ha registres desats.",
-        no_matches: "No s'han trobat registres coincidents.",
-        streak: "Ratxa de Dies 🔥",
-        totallogs: "Total de Registres",
-        avgday: "Mitjana / Dia",
-        peakhour: "Hora Punta",
-        toptags: "Top 5 Etiquetes Més Utilitzades",
-        charttitle: "Gràfic de Freqüència"
+        date: "Data", rating: "Qualificació (Opcional)", emoji: "Emoji de Categoria", details: "Detalls de l'Entrada",
+        tags: "Etiquetes", placeholder_note: "Què t'agradaria registrar avui?", placeholder_search: "🔍 Cerca registres per etiqueta o text...",
+        save: "Desar Entrada", update: "Actualitzar Entrada", cancel: "Cancel·lar Edició", export_all: "Exportar Totes les Dades (CSV)",
+        export_filtered: "Exportar Registros Filtrats (CSV)", settings_title: "Ajustos ⚙️", cal_title: "Calendari 📅",
+        stats_title: "Estadíatiques i Anàlisi 📊", language: "Idioma", theme: "Paleta de Colors",
+        no_logs: "Encara no hi ha registres desats.", no_matches: "No s'han trobat registres coincidents.", streak: "Ratxa de Dies 🔥",
+        totallogs: "Total de Registres", avgday: "Mitjana / Dia", peakhour: "Hora Punta", toptags: "Top 5 Etiquetes Més Utilitzades", charttitle: "Gràfic de Freqüència (Principal)"
       }
     };
 
+    /* Vocabulary Dataset */
     const vocabPools = {
       es: [
         { word: "Pusilánime", phonetic: "[pu-si-lá-ni-me]", type: "Adjetivo (Avanzado C2)", meaning: "Falto de ánimo y valor para tolerar las desgracias o hacer frente a grandes empresas.", sentence: "Su actitud pusilánime le impidió defender sus convicciones ante el comité.", source: "RAE / Español C2" },
-        { word: "Inmarcesible", phonetic: "[in-mar-ce-si-ble]", type: "Adjetivo (Avanzado C2)", meaning: "Que no se puede marchitar o perder la frescura y la belleza.", sentence: "Dejó un legado inmarcesible en la historia de la literatura hispánica.", source: "RAE / Español C2" },
-        { word: "Sesudo", phonetic: "[se-su-do]", type: "Adjetivo (Avanzado C2)", meaning: "Prudente, cuerdo y que actúa con buen juicio y reflexión.", sentence: "El comité presentó un informe sesudo tras meses de investigación minuciosa.", source: "RAE / Español C2" }
+        { word: "Inmarcesible", phonetic: "[in-mar-ce-si-ble]", type: "Adjetivo (Avanzado C2)", meaning: "Que no se puede marchitar o perder la frescura y la belleza.", sentence: "Dejó un legado inmarcesible en la historia de la literatura hispánica.", source: "RAE / Español C2" }
       ],
       ca: [
         { word: "Aixopluc", phonetic: "[əj.ʃuˈpluk]", type: "Substantiu", meaning: "Lloc on Hom es posa a cobert de la pluja.", sentence: "Van trobar un bon aixopluc sota les branques d'aquell roure antic.", source: "Diccionari Català" },
         { word: "Lletraferit", phonetic: "[ʎə.tɾə.fəˈɾit]", type: "Substantiu / Adj.", meaning: "Persona molt aficionada a la literatura i a la lectura.", sentence: "Com a bon lletraferit, passava les tardes navegant per llibreries velles.", source: "Diccionari Català" }
       ],
       zh: [
-        { word: "海纳百川", phonetic: "Hǎi nà bǎi chuān", type: "Idiom (Chengyu)", meaning: "The sea admits a hundred rivers; open-mindedness and inclusivity.", sentence: "海纳百川，有容乃大。(The sea is vast because it admits all rivers.)", source: "Classical Prose / 林则徐" },
-        { word: "坚持", phonetic: "Jiānchí", type: "Verb / Noun", meaning: "To persevere, persist, or uphold.", sentence: "只要坚持，就一定会成功。(If you persist, you will surely succeed.)", source: "Modern Chinese Corpus" }
+        { word: "海纳百川", phonetic: "Hǎi nà bǎi chuān", type: "Idiom (Chengyu)", meaning: "The sea admits a hundred rivers; open-mindedness and inclusivity.", sentence: "海纳百川，有容乃大。(The sea is vast because it admits all rivers.)", source: "Classical Prose / 林则徐" }
       ],
       th: [
-        { word: "สวัสดี", phonetic: "sà-wàt-dee", type: "Greeting", tone: "Low - Low - Mid", meaning: "Hello / Goodbye", sentence: "สวัสดีครับ คุณสบายดีไหม (Hello, how are you?)", source: "Thai Foundation" },
-        { word: "พยายาม", phonetic: "phá-yaa-yaam", type: "Verb", tone: "High - Mid - Mid", meaning: "To try, endeavor, or make an effort.", sentence: "เขาพยายามเรียนภาษาไทยทุกวัน (He tries to study Thai every day.)", source: "Thai Corpus" }
+        { word: "สวัสดี", phonetic: "sà-wàt-dee", type: "Greeting", tone: "Low - Low - Mid", meaning: "Hello / Goodbye", sentence: "สวัสดีครับ คุณสบายดีไหม (Hello, how are you?)", source: "Thai Foundation" }
       ]
     };
 
@@ -715,10 +700,32 @@
     let calCurrentDate = new Date();
     let vocabIndices = { es: 0, ca: 0, zh: 0, th: 0 };
 
+    /* Scroll To Top Logic */
+    function handleScroll(containerEl) {
+      const btn = document.getElementById(`topBtn-${containerEl.id}`);
+      if (btn) {
+        if (containerEl.scrollTop > 150) btn.style.display = 'block';
+        else btn.style.display = 'none';
+      }
+    }
+
+    window.onscroll = function() {
+      const btn = document.getElementById('topBtn-body');
+      if (btn) {
+        if (window.scrollY > 150) btn.style.display = 'block';
+        else btn.style.display = 'none';
+      }
+    };
+
     function scrollToTop(viewId) {
       document.getElementById(viewId).scrollTo({ top: 0, behavior: 'smooth' });
     }
 
+    function scrollToWindowTop() {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    /* System Language & Default Views */
     function changeLanguage(lang) {
       currentLang = lang || 'en';
       localStorage.setItem('selected_lang', currentLang);
@@ -770,6 +777,10 @@
       document.getElementById('defaultViewSelect').value = saved;
       if (saved === 'main_form') toggleEntryForm();
       else if (saved === 'media') openView('mediaView');
+      else if (saved === 'media_form') {
+        openView('mediaView');
+        toggleMediaForm();
+      }
     }
 
     function getNowForInput() {
@@ -778,9 +789,15 @@
       return now.toISOString().slice(0, 16);
     }
 
+    function getTodayDateForInput() {
+      const now = new Date();
+      now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+      return now.toISOString().slice(0, 10);
+    }
+
     function setCurrentDatetime() {
       document.getElementById('customDatetime').value = getNowForInput();
-      document.getElementById('mediaStartDate').value = getNowForInput();
+      document.getElementById('mediaStartDate').value = getTodayDateForInput();
     }
 
     function toggleEntryForm() {
@@ -846,6 +863,22 @@
         const words = val.split(' ').map(w => w ? (w.startsWith('#') ? w : '#' + w) : '');
         input.value = words.join(' ');
       }
+    }
+
+    function handleMediaTagTyping(e) {
+      const input = document.getElementById('mediaTags');
+      let val = input.value;
+      if (e.key === ' ' || e.code === 'Space') {
+        const words = val.split(' ').map(w => w ? (w.startsWith('#') ? w : '#' + w) : '');
+        input.value = words.join(' ');
+      }
+    }
+
+    function toggleAuthorField() {
+      const type = document.getElementById('mediaType').value;
+      const authorInput = document.getElementById('mediaAuthor');
+      if (type === 'Book') authorInput.style.display = 'block';
+      else authorInput.style.display = 'none';
     }
 
     function appendQuickTag(tagStr) {
@@ -1031,7 +1064,7 @@
     }
 
 
-    // ================= VOCABULARY FUNCTIONS =================
+    /* Vocab Logic */
     function nextVocabWord(langKey) {
       const pool = vocabPools[langKey] || [];
       if (pool.length === 0) return;
@@ -1106,7 +1139,7 @@
     }
 
 
-    // ================= MEDIA TRACKER FUNCTIONS =================
+    /* Media Tracker Core Logic */
     function getMediaItems() { return JSON.parse(localStorage.getItem('my_pwa_media') || '[]'); }
 
     async function fetchMediaInfo(title, type) {
@@ -1129,14 +1162,17 @@
     async function saveMediaItem() {
       const type = document.getElementById('mediaType').value;
       const title = document.getElementById('mediaTitle').value.trim();
+      const author = document.getElementById('mediaAuthor').value.trim();
       const startDate = document.getElementById('mediaStartDate').value;
       const endDate = document.getElementById('mediaEndDate').value || null;
       const rating = parseInt(document.getElementById('selectedMediaRating').value || '0');
+      const tagsInput = document.getElementById('mediaTags').value.trim();
       const notes = document.getElementById('mediaNotes').value.trim();
       const editingId = document.getElementById('editingMediaId').value;
 
       if (!title) return alert('Please enter a title.');
 
+      const formattedTags = tagsInput ? tagsInput.split(' ').map(t => t.startsWith('#') ? t : '#' + t) : [];
       let apiData = null;
       if (!editingId) apiData = await fetchMediaInfo(title, type);
 
@@ -1145,12 +1181,12 @@
       if (editingId) {
         const idx = items.findIndex(i => i.id == editingId);
         if (idx !== -1) {
-          items[idx] = { ...items[idx], type, title, startDate, endDate, rating, notes };
+          items[idx] = { ...items[idx], type, title, author, startDate, endDate, rating, tags: formattedTags, notes };
         }
       } else {
         items.unshift({
           id: Date.now(),
-          type, title, startDate, endDate, rating, notes,
+          type, title, author, startDate, endDate, rating, tags: formattedTags, notes,
           coverUrl: apiData ? apiData.coverUrl : null,
           summary: apiData ? apiData.summary : null
         });
@@ -1158,7 +1194,7 @@
 
       localStorage.setItem('my_pwa_media', JSON.stringify(items));
       cancelMediaEdit();
-      toggleMediaForm(); // Auto-collapse form after saving
+      toggleMediaForm();
       renderMediaList();
     }
 
@@ -1169,35 +1205,48 @@
       document.getElementById('editingMediaId').value = item.id;
       document.getElementById('mediaType').value = item.type;
       document.getElementById('mediaTitle').value = item.title;
+      document.getElementById('mediaAuthor').value = item.author || '';
+      document.getElementById('mediaTags').value = (item.tags || []).join(' ');
       document.getElementById('mediaNotes').value = item.notes || '';
       setMediaRating(item.rating || 0);
+      toggleAuthorField();
 
       if (item.startDate) {
-        const d = new Date(item.startDate);
-        d.setMinutes(d.getMinutes() - d.getTimezoneOffset());
-        document.getElementById('mediaStartDate').value = d.toISOString().slice(0, 16);
+        document.getElementById('mediaStartDate').value = item.startDate.slice(0, 10);
       }
       if (item.endDate) {
-        const d = new Date(item.endDate);
-        d.setMinutes(d.getMinutes() - d.getTimezoneOffset());
-        document.getElementById('mediaEndDate').value = d.toISOString().slice(0, 16);
+        document.getElementById('mediaEndDate').value = item.endDate.slice(0, 10);
       } else {
         document.getElementById('mediaEndDate').value = '';
       }
 
       document.getElementById('saveMediaBtn').innerText = 'Update Media Entry';
       document.getElementById('cancelMediaEditBtn').style.display = 'block';
+
+      /* Focused Editing View: Hide Feed & Search Controls */
       document.getElementById('mediaFormCard').style.display = 'block';
+      document.getElementById('mediaControlsRow').style.display = 'none';
+      document.getElementById('mediaFeedSearchWrapper').style.display = 'none';
+      document.getElementById('mediaContainer').style.display = 'none';
     }
 
     function cancelMediaEdit() {
       document.getElementById('editingMediaId').value = '';
       document.getElementById('mediaTitle').value = '';
+      document.getElementById('mediaAuthor').value = '';
+      document.getElementById('mediaTags').value = '';
       document.getElementById('mediaNotes').value = '';
       document.getElementById('mediaEndDate').value = '';
       setMediaRating(0);
       document.getElementById('saveMediaBtn').innerText = 'Add Media Log';
       document.getElementById('cancelMediaEditBtn').style.display = 'none';
+
+      /* Restore Focused View to Normal Feed Mode */
+      document.getElementById('mediaFormCard').style.display = 'none';
+      document.getElementById('mediaControlsRow').style.display = 'flex';
+      document.getElementById('mediaFeedSearchWrapper').style.display = 'block';
+      document.getElementById('mediaContainer').style.display = 'block';
+
       setCurrentDatetime();
     }
 
@@ -1220,7 +1269,9 @@
       const filtered = items.filter(i => {
         if (!searchQuery) return true;
         return i.title.toLowerCase().includes(searchQuery) ||
+               (i.author || '').toLowerCase().includes(searchQuery) ||
                (i.notes || '').toLowerCase().includes(searchQuery) ||
+               (i.tags || []).some(t => t.toLowerCase().includes(searchQuery)) ||
                i.type.toLowerCase().includes(searchQuery);
       });
 
@@ -1231,9 +1282,10 @@
 
       container.innerHTML = filtered.map(i => {
         const stars = i.rating ? `<span style="color:#ffcc00; margin-left:6px;">${'★'.repeat(i.rating)}</span>` : '';
-        const startStr = i.startDate ? new Date(i.startDate).toLocaleDateString(currentLang, { month:'short', day:'numeric', year:'numeric' }) : '';
-        const endStr = i.endDate ? new Date(i.endDate).toLocaleDateString(currentLang, { month:'short', day:'numeric', year:'numeric' }) : 'Ongoing';
+        const startStr = i.startDate ? new Date(i.startDate + 'T00:00:00').toLocaleDateString(currentLang, { month:'short', day:'numeric', year:'numeric' }) : '';
+        const endStr = i.endDate ? new Date(i.endDate + 'T00:00:00').toLocaleDateString(currentLang, { month:'short', day:'numeric', year:'numeric' }) : 'Ongoing';
         const dateRange = startStr ? `${startStr} → ${endStr}` : '';
+        const authorDisplay = i.author ? `<div style="font-size:12px; color:var(--subtext); font-style:italic;">By ${i.author}</div>` : '';
 
         return `
           <div class="card" style="margin-bottom:10px;">
@@ -1242,11 +1294,13 @@
               <span style="font-size:11px; color:var(--subtext);">${dateRange}</span>
             </div>
 
-            <div style="font-size:16px; font-weight:bold; margin-top:6px; cursor:pointer;" onclick="toggleMediaCardExpand(${i.id})">
+            <div style="font-size:16px; font-weight:bold; margin-top:4px; cursor:pointer;" onclick="toggleMediaCardExpand(${i.id})">
               ${i.title} ${stars}
             </div>
+            ${authorDisplay}
 
             <div style="font-size:13px; margin-top:4px; color:var(--text);">${i.notes || ''}</div>
+            <div>${(i.tags || []).map(t => `<span class="tag">${t}</span>`).join('')}</div>
 
             <div id="media-details-${i.id}" style="display:none; margin-top:10px; border-top:1px dashed var(--border); padding-top:8px;">
               ${i.coverUrl ? `<img src="${i.coverUrl}" class="media-cover-img" alt="Cover">` : ''}
@@ -1263,7 +1317,6 @@
     }
 
 
-    // ================= CALENDAR FUNCTIONS =================
     function changeCalMonth(delta) {
       calCurrentDate.setMonth(calCurrentDate.getMonth() + delta);
       renderCalendar();
@@ -1277,14 +1330,23 @@
 
       const firstDay = new Date(year, month, 1).getDay();
       const totalDays = new Date(year, month + 1, 0).getDate();
-      const logs = getLogs();
+      const mainLogs = getLogs();
+      const mediaItems = getMediaItems();
 
+      /* Categorize dates into Main / Media / Both */
       const dayLogs = {};
-      logs.forEach(l => {
+      mainLogs.forEach(l => {
         const d = new Date(l.timestamp);
         const key = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
-        if (!dayLogs[key]) dayLogs[key] = [];
-        dayLogs[key].push(l);
+        if (!dayLogs[key]) dayLogs[key] = { main: [], media: [] };
+        dayLogs[key].main.push(l);
+      });
+
+      mediaItems.forEach(m => {
+        const d = new Date((m.startDate || m.timestamp).slice(0, 10) + 'T00:00:00');
+        const key = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+        if (!dayLogs[key]) dayLogs[key] = { main: [], media: [] };
+        dayLogs[key].media.push(m);
       });
 
       const grid = document.getElementById('calGrid');
@@ -1294,19 +1356,27 @@
 
       for (let day = 1; day <= totalDays; day++) {
         const dateKey = `${year}-${String(month+1).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
-        const hasLogs = dayLogs[dateKey] && dayLogs[dateKey].length > 0;
-        const count = hasLogs ? dayLogs[dateKey].length : 0;
+        const entryData = dayLogs[dateKey];
+        const hasMain = entryData && entryData.main.length > 0;
+        const hasMedia = entryData && entryData.media.length > 0;
+
+        let classColor = '';
+        if (hasMain && hasMedia) classColor = 'has-both';
+        else if (hasMain) classColor = 'has-main';
+        else if (hasMedia) classColor = 'has-media';
+
+        const totalCount = (hasMain ? entryData.main.length : 0) + (hasMedia ? entryData.media.length : 0);
 
         const cell = document.createElement('div');
-        cell.className = `cal-cell ${hasLogs ? 'has-logs' : ''}`;
-        cell.innerHTML = `<span>${day}</span>${hasLogs ? `<span class="badge">${count} ●</span>` : ''}`;
-        cell.onclick = () => inspectCalDay(dateKey, dayLogs[dateKey] || []);
+        cell.className = `cal-cell ${classColor}`;
+        cell.innerHTML = `<span>${day}</span>${totalCount > 0 ? `<span class="badge">${totalCount} ●</span>` : ''}`;
+        cell.onclick = () => inspectCalDay(dateKey, entryData || { main: [], media: [] });
 
         grid.appendChild(cell);
       }
     }
 
-    function inspectCalDay(dateKey, logs) {
+    function inspectCalDay(dateKey, data) {
       const inspector = document.getElementById('calDayInspector');
       const title = document.getElementById('calInspectDateTitle');
       const container = document.getElementById('calInspectLogs');
@@ -1314,29 +1384,46 @@
       inspector.style.display = 'block';
       title.innerText = new Date(dateKey + 'T00:00:00').toLocaleDateString(currentLang, { weekday: 'long', month: 'short', day: 'numeric', year: 'numeric' });
 
-      if (logs.length === 0) {
+      if (data.main.length === 0 && data.media.length === 0) {
         container.innerHTML = `<p style="color:var(--subtext); font-size:13px; margin:8px 0;">No logs on this date.</p>`;
         return;
       }
 
-      container.innerHTML = logs.map(l => {
-        const timeStr = new Date(l.timestamp).toLocaleTimeString(currentLang, { hour: '2-digit', minute: '2-digit' });
-        const emoji = l.emoji ? `${l.emoji} ` : '';
-        const stars = l.rating ? ` <span style="color:#ffcc00">${'★'.repeat(l.rating)}</span>` : '';
-        return `
-          <div style="padding: 6px 0; border-bottom: 1px solid var(--border);">
-            <small style="color:var(--subtext);">${timeStr}${stars}</small><br>
-            <strong>${emoji}${l.note}</strong>
-            <div>${(l.tags || []).map(t => `<span class="tag">${t}</span>`).join('')}</div>
-          </div>
-        `;
-      }).join('');
+      let html = '';
+
+      if (data.main.length > 0) {
+        html += `<div style="font-size:11px; font-weight:bold; color:var(--header-accent); margin-top:4px;">MAIN LOGS</div>`;
+        data.main.forEach(l => {
+          const timeStr = new Date(l.timestamp).toLocaleTimeString(currentLang, { hour: '2-digit', minute: '2-digit' });
+          const emoji = l.emoji ? `${l.emoji} ` : '';
+          const stars = l.rating ? ` <span style="color:#ffcc00">${'★'.repeat(l.rating)}</span>` : '';
+          html += `
+            <div style="padding: 4px 0; border-bottom: 1px dashed var(--border);">
+              <small style="color:var(--subtext);">${timeStr}${stars}</small><br>
+              <strong>${emoji}${l.note}</strong>
+            </div>
+          `;
+        });
+      }
+
+      if (data.media.length > 0) {
+        html += `<div style="font-size:11px; font-weight:bold; color:var(--header-accent); margin-top:8px;">MEDIA LOGS</div>`;
+        data.media.forEach(m => {
+          const stars = m.rating ? ` <span style="color:#ffcc00">${'★'.repeat(m.rating)}</span>` : '';
+          html += `
+            <div style="padding: 4px 0; border-bottom: 1px dashed var(--border);">
+              <span class="media-type-badge">${m.type}</span> <strong>${m.title}</strong>${stars}
+            </div>
+          `;
+        });
+      }
+
+      container.innerHTML = html;
     }
 
 
-    // ================= STATS FUNCTIONS (MAIN + MEDIA INTEGRATED) =================
     function renderStats() {
-      // 1. MAIN LOG STATS
+      /* 1. MAIN LOG STATS */
       const logs = getLogs();
       if (logs.length === 0) {
         document.getElementById('st-streak').innerText = '0';
@@ -1399,7 +1486,7 @@
         renderChart();
       }
 
-      // 2. MEDIA TRACKER STATS
+      /* 2. MEDIA TRACKER STATS */
       const mediaItems = getMediaItems();
       document.getElementById('mst-total').innerText = mediaItems.length;
 
@@ -1415,7 +1502,18 @@
       const avgRating = ratings.length ? (ratings.reduce((a,b)=>a+b,0)/ratings.length).toFixed(1) + ' ★' : '-';
       document.getElementById('mst-avg-rating').innerText = avgRating;
 
-      // Top 3 Rated Lists
+      /* Populate Media Tag Chart Select */
+      const mediaTagCounts = {};
+      mediaItems.forEach(i => (i.tags || []).forEach(t => mediaTagCounts[t] = (mediaTagCounts[t] || 0) + 1));
+      const sortedMediaTags = Object.entries(mediaTagCounts).sort((a,b) => b[1] - a[1]);
+
+      const mediaChartSelect = document.getElementById('mediaChartTagSelect');
+      mediaChartSelect.innerHTML = sortedMediaTags.map(([tag]) => `<option value="${tag}">${tag}</option>`).join('');
+      if (sortedMediaTags.length === 0) mediaChartSelect.innerHTML = '<option value="">No tags</option>';
+
+      renderMediaChart();
+
+      /* Render Top 3 Rated Lists */
       renderTopMediaCategory(movies, 'topMoviesList');
       renderTopMediaCategory(books, 'topBooksList');
       renderTopMediaCategory(series, 'topSeriesList');
@@ -1432,7 +1530,7 @@
 
       container.innerHTML = sorted.map((i, idx) => `
         <div class="top-media-item">
-          <strong>${idx+1}. ${i.title}</strong>
+          <strong>${idx+1}. ${i.title}</strong> ${i.author ? `<span style="font-size:11px; color:var(--subtext);">(By ${i.author})</span>` : ''}
           <span style="color:#ffcc00; margin-left:4px;">${'★'.repeat(i.rating || 0)}</span>
         </div>
       `).join('');
@@ -1470,10 +1568,60 @@
       }
 
       const maxVal = Math.max(...values, 1);
-      const width = 280;
-      const height = 120;
-      const padding = 20;
+      const width = 280; const height = 120; const padding = 20;
+      const points = values.map((val, idx) => {
+        const x = padding + (idx / Math.max(1, keys.length - 1)) * (width - 2 * padding);
+        const y = height - padding - (val / maxVal) * (height - 2 * padding);
+        return { x, y, val, label: keys[idx] };
+      });
 
+      const polylineStr = points.map(p => `${p.x},${p.y}`).join(' ');
+
+      box.innerHTML = `
+        <svg viewBox="0 0 ${width} ${height}" style="width:100%; height:100%;">
+          <polyline points="${polylineStr}" />
+          ${points.map(p => `
+            <circle cx="${p.x}" cy="${p.y}" r="4" />
+            <text x="${p.x}" y="${height - 2}" font-size="8" fill="var(--subtext)" text-anchor="middle">${p.label}</text>
+            <text x="${p.x}" y="${p.y - 7}" font-size="9" font-weight="bold" fill="var(--text)" text-anchor="middle">${p.val}</text>
+          `).join('')}
+        </svg>
+      `;
+    }
+
+    function renderMediaChart() {
+      const selectedTag = document.getElementById('mediaChartTagSelect').value;
+      const grain = document.getElementById('mediaChartGrainSelect').value;
+      const box = document.getElementById('svgMediaChartBox');
+
+      if (!selectedTag) {
+        box.innerHTML = '<p style="color:var(--subtext); text-align:center; padding-top:40px;">No media tag selected.</p>';
+        return;
+      }
+
+      const items = getMediaItems().filter(i => (i.tags || []).includes(selectedTag));
+      const buckets = {};
+
+      items.forEach(i => {
+        const d = new Date((i.startDate || i.timestamp).slice(0, 10) + 'T00:00:00');
+        let key;
+        if (grain === 'daily') key = d.toISOString().slice(5, 10);
+        else if (grain === 'monthly') key = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;
+        else key = `W${Math.ceil(d.getDate()/7)} ${d.toLocaleString('default',{month:'short'})}`;
+
+        buckets[key] = (buckets[key] || 0) + 1;
+      });
+
+      const keys = Object.keys(buckets).slice(-7);
+      const values = keys.map(k => buckets[k]);
+
+      if (keys.length === 0) {
+        box.innerHTML = '<p style="color:var(--subtext); text-align:center; padding-top:40px;">No media history for this tag.</p>';
+        return;
+      }
+
+      const maxVal = Math.max(...values, 1);
+      const width = 280; const height = 120; const padding = 20;
       const points = values.map((val, idx) => {
         const x = padding + (idx / Math.max(1, keys.length - 1)) * (width - 2 * padding);
         const y = height - padding - (val / maxVal) * (height - 2 * padding);
@@ -1495,7 +1643,6 @@
     }
 
 
-    // ================= CSV EXPORT FUNCTIONS =================
     async function exportCSV(onlyFiltered = false) {
       const logsToExport = onlyFiltered ? getFilteredLogs() : getLogs();
       if (logsToExport.length === 0) return alert('No data to export.');
@@ -1518,11 +1665,13 @@
       const mediaItems = getMediaItems();
       if (mediaItems.length === 0) return alert('No media data to export.');
 
-      let csv = "MediaType,Title,StartDate,EndDate,Rating,Notes,Summary\n";
+      let csv = "MediaType,Title,Author,StartDate,EndDate,Rating,Tags,Notes,Summary\n";
       mediaItems.forEach(i => {
+        const author = (i.author || '').replace(/"/g, '""');
+        const tags = (i.tags || []).join(' ');
         const notes = (i.notes || '').replace(/"/g, '""');
         const summary = (i.summary || '').replace(/"/g, '""');
-        csv += `"${i.type}","${i.title.replace(/"/g, '""')}","${i.startDate || ''}","${i.endDate || ''}","${i.rating || ''}","${notes}","${summary}"\n`;
+        csv += `"${i.type}","${i.title.replace(/"/g, '""')}","${author}","${i.startDate || ''}","${i.endDate || ''}","${i.rating || ''}","${tags}","${notes}","${summary}"\n`;
       });
 
       const fileName = `media_tracker_export_${new Date().toISOString().slice(0,10)}.csv`;
@@ -1551,7 +1700,7 @@
       a.click();
     }
 
-    // App Startup
+    /* App Startup Initialization */
     currentLang = detectUserLanguage();
     applyLanguage();
     loadSavedTheme();
