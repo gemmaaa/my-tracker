@@ -81,27 +81,45 @@
       -webkit-tap-highlight-color: transparent;
     }
 
-    .top-bar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 12px;
+    /* Two-line header layout */
+    .app-header {
+      margin-bottom: 16px;
     }
 
-    .top-bar h2 { margin: 0; font-size: 20px; }
+    .app-title-row {
+      text-align: center;
+      margin-bottom: 8px;
+    }
 
-    .nav-actions { display: flex; gap: 4px; }
+    .app-title-row h2 {
+      margin: 0;
+      font-size: 22px;
+      font-weight: 800;
+      color: var(--header-accent);
+      letter-spacing: 0.5px;
+    }
+
+    .nav-actions {
+      display: flex;
+      justify-content: center;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
 
     .btn-icon-head {
       background: var(--btn-secondary);
       border: 1px solid var(--border);
       color: var(--text);
-      font-size: 15px;
+      font-size: 14px;
+      font-weight: 600;
       cursor: pointer;
-      padding: 6px 8px;
-      border-radius: 10px;
+      padding: 6px 12px;
+      border-radius: 12px;
       margin: 0;
       width: auto;
+      display: flex;
+      align-items: center;
+      gap: 4px;
     }
 
     .card {
@@ -125,15 +143,44 @@
       box-sizing: border-box;
     }
 
+    .overlay-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+
+    .overlay-header h2 {
+      margin: 0;
+      font-size: 20px;
+      color: var(--header-accent);
+    }
+
     .btn-close-view {
       background: var(--btn-secondary);
       color: var(--text);
       border: 1px solid var(--border);
       border-radius: 50%;
-      width: 32px; height: 32px;
+      width: 34px; height: 34px;
       font-size: 16px; font-weight: bold;
       display: flex; align-items: center; justify-content: center;
       cursor: pointer;
+    }
+
+    .btn-back-top {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: var(--accent);
+      color: var(--accent-text);
+      border: 1px solid var(--border);
+      padding: 8px 14px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: bold;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+      cursor: pointer;
+      z-index: 1000;
     }
 
     label {
@@ -237,24 +284,36 @@
     .vocab-phonetic { font-size: 13px; color: var(--subtext); margin-bottom: 6px; }
     .vocab-sentence { font-style: italic; margin-top: 6px; font-size: 13px; padding-left: 8px; border-left: 2px solid var(--header-accent); }
 
-    /* Media List Grid */
+    /* Media Expandable Cards */
     .media-type-badge { font-size: 10px; font-weight: bold; text-transform: uppercase; background: var(--tag-bg); color: var(--tag-text); padding: 2px 6px; border-radius: 4px; }
+    .media-cover-img { width: 100%; max-height: 180px; object-fit: contain; border-radius: 8px; margin-top: 8px; background: rgba(0,0,0,0.05); }
+
+    .top-media-list {
+      font-size: 13px;
+      line-height: 1.5;
+    }
+    .top-media-item {
+      padding: 4px 0;
+      border-bottom: 1px dashed var(--border);
+    }
   </style>
 </head>
 <body>
 
-  <!-- Top Navigation Header -->
-  <div class="top-bar">
-    <h2>Quick Tracker ✨</h2>
-    <div class="nav-actions">
-      <button class="btn-icon-head" onclick="toggleEntryForm()" title="New Log">📓</button>
-      <button class="btn-icon-head" onclick="openView('mediaView')" title="Media">🎬</button>
-      <button class="btn-icon-head" onclick="openView('vocabView')" title="Vocab">🗣️</button>
-      <button class="btn-icon-head" onclick="openView('calendarView')" title="Calendar">📅</button>
-      <button class="btn-icon-head" onclick="openView('statsView')" title="Stats">📊</button>
-      <button class="btn-icon-head" onclick="openView('settingsView')" title="Settings">⚙️</button>
+  <!-- App Header - Line 1: Title, Line 2: Navigation Buttons -->
+  <header class="app-header">
+    <div class="app-title-row">
+      <h2>Quick Tracker ✨</h2>
     </div>
-  </div>
+    <nav class="nav-actions">
+      <button class="btn-icon-head" onclick="toggleEntryForm()" title="New Log">📓 <span>Log</span></button>
+      <button class="btn-icon-head" onclick="openView('mediaView')" title="Media">🎬 <span>Media</span></button>
+      <button class="btn-icon-head" onclick="openView('vocabView')" title="Vocab">🗣️ <span>Vocab</span></button>
+      <button class="btn-icon-head" onclick="openView('calendarView')" title="Calendar">📅 <span>Cal</span></button>
+      <button class="btn-icon-head" onclick="openView('statsView')" title="Stats">📊 <span>Stats</span></button>
+      <button class="btn-icon-head" onclick="openView('settingsView')" title="Settings">⚙️ <span>Opts</span></button>
+    </nav>
+  </header>
 
   <!-- Collapsible Logger Card (Hidden by default) -->
   <div id="entryCard" class="card" style="display: none;">
@@ -308,13 +367,19 @@
 
   <!-- ==================== MEDIA TRACKER OVERLAY ==================== -->
   <div id="mediaView" class="overlay-view">
-    <div class="top-bar">
+    <div class="overlay-header">
       <h2>Media Tracker 🎬</h2>
       <button class="btn-close-view" onclick="closeView('mediaView')">✕</button>
     </div>
 
-    <div class="card">
-      <label>Add New Media Entry</label>
+    <!-- Toggle Action to Add Media -->
+    <div style="display: flex; gap: 8px; margin-bottom: 12px;">
+      <button onclick="toggleMediaForm()" style="margin-bottom: 0;">＋ Add Media Entry</button>
+    </div>
+
+    <!-- Collapsible Media Entry Form Card (Hidden by default) -->
+    <div id="mediaFormCard" class="card" style="display: none;">
+      <label>Add / Edit Media Entry</label>
       <select id="mediaType" class="input-compact">
         <option value="Movie">🎬 Movie</option>
         <option value="Book">📚 Book</option>
@@ -322,8 +387,19 @@
       </select>
 
       <input type="text" id="mediaTitle" placeholder="Title (e.g. Inception / Dune)" class="input-compact">
-      
-      <label>Rating</label>
+
+      <div style="display: flex; gap: 8px;">
+        <div style="flex:1;">
+          <label style="font-size:10px;">Start Date</label>
+          <input type="datetime-local" id="mediaStartDate" class="input-compact">
+        </div>
+        <div style="flex:1;">
+          <label style="font-size:10px;">End Date (Optional)</label>
+          <input type="datetime-local" id="mediaEndDate" class="input-compact">
+        </div>
+      </div>
+
+      <label style="margin-top: 4px;">Rating</label>
       <div class="star-rating" id="mediaStarRating">
         <span class="star" onclick="setMediaRating(1)">★</span>
         <span class="star" onclick="setMediaRating(2)">★</span>
@@ -334,16 +410,25 @@
       <input type="hidden" id="selectedMediaRating" value="0">
 
       <textarea id="mediaNotes" placeholder="Review, favorite quotes, or thoughts..."></textarea>
-      <button onclick="saveMediaItem()">Add Media Log</button>
+
+      <input type="hidden" id="editingMediaId" value="">
+      <button id="saveMediaBtn" onclick="saveMediaItem()">Add Media Log</button>
+      <button id="cancelMediaEditBtn" onclick="cancelMediaEdit()" style="display:none; background:var(--border); color:var(--text); margin-top:-4px;">Cancel Edit</button>
     </div>
 
+    <!-- Search Input directly above Media Logs -->
+    <input type="text" id="mediaSearchFilter" placeholder="🔍 Search media by title, note, or type..." oninput="renderMediaList()" class="input-compact" style="margin-bottom: 12px;">
+
+    <!-- Media Logs List -->
     <div id="mediaContainer"></div>
+
+    <button class="btn-back-top" onclick="scrollToTop('mediaView')">↑ Top</button>
   </div>
 
 
-  <!-- ==================== VOCABULARY / LANGUAGE OVERLAY ==================== -->
+  <!-- ==================== VOCABULARY OVERLAY ==================== -->
   <div id="vocabView" class="overlay-view">
-    <div class="top-bar">
+    <div class="overlay-header">
       <h2>Daily Vocabulary 🗣️</h2>
       <button class="btn-close-view" onclick="closeView('vocabView')">✕</button>
     </div>
@@ -353,12 +438,14 @@
     </p>
 
     <div id="vocabListContainer"></div>
+
+    <button class="btn-back-top" onclick="scrollToTop('vocabView')">↑ Top</button>
   </div>
 
 
   <!-- ==================== CALENDAR OVERLAY ==================== -->
   <div id="calendarView" class="overlay-view">
-    <div class="top-bar">
+    <div class="overlay-header">
       <h2 id="lbl-cal-title">Calendar 📅</h2>
       <button class="btn-close-view" onclick="closeView('calendarView')">✕</button>
     </div>
@@ -381,16 +468,19 @@
       <h3 id="calInspectDateTitle" style="margin-top: 0; font-size: 16px; border-bottom: 1px solid var(--border); padding-bottom: 6px;"></h3>
       <div id="calInspectLogs"></div>
     </div>
+
+    <button class="btn-back-top" onclick="scrollToTop('calendarView')">↑ Top</button>
   </div>
 
 
   <!-- ==================== STATS OVERLAY ==================== -->
   <div id="statsView" class="overlay-view">
-    <div class="top-bar">
+    <div class="overlay-header">
       <h2 id="lbl-stats-title">Analytics & Stats 📊</h2>
       <button class="btn-close-view" onclick="closeView('statsView')">✕</button>
     </div>
 
+    <!-- MAIN LOG STATS SECTION -->
     <div class="stat-grid">
       <div class="stat-card">
         <div class="stat-val" id="st-streak">0</div>
@@ -427,12 +517,48 @@
       </div>
       <div class="chart-container" id="svgChartBox"></div>
     </div>
+
+    <!-- MEDIA TRACKER STATS SECTION (INTEGRATED BELOW MAIN STATS) -->
+    <h3 style="margin-top: 24px; margin-bottom: 12px; font-size: 18px; color: var(--header-accent);">Media Tracker Analytics 🎬</h3>
+
+    <div class="stat-grid">
+      <div class="stat-card">
+        <div class="stat-val" id="mst-total">0</div>
+        <div class="stat-lbl">Total Media Logged</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-val" id="mst-finished">0</div>
+        <div class="stat-lbl">Completed (End Date)</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-val" id="mst-avg-rating">-</div>
+        <div class="stat-lbl">Average Rating</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-val" id="mst-breakdown">0/0/0</div>
+        <div class="stat-lbl">Movies / Books / Series</div>
+      </div>
+    </div>
+
+    <!-- Top Rated Lists (Up to 3 each) -->
+    <div class="card">
+      <label>Top Rated Movies (Top 3)</label>
+      <div id="topMoviesList" class="top-media-list"></div>
+
+      <label style="margin-top: 12px;">Top Rated Books (Top 3)</label>
+      <div id="topBooksList" class="top-media-list"></div>
+
+      <label style="margin-top: 12px;">Top Rated TV Series (Top 3)</label>
+      <div id="topSeriesList" class="top-media-list"></div>
+    </div>
+
+    <button class="btn-back-top" onclick="scrollToTop('statsView')">↑ Top</button>
   </div>
 
 
   <!-- ==================== SETTINGS OVERLAY ==================== -->
   <div id="settingsView" class="overlay-view">
-    <div class="top-bar">
+    <div class="overlay-header">
       <h2 id="lbl-settings-title">Settings ⚙️</h2>
       <button class="btn-close-view" onclick="closeView('settingsView')">✕</button>
     </div>
@@ -461,16 +587,21 @@
       </select>
     </div>
 
+    <!-- Main Log Management -->
     <div class="card">
-      <label id="lbl-exportmgmt">Data Export</label>
-      <button id="btn-export-all" class="btn-themed" onclick="exportCSV(false)">Export All Data (CSV)</button>
+      <label>Main Log Management</label>
+      <button class="btn-themed" onclick="exportCSV(false)">Export Main Log (CSV)</button>
+      <button class="btn-danger" onclick="deleteAllLogs()">Clear Main Log Data (Reset)</button>
     </div>
 
-    <div class="card" style="border: 1px solid var(--danger);">
-      <label id="lbl-datamgmt" style="color: var(--danger);">Danger Zone</label>
-      <button id="btn-delete-all" class="btn-danger" onclick="deleteAllLogs()">Clear Main Log (Reset)</button>
-      <button id="btn-delete-media" class="btn-danger" onclick="deleteMediaData()" style="margin-top: 8px;">Clear Media Tracker Data</button>
+    <!-- Media Log Management -->
+    <div class="card">
+      <label>Media Log Management</label>
+      <button class="btn-themed" onclick="exportMediaCSV()">Export Media Log (CSV)</button>
+      <button class="btn-danger" onclick="deleteMediaData()">Clear Media Log Data (Reset)</button>
     </div>
+
+    <button class="btn-back-top" onclick="scrollToTop('settingsView')">↑ Top</button>
   </div>
 
 
@@ -495,10 +626,6 @@
         stats_title: "Analytics & Stats 📊",
         language: "Language",
         theme: "Color Palette Theme",
-        exportmgmt: "Data Export",
-        datamgmt: "Danger Zone",
-        delete_all: "Clear Main Log (Reset)",
-        delete_media: "Clear Media Tracker Data",
         no_logs: "No logs recorded yet.",
         no_matches: "No matching logs found.",
         streak: "Day Streak 🔥",
@@ -526,10 +653,6 @@
         stats_title: "Estadísticas y Análisis 📊",
         language: "Idioma",
         theme: "Paleta de Colores",
-        exportmgmt: "Exportar Datos",
-        datamgmt: "Zona de Peligro",
-        delete_all: "Borrar Registro Principal (Reiniciar)",
-        delete_media: "Borrar Datos del Gestor de Medios",
         no_logs: "Aún no hay registros guardados.",
         no_matches: "No se encontraron registros coincidentes.",
         streak: "Racha de Días 🔥",
@@ -557,10 +680,6 @@
         stats_title: "Estadístiques i Anàlisi 📊",
         language: "Idioma",
         theme: "Paleta de Colors",
-        exportmgmt: "Exportació de Dades",
-        datamgmt: "Zona de Perill",
-        delete_all: "Esborrar Registre Principal (Reiniciar)",
-        delete_media: "Esborrar Dades del Gestor de Mitjans",
         no_logs: "Encara no hi ha registres desats.",
         no_matches: "No s'han trobat registres coincidents.",
         streak: "Ratxa de Dies 🔥",
@@ -572,13 +691,7 @@
       }
     };
 
-    // Dictionary for Daily Vocabulary Pools
     const vocabPools = {
-      en: [
-        { word: "Sycophant", phonetic: "/ˈsɪk.ə.fænt/", type: "Noun (Advanced C2)", meaning: "A person who acts obsequiously toward someone important to gain advantage.", sentence: "He was surrounded by sycophants who applauded every idea he uttered.", source: "C2 Literary Corpus" },
-        { word: "Perspicacious", phonetic: "/ˌpɜː.spɪˈkeɪ.ʃəs/", type: "Adjective (Advanced C2)", meaning: "Having a ready insight into and understanding of things; mentally perceptive.", sentence: "Her perspicacious analysis revealed flaws that everyone else had missed.", source: "C2 Academic Corpus" },
-        { word: "Quixotic", phonetic: "/kwɪkˈsɒt.ɪk/", type: "Adjective (Advanced C2)", meaning: "Exceedingly idealistic; unrealistic and impractical.", sentence: "It was a quixotic quest to overhaul the entire bureau in one week.", source: "C2 Academic Corpus" }
-      ],
       es: [
         { word: "Pusilánime", phonetic: "[pu-si-lá-ni-me]", type: "Adjetivo (Avanzado C2)", meaning: "Falto de ánimo y valor para tolerar las desgracias o hacer frente a grandes empresas.", sentence: "Su actitud pusilánime le impidió defender sus convicciones ante el comité.", source: "RAE / Español C2" },
         { word: "Inmarcesible", phonetic: "[in-mar-ce-si-ble]", type: "Adjetivo (Avanzado C2)", meaning: "Que no se puede marchitar o perder la frescura y la belleza.", sentence: "Dejó un legado inmarcesible en la historia de la literatura hispánica.", source: "RAE / Español C2" },
@@ -600,7 +713,11 @@
 
     let currentLang = 'en';
     let calCurrentDate = new Date();
-    let vocabIndices = { en: 0, es: 0, ca: 0, zh: 0, th: 0 };
+    let vocabIndices = { es: 0, ca: 0, zh: 0, th: 0 };
+
+    function scrollToTop(viewId) {
+      document.getElementById(viewId).scrollTo({ top: 0, behavior: 'smooth' });
+    }
 
     function changeLanguage(lang) {
       currentLang = lang || 'en';
@@ -630,11 +747,6 @@
       document.getElementById('lbl-stats-title').innerText = t.stats_title;
       document.getElementById('lbl-language').innerText = t.language;
       document.getElementById('lbl-theme').innerText = t.theme;
-      document.getElementById('lbl-exportmgmt').innerText = t.exportmgmt;
-      document.getElementById('btn-export-all').innerText = t.export_all;
-      document.getElementById('lbl-datamgmt').innerText = t.datamgmt;
-      document.getElementById('btn-delete-all').innerText = t.delete_all;
-      document.getElementById('btn-delete-media').innerText = t.delete_media;
 
       document.getElementById('lbl-st-streak').innerText = t.streak;
       document.getElementById('lbl-st-total').innerText = t.totallogs;
@@ -651,19 +763,13 @@
       return translations[sysLang] ? sysLang : 'en';
     }
 
-    function changeDefaultView(val) {
-      localStorage.setItem('default_view', val);
-    }
+    function changeDefaultView(val) { localStorage.setItem('default_view', val); }
 
     function loadDefaultViewSetting() {
       const saved = localStorage.getItem('default_view') || 'main';
       document.getElementById('defaultViewSelect').value = saved;
-
-      if (saved === 'main_form') {
-        toggleEntryForm();
-      } else if (saved === 'media') {
-        openView('mediaView');
-      }
+      if (saved === 'main_form') toggleEntryForm();
+      else if (saved === 'media') openView('mediaView');
     }
 
     function getNowForInput() {
@@ -674,10 +780,16 @@
 
     function setCurrentDatetime() {
       document.getElementById('customDatetime').value = getNowForInput();
+      document.getElementById('mediaStartDate').value = getNowForInput();
     }
 
     function toggleEntryForm() {
       const card = document.getElementById('entryCard');
+      card.style.display = (card.style.display === 'none') ? 'block' : 'none';
+    }
+
+    function toggleMediaForm() {
+      const card = document.getElementById('mediaFormCard');
       card.style.display = (card.style.display === 'none') ? 'block' : 'none';
     }
 
@@ -689,9 +801,7 @@
       if (viewId === 'mediaView') renderMediaList();
     }
 
-    function closeView(viewId) {
-      document.getElementById(viewId).style.display = 'none';
-    }
+    function closeView(viewId) { document.getElementById(viewId).style.display = 'none'; }
 
     function changeTheme(themeName) {
       document.documentElement.setAttribute('data-theme', themeName);
@@ -725,24 +835,15 @@
     function selectEmoji(el, emojiChar) {
       document.querySelectorAll('.emoji-opt').forEach(e => e.classList.remove('selected'));
       const hiddenInput = document.getElementById('selectedEmoji');
-
-      if (hiddenInput.value === emojiChar) {
-        hiddenInput.value = '';
-      } else {
-        el.classList.add('selected');
-        hiddenInput.value = emojiChar;
-      }
+      if (hiddenInput.value === emojiChar) hiddenInput.value = '';
+      else { el.classList.add('selected'); hiddenInput.value = emojiChar; }
     }
 
     function handleTagTyping(e) {
       const input = document.getElementById('tags');
       let val = input.value;
-
       if (e.key === ' ' || e.code === 'Space') {
-        const words = val.split(' ').map(w => {
-          if (!w) return '';
-          return w.startsWith('#') ? w : '#' + w;
-        });
+        const words = val.split(' ').map(w => w ? (w.startsWith('#') ? w : '#' + w) : '');
         input.value = words.join(' ');
       }
     }
@@ -750,43 +851,29 @@
     function appendQuickTag(tagStr) {
       const input = document.getElementById('tags');
       const current = input.value.trim();
-      if (!current.includes(tagStr)) {
-        input.value = current ? `${current} ${tagStr}` : tagStr;
-      }
+      if (!current.includes(tagStr)) input.value = current ? `${current} ${tagStr}` : tagStr;
     }
 
     function renderQuickTags() {
       const logs = getLogs();
       const tagCounts = {};
-      logs.forEach(l => {
-        (l.tags || []).forEach(t => {
-          tagCounts[t] = (tagCounts[t] || 0) + 1;
-        });
-      });
+      logs.forEach(l => (l.tags || []).forEach(t => tagCounts[t] = (tagCounts[t] || 0) + 1));
 
       const defaults = ['#food', '#symptom', '#exercise', '#mood', '#meds', '#water'];
       const combined = Array.from(new Set([...defaults, ...Object.keys(tagCounts)]));
 
-      const container = document.getElementById('quickTagBar');
-      container.innerHTML = combined.map(t => `
+      document.getElementById('quickTagBar').innerHTML = combined.map(t => `
         <span class="tag-chip" onclick="appendQuickTag('${t}')">${t}</span>
       `).join('');
     }
 
-    function getLogs() {
-      return JSON.parse(localStorage.getItem('my_pwa_logs') || '[]');
-    }
+    function getLogs() { return JSON.parse(localStorage.getItem('my_pwa_logs') || '[]'); }
 
     function getFilteredLogs() {
       const logs = getLogs();
       const searchQuery = (document.getElementById('searchFilter').value || '').toLowerCase().trim();
       if (!searchQuery) return logs;
-
-      return logs.filter(l => {
-        const textMatch = l.note.toLowerCase().includes(searchQuery);
-        const tagMatch = (l.tags || []).some(t => t.toLowerCase().includes(searchQuery));
-        return textMatch || tagMatch;
-      });
+      return logs.filter(l => l.note.toLowerCase().includes(searchQuery) || (l.tags || []).some(t => t.toLowerCase().includes(searchQuery)));
     }
 
     function saveLog() {
@@ -804,30 +891,9 @@
       let logs = getLogs();
 
       if (editingId) {
-        logs = logs.map(log => {
-          if (log.id == editingId) {
-            return {
-              ...log,
-              timestamp: finalTimestamp,
-              emoji: emojiInput,
-              rating: ratingInput,
-              tags: formattedTags,
-              note: noteInput
-            };
-          }
-          return log;
-        });
+        logs = logs.map(log => log.id == editingId ? { ...log, timestamp: finalTimestamp, emoji: emojiInput, rating: ratingInput, tags: formattedTags, note: noteInput } : log);
       } else {
-        const newEntry = {
-          id: Date.now(),
-          created_at: new Date().toISOString(),
-          timestamp: finalTimestamp,
-          emoji: emojiInput,
-          rating: ratingInput,
-          tags: formattedTags,
-          note: noteInput
-        };
-        logs.push(newEntry);
+        logs.push({ id: Date.now(), created_at: new Date().toISOString(), timestamp: finalTimestamp, emoji: emojiInput, rating: ratingInput, tags: formattedTags, note: noteInput });
       }
 
       logs.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
@@ -838,8 +904,7 @@
     }
 
     function editLog(id) {
-      const logs = getLogs();
-      const log = logs.find(l => l.id == id);
+      const log = getLogs().find(l => l.id == id);
       if (!log) return;
 
       const t = translations[currentLang] || translations.en;
@@ -849,10 +914,7 @@
       document.getElementById('selectedEmoji').value = log.emoji || '';
       setLogRating(log.rating || 0);
 
-      document.querySelectorAll('.emoji-opt').forEach(e => {
-        if (e.innerText === log.emoji) e.classList.add('selected');
-        else e.classList.remove('selected');
-      });
+      document.querySelectorAll('.emoji-opt').forEach(e => e.innerText === log.emoji ? e.classList.add('selected') : e.classList.remove('selected'));
 
       const localDate = new Date(log.timestamp);
       localDate.setMinutes(localDate.getMinutes() - localDate.getTimezoneOffset());
@@ -862,31 +924,21 @@
       document.getElementById('cancelEditBtn').style.display = 'block';
       document.getElementById('entryCard').style.display = 'block';
 
-      closeView('calendarView');
-      closeView('statsView');
-      closeView('settingsView');
-      closeView('vocabView');
-      closeView('mediaView');
-
+      closeView('calendarView'); closeView('statsView'); closeView('settingsView'); closeView('vocabView'); closeView('mediaView');
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
     function deleteLog(id) {
       if (!confirm('Are you sure you want to delete this entry?')) return;
-      let logs = getLogs();
-      logs = logs.filter(l => l.id != id);
-      localStorage.setItem('my_pwa_logs', JSON.stringify(logs));
-      render();
-      renderQuickTags();
+      localStorage.setItem('my_pwa_logs', JSON.stringify(getLogs().filter(l => l.id != id)));
+      render(); renderQuickTags();
     }
 
     function deleteAllLogs() {
       if (confirm('FIRST WARNING: Are you sure you want to delete ALL main log entries? This cannot be undone.')) {
         if (confirm('FINAL CONFIRMATION: Tap OK to permanently wipe your main log timeline.')) {
           localStorage.removeItem('my_pwa_logs');
-          render();
-          renderQuickTags();
-          closeView('settingsView');
+          render(); renderQuickTags(); closeView('settingsView');
           alert('Main log timeline has been erased.');
         }
       }
@@ -927,9 +979,7 @@
       if (searchQuery) {
         filterBtn.innerText = `${t.export_filtered} (${filteredLogs.length})`;
         filterBtn.style.display = 'block';
-      } else {
-        filterBtn.style.display = 'none';
-      }
+      } else filterBtn.style.display = 'none';
 
       if (filteredLogs.length === 0) {
         container.innerHTML = `<p style="color:var(--subtext); margin-top:12px;">${searchQuery ? t.no_matches : t.no_logs}</p>`;
@@ -937,31 +987,24 @@
       }
 
       const grouped = {};
-
       filteredLogs.forEach(log => {
         const d = new Date(log.timestamp);
         const year = d.getFullYear();
         const month = d.toLocaleString(currentLang, { month: 'long' });
         const dateStr = d.toLocaleDateString(currentLang, { weekday: 'short', month: 'short', day: 'numeric' });
-
         if (!grouped[year]) grouped[year] = {};
         if (!grouped[year][month]) grouped[year][month] = {};
         if (!grouped[year][month][dateStr]) grouped[year][month][dateStr] = [];
-
         grouped[year][month][dateStr].push(log);
       });
 
       let html = '';
-
       for (const year in grouped) {
         html += `<div class="year-header">${year}</div>`;
         for (const month in grouped[year]) {
           html += `<div class="month-header">${month}</div>`;
           for (const dateStr in grouped[year][month]) {
-            html += `
-              <div class="date-card">
-                <div class="date-title">${dateStr}</div>
-            `;
+            html += `<div class="date-card"><div class="date-title">${dateStr}</div>`;
             grouped[year][month][dateStr].forEach(l => {
               const timeStr = new Date(l.timestamp).toLocaleTimeString(currentLang, { hour: '2-digit', minute: '2-digit' });
               const emojiDisplay = l.emoji ? `<span style="margin-right:6px; font-size:16px;">${l.emoji}</span>` : '';
@@ -984,7 +1027,6 @@
           }
         }
       }
-
       container.innerHTML = html;
     }
 
@@ -1009,7 +1051,7 @@
       const item = vocabPools[langKey][vocabIndices[langKey]];
       if (!item) return;
 
-      const tagMap = { en: '#vocab #english', es: '#vocab #spanish', ca: '#vocab #catalan', zh: '#vocab #chinese', th: '#vocab #thai' };
+      const tagMap = { es: '#vocab #spanish', ca: '#vocab #catalan', zh: '#vocab #chinese', th: '#vocab #thai' };
       const noteText = `Learned word: ${item.word} (${item.phonetic}) - ${item.meaning}. Sentence: "${item.sentence}"`;
 
       document.getElementById('note').value = noteText;
@@ -1023,8 +1065,8 @@
 
     function renderVocabView() {
       const container = document.getElementById('vocabListContainer');
-      const langNames = { en: "English (C2 Advanced)", es: "Español (Avanzado C2)", ca: "Català", zh: "Chinese (Mandarin)", th: "Thai (ไทย)" };
-      const speechCodes = { en: "en-US", es: "es-ES", ca: "ca-ES", zh: "zh-CN", th: "th-TH" };
+      const langNames = { es: "Español (Avanzado C2)", ca: "Català", zh: "Chinese (Mandarin)", th: "Thai (ไทย)" };
+      const speechCodes = { es: "es-ES", ca: "ca-ES", zh: "zh-CN", th: "th-TH" };
 
       let html = '';
 
@@ -1065,63 +1107,156 @@
 
 
     // ================= MEDIA TRACKER FUNCTIONS =================
-    function getMediaItems() {
-      return JSON.parse(localStorage.getItem('my_pwa_media') || '[]');
+    function getMediaItems() { return JSON.parse(localStorage.getItem('my_pwa_media') || '[]'); }
+
+    async function fetchMediaInfo(title, type) {
+      try {
+        if (type === 'Book') {
+          const res = await fetch(`https://openlibrary.org/search.json?title=${encodeURIComponent(title)}&limit=1`);
+          const data = await res.json();
+          if (data.docs && data.docs.length > 0) {
+            const doc = data.docs[0];
+            const coverId = doc.cover_i;
+            const coverUrl = coverId ? `https://covers.openlibrary.org/b/id/${coverId}-M.jpg` : null;
+            const summary = doc.first_sentence ? doc.first_sentence.join(' ') : (doc.author_name ? `By ${doc.author_name.join(', ')}` : 'No summary available.');
+            return { coverUrl, summary };
+          }
+        }
+      } catch (err) { console.log('API Fetch Error:', err); }
+      return null;
     }
 
-    function saveMediaItem() {
+    async function saveMediaItem() {
       const type = document.getElementById('mediaType').value;
       const title = document.getElementById('mediaTitle').value.trim();
+      const startDate = document.getElementById('mediaStartDate').value;
+      const endDate = document.getElementById('mediaEndDate').value || null;
       const rating = parseInt(document.getElementById('selectedMediaRating').value || '0');
       const notes = document.getElementById('mediaNotes').value.trim();
+      const editingId = document.getElementById('editingMediaId').value;
 
       if (!title) return alert('Please enter a title.');
 
-      const newItem = {
-        id: Date.now(),
-        timestamp: new Date().toISOString(),
-        type, title, rating, notes
-      };
+      let apiData = null;
+      if (!editingId) apiData = await fetchMediaInfo(title, type);
 
       const items = getMediaItems();
-      items.unshift(newItem);
-      localStorage.setItem('my_pwa_media', JSON.stringify(items));
 
+      if (editingId) {
+        const idx = items.findIndex(i => i.id == editingId);
+        if (idx !== -1) {
+          items[idx] = { ...items[idx], type, title, startDate, endDate, rating, notes };
+        }
+      } else {
+        items.unshift({
+          id: Date.now(),
+          type, title, startDate, endDate, rating, notes,
+          coverUrl: apiData ? apiData.coverUrl : null,
+          summary: apiData ? apiData.summary : null
+        });
+      }
+
+      localStorage.setItem('my_pwa_media', JSON.stringify(items));
+      cancelMediaEdit();
+      toggleMediaForm(); // Auto-collapse form after saving
+      renderMediaList();
+    }
+
+    function editMediaItem(id) {
+      const item = getMediaItems().find(i => i.id == id);
+      if (!item) return;
+
+      document.getElementById('editingMediaId').value = item.id;
+      document.getElementById('mediaType').value = item.type;
+      document.getElementById('mediaTitle').value = item.title;
+      document.getElementById('mediaNotes').value = item.notes || '';
+      setMediaRating(item.rating || 0);
+
+      if (item.startDate) {
+        const d = new Date(item.startDate);
+        d.setMinutes(d.getMinutes() - d.getTimezoneOffset());
+        document.getElementById('mediaStartDate').value = d.toISOString().slice(0, 16);
+      }
+      if (item.endDate) {
+        const d = new Date(item.endDate);
+        d.setMinutes(d.getMinutes() - d.getTimezoneOffset());
+        document.getElementById('mediaEndDate').value = d.toISOString().slice(0, 16);
+      } else {
+        document.getElementById('mediaEndDate').value = '';
+      }
+
+      document.getElementById('saveMediaBtn').innerText = 'Update Media Entry';
+      document.getElementById('cancelMediaEditBtn').style.display = 'block';
+      document.getElementById('mediaFormCard').style.display = 'block';
+    }
+
+    function cancelMediaEdit() {
+      document.getElementById('editingMediaId').value = '';
       document.getElementById('mediaTitle').value = '';
       document.getElementById('mediaNotes').value = '';
+      document.getElementById('mediaEndDate').value = '';
       setMediaRating(0);
-
-      renderMediaList();
+      document.getElementById('saveMediaBtn').innerText = 'Add Media Log';
+      document.getElementById('cancelMediaEditBtn').style.display = 'none';
+      setCurrentDatetime();
     }
 
     function deleteMediaItem(id) {
       if (!confirm('Delete this media entry?')) return;
-      let items = getMediaItems();
-      items = items.filter(i => i.id != id);
-      localStorage.setItem('my_pwa_media', JSON.stringify(items));
+      localStorage.setItem('my_pwa_media', JSON.stringify(getMediaItems().filter(i => i.id != id)));
       renderMediaList();
+    }
+
+    function toggleMediaCardExpand(cardId) {
+      const details = document.getElementById(`media-details-${cardId}`);
+      if (details) details.style.display = (details.style.display === 'none') ? 'block' : 'none';
     }
 
     function renderMediaList() {
       const items = getMediaItems();
+      const searchQuery = (document.getElementById('mediaSearchFilter').value || '').toLowerCase().trim();
       const container = document.getElementById('mediaContainer');
 
-      if (items.length === 0) {
-        container.innerHTML = '<p style="color:var(--subtext); margin-top:12px;">No books, movies, or series logged yet.</p>';
+      const filtered = items.filter(i => {
+        if (!searchQuery) return true;
+        return i.title.toLowerCase().includes(searchQuery) ||
+               (i.notes || '').toLowerCase().includes(searchQuery) ||
+               i.type.toLowerCase().includes(searchQuery);
+      });
+
+      if (filtered.length === 0) {
+        container.innerHTML = '<p style="color:var(--subtext); margin-top:12px;">No matching media entries found.</p>';
         return;
       }
 
-      container.innerHTML = items.map(i => {
+      container.innerHTML = filtered.map(i => {
         const stars = i.rating ? `<span style="color:#ffcc00; margin-left:6px;">${'★'.repeat(i.rating)}</span>` : '';
+        const startStr = i.startDate ? new Date(i.startDate).toLocaleDateString(currentLang, { month:'short', day:'numeric', year:'numeric' }) : '';
+        const endStr = i.endDate ? new Date(i.endDate).toLocaleDateString(currentLang, { month:'short', day:'numeric', year:'numeric' }) : 'Ongoing';
+        const dateRange = startStr ? `${startStr} → ${endStr}` : '';
+
         return `
           <div class="card" style="margin-bottom:10px;">
-            <div style="display:flex; justify-content:space-between; align-items:center;">
+            <div style="display:flex; justify-content:space-between; align-items:center; cursor:pointer;" onclick="toggleMediaCardExpand(${i.id})">
               <span class="media-type-badge">${i.type}</span>
-              <button class="btn-icon" onclick="deleteMediaItem(${i.id})">🗑️</button>
+              <span style="font-size:11px; color:var(--subtext);">${dateRange}</span>
             </div>
-            <div style="font-size:16px; font-weight:bold; margin-top:6px;">${i.title} ${stars}</div>
+
+            <div style="font-size:16px; font-weight:bold; margin-top:6px; cursor:pointer;" onclick="toggleMediaCardExpand(${i.id})">
+              ${i.title} ${stars}
+            </div>
+
             <div style="font-size:13px; margin-top:4px; color:var(--text);">${i.notes || ''}</div>
-            <div style="font-size:11px; color:var(--subtext); margin-top:6px;">${new Date(i.timestamp).toLocaleDateString(currentLang, { month:'short', day:'numeric', year:'numeric' })}</div>
+
+            <div id="media-details-${i.id}" style="display:none; margin-top:10px; border-top:1px dashed var(--border); padding-top:8px;">
+              ${i.coverUrl ? `<img src="${i.coverUrl}" class="media-cover-img" alt="Cover">` : ''}
+              ${i.summary ? `<div style="font-size:12px; font-style:italic; margin-top:6px; color:var(--subtext);">${i.summary}</div>` : ''}
+              
+              <div style="display:flex; justify-content:flex-end; gap:8px; margin-top:8px;">
+                <button class="btn-themed" style="width:auto; padding:4px 10px; font-size:12px;" onclick="editMediaItem(${i.id})">✏️ Edit</button>
+                <button class="btn-themed" style="width:auto; padding:4px 10px; font-size:12px; color:var(--danger);" onclick="deleteMediaItem(${i.id})">🗑️ Delete</button>
+              </div>
+            </div>
           </div>
         `;
       }).join('');
@@ -1199,8 +1334,9 @@
     }
 
 
-    // ================= STATS FUNCTIONS =================
+    // ================= STATS FUNCTIONS (MAIN + MEDIA INTEGRATED) =================
     function renderStats() {
+      // 1. MAIN LOG STATS
       const logs = getLogs();
       if (logs.length === 0) {
         document.getElementById('st-streak').innerText = '0';
@@ -1209,61 +1345,97 @@
         document.getElementById('st-peak').innerText = '-';
         document.getElementById('topTagsList').innerHTML = '<p style="color:var(--subtext);">No data recorded yet.</p>';
         document.getElementById('svgChartBox').innerHTML = '';
+      } else {
+        document.getElementById('st-total').innerText = logs.length;
+
+        const uniqueDates = Array.from(new Set(logs.map(l => l.timestamp.slice(0,10)))).sort().reverse();
+        let streak = 0;
+        const todayStr = new Date().toISOString().slice(0,10);
+        const yesterdayStr = new Date(Date.now() - 86400000).toISOString().slice(0,10);
+
+        if (uniqueDates.includes(todayStr) || uniqueDates.includes(yesterdayStr)) {
+          let checkDate = new Date(uniqueDates.includes(todayStr) ? todayStr : yesterdayStr);
+          while (true) {
+            const key = checkDate.toISOString().slice(0,10);
+            if (uniqueDates.includes(key)) {
+              streak++;
+              checkDate.setDate(checkDate.getDate() - 1);
+            } else break;
+          }
+        }
+        document.getElementById('st-streak').innerText = streak;
+
+        const avg = (logs.length / Math.max(1, uniqueDates.length)).toFixed(1);
+        document.getElementById('st-avg').innerText = avg;
+
+        const hours = {};
+        logs.forEach(l => {
+          const h = new Date(l.timestamp).getHours();
+          hours[h] = (hours[h] || 0) + 1;
+        });
+        const peakHour = Object.keys(hours).reduce((a, b) => hours[a] > hours[b] ? a : b, 12);
+        const ampm = peakHour >= 12 ? 'PM' : 'AM';
+        document.getElementById('st-peak').innerText = `${peakHour % 12 || 12}${ampm}`;
+
+        const tagCounts = {};
+        logs.forEach(l => {
+          (l.tags || []).forEach(t => tagCounts[t] = (tagCounts[t] || 0) + 1);
+        });
+
+        const sortedTags = Object.entries(tagCounts).sort((a,b) => b[1] - a[1]);
+        const top5 = sortedTags.slice(0, 5);
+
+        document.getElementById('topTagsList').innerHTML = top5.length ? top5.map(([tag, count], i) => `
+          <div style="display:flex; justify-content:space-between; padding: 4px 0; border-bottom: 1px dashed var(--border);">
+            <span><strong>${i+1}. ${tag}</strong></span>
+            <span style="color:var(--subtext);">${count} logs</span>
+          </div>
+        `).join('') : '<p style="color:var(--subtext);">No tags used yet.</p>';
+
+        const chartSelect = document.getElementById('chartTagSelect');
+        chartSelect.innerHTML = sortedTags.map(([tag]) => `<option value="${tag}">${tag}</option>`).join('');
+        if (sortedTags.length === 0) chartSelect.innerHTML = '<option value="">No tags</option>';
+
+        renderChart();
+      }
+
+      // 2. MEDIA TRACKER STATS
+      const mediaItems = getMediaItems();
+      document.getElementById('mst-total').innerText = mediaItems.length;
+
+      const movies = mediaItems.filter(i => i.type === 'Movie');
+      const books = mediaItems.filter(i => i.type === 'Book');
+      const series = mediaItems.filter(i => i.type === 'TV Series');
+      const finished = mediaItems.filter(i => i.endDate).length;
+
+      document.getElementById('mst-finished').innerText = finished;
+      document.getElementById('mst-breakdown').innerText = `${movies.length} / ${books.length} / ${series.length}`;
+
+      const ratings = mediaItems.filter(i => i.rating).map(i => i.rating);
+      const avgRating = ratings.length ? (ratings.reduce((a,b)=>a+b,0)/ratings.length).toFixed(1) + ' ★' : '-';
+      document.getElementById('mst-avg-rating').innerText = avgRating;
+
+      // Top 3 Rated Lists
+      renderTopMediaCategory(movies, 'topMoviesList');
+      renderTopMediaCategory(books, 'topBooksList');
+      renderTopMediaCategory(series, 'topSeriesList');
+    }
+
+    function renderTopMediaCategory(items, elementId) {
+      const container = document.getElementById(elementId);
+      const sorted = [...items].sort((a, b) => (b.rating || 0) - (a.rating || 0)).slice(0, 3);
+
+      if (sorted.length === 0) {
+        container.innerHTML = '<span style="color:var(--subtext); font-style:italic;">None logged yet.</span>';
         return;
       }
 
-      document.getElementById('st-total').innerText = logs.length;
-
-      const uniqueDates = Array.from(new Set(logs.map(l => l.timestamp.slice(0,10)))).sort().reverse();
-      
-      let streak = 0;
-      const todayStr = new Date().toISOString().slice(0,10);
-      const yesterdayStr = new Date(Date.now() - 86400000).toISOString().slice(0,10);
-
-      if (uniqueDates.includes(todayStr) || uniqueDates.includes(yesterdayStr)) {
-        let checkDate = new Date(uniqueDates.includes(todayStr) ? todayStr : yesterdayStr);
-        while (true) {
-          const key = checkDate.toISOString().slice(0,10);
-          if (uniqueDates.includes(key)) {
-            streak++;
-            checkDate.setDate(checkDate.getDate() - 1);
-          } else break;
-        }
-      }
-      document.getElementById('st-streak').innerText = streak;
-
-      const avg = (logs.length / Math.max(1, uniqueDates.length)).toFixed(1);
-      document.getElementById('st-avg').innerText = avg;
-
-      const hours = {};
-      logs.forEach(l => {
-        const h = new Date(l.timestamp).getHours();
-        hours[h] = (hours[h] || 0) + 1;
-      });
-      const peakHour = Object.keys(hours).reduce((a, b) => hours[a] > hours[b] ? a : b, 12);
-      const ampm = peakHour >= 12 ? 'PM' : 'AM';
-      document.getElementById('st-peak').innerText = `${peakHour % 12 || 12}${ampm}`;
-
-      const tagCounts = {};
-      logs.forEach(l => {
-        (l.tags || []).forEach(t => tagCounts[t] = (tagCounts[t] || 0) + 1);
-      });
-
-      const sortedTags = Object.entries(tagCounts).sort((a,b) => b[1] - a[1]);
-      const top5 = sortedTags.slice(0, 5);
-
-      document.getElementById('topTagsList').innerHTML = top5.length ? top5.map(([tag, count], i) => `
-        <div style="display:flex; justify-content:space-between; padding: 4px 0; border-bottom: 1px dashed var(--border);">
-          <span><strong>${i+1}. ${tag}</strong></span>
-          <span style="color:var(--subtext);">${count} logs</span>
+      container.innerHTML = sorted.map((i, idx) => `
+        <div class="top-media-item">
+          <strong>${idx+1}. ${i.title}</strong>
+          <span style="color:#ffcc00; margin-left:4px;">${'★'.repeat(i.rating || 0)}</span>
         </div>
-      `).join('') : '<p style="color:var(--subtext);">No tags used yet.</p>';
-
-      const chartSelect = document.getElementById('chartTagSelect');
-      chartSelect.innerHTML = sortedTags.map(([tag]) => `<option value="${tag}">${tag}</option>`).join('');
-      if (sortedTags.length === 0) chartSelect.innerHTML = '<option value="">No tags</option>';
-
-      renderChart();
+      `).join('');
     }
 
     function renderChart() {
@@ -1323,7 +1495,7 @@
     }
 
 
-    // ================= CSV EXPORT =================
+    // ================= CSV EXPORT FUNCTIONS =================
     async function exportCSV(onlyFiltered = false) {
       const logsToExport = onlyFiltered ? getFilteredLogs() : getLogs();
       if (logsToExport.length === 0) return alert('No data to export.');
@@ -1337,17 +1509,32 @@
         csv += `"${l.timestamp}","${recorded}","${rating}","${emoji}","${tags}","${l.note.replace(/"/g, '""')}"\n`;
       });
 
-      const prefix = onlyFiltered ? 'filtered_logs' : 'tracker_export';
+      const prefix = onlyFiltered ? 'filtered_logs' : 'main_tracker_export';
       const fileName = `${prefix}_${new Date().toISOString().slice(0,10)}.csv`;
-      const blob = new Blob([csv], { type: 'text/csv' });
+      triggerShareOrDownload(csv, fileName);
+    }
 
+    async function exportMediaCSV() {
+      const mediaItems = getMediaItems();
+      if (mediaItems.length === 0) return alert('No media data to export.');
+
+      let csv = "MediaType,Title,StartDate,EndDate,Rating,Notes,Summary\n";
+      mediaItems.forEach(i => {
+        const notes = (i.notes || '').replace(/"/g, '""');
+        const summary = (i.summary || '').replace(/"/g, '""');
+        csv += `"${i.type}","${i.title.replace(/"/g, '""')}","${i.startDate || ''}","${i.endDate || ''}","${i.rating || ''}","${notes}","${summary}"\n`;
+      });
+
+      const fileName = `media_tracker_export_${new Date().toISOString().slice(0,10)}.csv`;
+      triggerShareOrDownload(csv, fileName);
+    }
+
+    async function triggerShareOrDownload(csvContent, fileName) {
+      const blob = new Blob([csvContent], { type: 'text/csv' });
       if (navigator.canShare && navigator.canShare({ files: [new File([blob], fileName, { type: 'text/csv' })] })) {
         try {
           const file = new File([blob], fileName, { type: 'text/csv' });
-          await navigator.share({
-            title: 'Quick Tracker Data Export',
-            files: [file]
-          });
+          await navigator.share({ title: 'Quick Tracker Export', files: [file] });
         } catch (err) {
           if (err.name !== 'AbortError') fallbackDownload(blob, fileName);
         }
