@@ -5,9 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
-  <title>Quick Tracker ✨ ★★★★★</title>
+  <title>Quick Tracker ✨</title>
+  
   <style>
-    /* Lavender Theme (Default Light) */
+    /* Default: Lavender Theme (Light) */
     :root, [data-theme="lavender"] {
       --bg: #e6def8;
       --card: #d8ccf1;
@@ -93,29 +94,27 @@
       -webkit-tap-highlight-color: transparent;
     }
 
-    .top-bar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
+    /* Header & Navigation Row Layout */
+    .app-header {
       margin-bottom: 16px;
     }
 
-    .app-title-left {
+    .app-title-row {
+      text-align: left;
+      margin-bottom: 10px;
+    }
+
+    .app-title-row h2 {
       margin: 0;
-      font-size: 18px;
+      font-size: 22px;
       font-weight: 800;
       color: var(--header-accent);
       letter-spacing: -0.3px;
     }
 
-    .app-title-stars {
-      color: #ffcc00;
-      font-size: 14px;
-      margin-left: 2px;
-    }
-
-    .nav-actions-right {
+    .nav-actions-row {
       display: flex;
+      justify-content: space-between;
       gap: 4px;
     }
 
@@ -123,15 +122,23 @@
       background: var(--btn-secondary);
       border: 1px solid var(--border);
       color: var(--text);
-      font-size: 16px;
+      font-size: 13px;
+      font-weight: 600;
       cursor: pointer;
-      padding: 6px 9px;
+      padding: 8px 6px;
       border-radius: 12px;
       margin: 0;
-      width: auto;
-      display: inline-flex;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
       align-items: center;
       justify-content: center;
+      gap: 2px;
+    }
+
+    .btn-icon-head span {
+      font-size: 10px;
+      font-weight: 700;
     }
 
     .card {
@@ -317,22 +324,40 @@
     .top-media-item {
       padding: 4px 0; border-bottom: 1px dashed var(--border); font-size: 13px;
     }
+
+    .custom-type-list {
+      margin-top: 8px;
+    }
+    .custom-type-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      padding: 4px 10px;
+      border-radius: 12px;
+      font-size: 12px;
+      margin-right: 6px;
+      margin-bottom: 6px;
+    }
   </style>
 </head>
 <body>
 
   <!-- Top Navigation Header -->
-  <div class="top-bar">
-    <h2 class="app-title-left">Quick Tracker ✨ <span class="app-title-stars">★★★★★</span></h2>
-    <div class="nav-actions-right">
-      <button class="btn-icon-head" onclick="toggleEntryForm()" title="New Log">📓</button>
-      <button class="btn-icon-head" onclick="openView('mediaView')" title="Media">🎬</button>
-      <button class="btn-icon-head" onclick="openView('vocabView')" title="Vocab">🗣️</button>
-      <button class="btn-icon-head" onclick="openView('calendarView')" title="Calendar">📅</button>
-      <button class="btn-icon-head" onclick="openView('statsView')" title="Stats">📊</button>
-      <button class="btn-icon-head" onclick="openView('settingsView')" title="Settings">⚙️</button>
+  <header class="app-header">
+    <div class="app-title-row">
+      <h2>Quick Tracker ✨</h2>
     </div>
-  </div>
+    <nav class="nav-actions-row">
+      <button class="btn-icon-head" onclick="toggleEntryForm()" title="New Log">📓 <!--<span>Log</span>--> </button>
+      <button class="btn-icon-head" onclick="openView('mediaView')" title="Collections">🗂️ <!--<span>Collections</span> --> </button>
+      <button class="btn-icon-head" onclick="openView('vocabView')" title="Vocab">🗣️ <!--<span>Vocab</span>--> </button>
+      <button class="btn-icon-head" onclick="openView('calendarView')" title="Calendar">📅 <!-- <span>Cal</span>--></button>
+      <button class="btn-icon-head" onclick="openView('statsView')" title="Stats">📊 <!-- <span>Stats</span>--></button>
+      <button class="btn-icon-head" onclick="openView('settingsView')" title="Settings">⚙️ <!-- <span>Opts</span>--></button>
+    </nav>
+  </header>
 
   <!-- Collapsible Main Logger Card (Hidden by default) -->
   <div id="entryCard" class="card" style="display: none;">
@@ -383,29 +408,37 @@
 
   <div id="logsContainer"></div>
 
-  <!-- ==================== MEDIA TRACKER OVERLAY ==================== -->
+  <!-- ==================== COLLECTIONS TRACKER OVERLAY ==================== -->
   <div id="mediaView" class="overlay-view" onscroll="handleScroll(this)">
     <div class="overlay-header">
-      <h2>Media Tracker 🎬</h2>
+      <h2>Collections 🗂️</h2>
       <button class="btn-close-view" onclick="closeView('mediaView')">✕</button>
     </div>
 
-    <!-- Media Controls Row -->
+    <!-- Collection Controls Row -->
     <div id="mediaControlsRow" style="display: flex; gap: 8px; margin-bottom: 12px;">
-      <button onclick="toggleMediaForm()" style="margin-bottom: 0;">＋ Add Media Entry</button>
+      <button onclick="toggleMediaForm()" style="margin-bottom: 0;">＋ Add Collection Entry</button>
+      <button class="btn-themed" onclick="toggleCustomTypeCard()" style="margin-bottom: 0; width: auto; font-size: 13px;">⚙️ Manage Types</button>
     </div>
 
-    <!-- Collapsible Media Entry / Edit Form Card -->
-    <div id="mediaFormCard" class="card" style="display: none;">
-      <label>Add / Edit Media Entry</label>
-      <select id="mediaType" class="input-compact" onchange="toggleAuthorField()">
-        <option value="Movie">🎬 Movie</option>
-        <option value="Book">📚 Book</option>
-        <option value="TV Series">📺 TV Series</option>
-      </select>
+    <!-- Manage Custom Collection Types Card -->
+    <div id="customTypeCard" class="card" style="display: none;">
+      <label>Add New Custom Collection Type</label>
+      <div style="display: flex; gap: 6px;">
+        <input type="text" id="newTypeName" placeholder="e.g. Podcast, Game, Wine, Workout" class="input-compact" style="margin-bottom: 0;">
+        <button onclick="addCustomType()" style="width: auto; padding: 0 16px; margin-bottom: 0; white-space: nowrap;">Add Type</button>
+      </div>
+      <label style="margin-top: 12px;">Your Custom Types</label>
+      <div id="customTypeList" class="custom-type-list"></div>
+    </div>
 
-      <input type="text" id="mediaTitle" placeholder="Title (e.g. Inception / Dune)" class="input-compact">
-      <input type="text" id="mediaAuthor" placeholder="Author Name (for Books)" class="input-compact" style="display: none;">
+    <!-- Collapsible Collection Entry / Edit Form Card -->
+    <div id="mediaFormCard" class="card" style="display: none;">
+      <label>Add / Edit Collection Entry</label>
+      <select id="mediaType" class="input-compact"></select>
+
+      <input type="text" id="mediaTitle" placeholder="Title / Name" class="input-compact">
+      <input type="text" id="mediaAuthor" placeholder="By / Creator / Venue" class="input-compact">
 
       <div style="display: flex; gap: 8px;">
         <div style="flex:1;">
@@ -429,21 +462,21 @@
       <input type="hidden" id="selectedMediaRating" value="0">
 
       <label for="mediaTags">Tags</label>
-      <input type="text" id="mediaTags" placeholder="#scifi #fantasy" onkeyup="handleMediaTagTyping(event)" class="input-compact">
+      <input type="text" id="mediaTags" placeholder="#scifi #favorite" onkeyup="handleMediaTagTyping(event)" class="input-compact">
 
-      <textarea id="mediaNotes" placeholder="Review, favorite quotes, or thoughts..."></textarea>
+      <textarea id="mediaNotes" placeholder="Review, quotes, or details..."></textarea>
 
       <input type="hidden" id="editingMediaId" value="">
-      <button id="saveMediaBtn" onclick="saveMediaItem()">Add Media Log</button>
+      <button id="saveMediaBtn" onclick="saveMediaItem()">Add Collection Log</button>
       <button id="cancelMediaEditBtn" onclick="cancelMediaEdit()" style="display:none; background:var(--border); color:var(--text); margin-top:-4px;">Cancel Edit</button>
     </div>
 
-    <!-- Search Input Directly Above Media Feed -->
+    <!-- Search Input Directly Above Collection Feed -->
     <div id="mediaFeedSearchWrapper">
-      <input type="text" id="mediaSearchFilter" placeholder="🔍 Search media by title, author, tag, or note..." oninput="renderMediaList()" class="input-compact" style="margin-bottom: 12px;">
+      <input type="text" id="mediaSearchFilter" placeholder="🔍 Search collections by name, creator, tag, or note..." oninput="renderMediaList()" class="input-compact" style="margin-bottom: 12px;">
     </div>
 
-    <!-- Media Feed Container -->
+    <!-- Collection Feed Container -->
     <div id="mediaContainer"></div>
 
     <button id="topBtn-mediaView" class="btn-back-top" onclick="scrollToTop('mediaView')">↑ Top</button>
@@ -460,7 +493,6 @@
 
     <button id="topBtn-vocabView" class="btn-back-top" onclick="scrollToTop('vocabView')">↑ Top</button>
   </div>
-
 
   <!-- ==================== CALENDAR OVERLAY ==================== -->
   <div id="calendarView" class="overlay-view" onscroll="handleScroll(this)">
@@ -485,7 +517,7 @@
       <!-- Theme-Dynamic Calendar Legend -->
       <div class="cal-legend">
         <div class="legend-item"><div class="legend-box" style="background:var(--cal-main);"></div><span>Main Log</span></div>
-        <div class="legend-item"><div class="legend-box" style="background:var(--cal-media);"></div><span>Media</span></div>
+        <div class="legend-item"><div class="legend-box" style="background:var(--cal-media);"></div><span>Collections</span></div>
         <div class="legend-item"><div class="legend-box" style="background:var(--cal-both);"></div><span>Both</span></div>
       </div>
     </div>
@@ -497,7 +529,6 @@
 
     <button id="topBtn-calendarView" class="btn-back-top" onclick="scrollToTop('calendarView')">↑ Top</button>
   </div>
-
 
   <!-- ==================== STATS OVERLAY ==================== -->
   <div id="statsView" class="overlay-view" onscroll="handleScroll(this)">
@@ -544,31 +575,31 @@
       <div class="chart-container" id="svgChartBox"></div>
     </div>
 
-    <!-- INTEGRATED MEDIA TRACKER STATS -->
-    <h3 style="margin-top: 24px; margin-bottom: 12px; font-size: 18px; color: var(--header-accent);">Media Tracker Analytics 🎬</h3>
+    <!-- INTEGRATED COLLECTIONS STATS -->
+    <h3 style="margin-top: 24px; margin-bottom: 12px; font-size: 18px; color: var(--header-accent);">Collections Analytics 🗂️</h3>
 
     <div class="stat-grid">
       <div class="stat-card">
         <div class="stat-val" id="mst-total">0</div>
-        <div class="stat-lbl">Total Logged</div>
+        <div class="stat-lbl">Total Items</div>
       </div>
       <div class="stat-card">
         <div class="stat-val" id="mst-finished">0</div>
-        <div class="stat-lbl">Completed (End Date)</div>
+        <div class="stat-lbl">Completed Items</div>
       </div>
       <div class="stat-card">
         <div class="stat-val" id="mst-avg-rating">-</div>
         <div class="stat-lbl">Average Rating</div>
       </div>
       <div class="stat-card">
-        <div class="stat-val" id="mst-breakdown">0/0/0</div>
-        <div class="stat-lbl">Movies / Books / Series</div>
+        <div class="stat-val" id="mst-breakdown">-</div>
+        <div class="stat-lbl">Type Breakdown</div>
       </div>
     </div>
 
-    <!-- Media Tag Frequency Chart -->
+    <!-- Collection Tag Frequency Chart -->
     <div class="card">
-      <label>Media Tag Frequency Chart</label>
+      <label>Collection Tag Frequency Chart</label>
       <div style="display: flex; gap: 8px; margin-top: 6px;">
         <select id="mediaChartTagSelect" onchange="renderMediaChart()" class="input-compact"></select>
         <select id="mediaChartGrainSelect" onchange="renderMediaChart()" class="input-compact">
@@ -580,21 +611,11 @@
       <div class="chart-container" id="svgMediaChartBox"></div>
     </div>
 
-    <!-- Top Rated Media Lists -->
-    <div class="card">
-      <label>Top Rated Movies (Top 3)</label>
-      <div id="topMoviesList" style="font-size: 13px; margin-bottom: 10px;"></div>
-
-      <label>Top Rated Books (Top 3)</label>
-      <div id="topBooksList" style="font-size: 13px; margin-bottom: 10px;"></div>
-
-      <label>Top Rated TV Series (Top 3)</label>
-      <div id="topSeriesList" style="font-size: 13px;"></div>
-    </div>
+    <!-- Dynamic Top Rated Lists Per Collection Type -->
+    <div id="dynamicTopRatedContainer"></div>
 
     <button id="topBtn-statsView" class="btn-back-top" onclick="scrollToTop('statsView')">↑ Top</button>
   </div>
-
 
   <!-- ==================== SETTINGS OVERLAY ==================== -->
   <div id="settingsView" class="overlay-view" onscroll="handleScroll(this)">
@@ -608,8 +629,8 @@
       <select id="defaultViewSelect" onchange="changeDefaultView(this.value)">
         <option value="main">Main Log</option>
         <option value="main_form">Main Log Entry</option>
-        <option value="media">Media Log</option>
-        <option value="media_form">Media Log Entry</option>
+        <option value="media">Collections Log</option>
+        <option value="media_form">Collections Log Entry</option>
       </select>
 
       <label for="langSelect" id="lbl-language" style="margin-top: 10px;">Language</label>
@@ -635,9 +656,9 @@
     </div>
 
     <div class="card">
-      <label>Media Log Management</label>
-      <button class="btn-themed" onclick="exportMediaCSV()">Export Media Log (CSV)</button>
-      <button class="btn-danger" onclick="deleteMediaData()">Clear Media Log Data (Reset)</button>
+      <label>Collections Log Management</label>
+      <button class="btn-themed" onclick="exportMediaCSV()">Export Collections Log (CSV)</button>
+      <button class="btn-danger" onclick="deleteMediaData()">Clear Collections Log Data (Reset)</button>
     </div>
 
     <button id="topBtn-settingsView" class="btn-back-top" onclick="scrollToTop('settingsView')">↑ Top</button>
@@ -672,7 +693,7 @@
         tags: "Etiquetes", placeholder_note: "Què t'agradaria registrar avui?", placeholder_search: "🔍 Cerca registres per etiqueta o text...",
         save: "Desar Entrada", update: "Actualitzar Entrada", cancel: "Cancel·lar Edició", export_all: "Exportar Totes les Dades (CSV)",
         export_filtered: "Exportar Registros Filtrats (CSV)", settings_title: "Ajustos ⚙️", cal_title: "Calendari 📅",
-        stats_title: "Estadíatiques i Anàlisi 📊", language: "Idioma", theme: "Paleta de Colors",
+        stats_title: "Estadístiques i Anàlisi 📊", language: "Idioma", theme: "Paleta de Colors",
         no_logs: "Encara no hi ha registres desats.", no_matches: "No s'han trobat registres coincidents.", streak: "Ratxa de Dies 🔥",
         totallogs: "Total de Registres", avgday: "Mitjana / Dia", peakhour: "Hora Punta", toptags: "Top 5 Etiquetes Més Utilitzades", charttitle: "Gràfic de Freqüència (Principal)"
       }
@@ -810,12 +831,21 @@
       card.style.display = (card.style.display === 'none') ? 'block' : 'none';
     }
 
+    function toggleCustomTypeCard() {
+      const card = document.getElementById('customTypeCard');
+      card.style.display = (card.style.display === 'none') ? 'block' : 'none';
+      renderCustomTypeList();
+    }
+
     function openView(viewId) {
       document.getElementById(viewId).style.display = 'block';
       if (viewId === 'calendarView') renderCalendar();
       if (viewId === 'statsView') renderStats();
       if (viewId === 'vocabView') renderVocabView();
-      if (viewId === 'mediaView') renderMediaList();
+      if (viewId === 'mediaView') {
+        populateCollectionTypeDropdown();
+        renderMediaList();
+      }
     }
 
     function closeView(viewId) { document.getElementById(viewId).style.display = 'none'; }
@@ -872,13 +902,6 @@
         const words = val.split(' ').map(w => w ? (w.startsWith('#') ? w : '#' + w) : '');
         input.value = words.join(' ');
       }
-    }
-
-    function toggleAuthorField() {
-      const type = document.getElementById('mediaType').value;
-      const authorInput = document.getElementById('mediaAuthor');
-      if (type === 'Book') authorInput.style.display = 'block';
-      else authorInput.style.display = 'none';
     }
 
     function appendQuickTag(tagStr) {
@@ -978,11 +1001,11 @@
     }
 
     function deleteMediaData() {
-      if (confirm('FIRST WARNING: Are you sure you want to delete ALL Media Tracker entries?')) {
-        if (confirm('FINAL CONFIRMATION: Tap OK to clear all books, movies, and series records.')) {
+      if (confirm('FIRST WARNING: Are you sure you want to delete ALL Collections entries?')) {
+        if (confirm('FINAL CONFIRMATION: Tap OK to clear all collections records.')) {
           localStorage.removeItem('my_pwa_media');
           closeView('settingsView');
-          alert('Media tracker data erased.');
+          alert('Collections tracker data erased.');
         }
       }
     }
@@ -1063,6 +1086,73 @@
       container.innerHTML = html;
     }
 
+    /* Custom Collection Types Logic */
+    function getCustomTypes() {
+      return JSON.parse(localStorage.getItem('my_pwa_custom_types') || '[]');
+    }
+
+    function addCustomType() {
+      const input = document.getElementById('newTypeName');
+      const name = input.value.trim();
+      if (!name) return alert('Please enter a custom type name.');
+
+      const existing = ['Movie', 'Book', 'TV Series', ...getCustomTypes()];
+      if (existing.some(t => t.toLowerCase() === name.toLowerCase())) {
+        return alert('This collection type already exists.');
+      }
+
+      const customTypes = getCustomTypes();
+      customTypes.push(name);
+      localStorage.setItem('my_pwa_custom_types', JSON.stringify(customTypes));
+
+      input.value = '';
+      populateCollectionTypeDropdown();
+      renderCustomTypeList();
+    }
+
+    function removeCustomType(typeName) {
+      const items = getMediaItems();
+      const usageCount = items.filter(i => i.type === typeName).length;
+
+      /* SAFEGUARD CHECK: Prevent deletion if used */
+      if (usageCount > 0) {
+        alert(`This collection type has been used ${usageCount} time(s). Please remove or update those records in order to delete this type.`);
+        return;
+      }
+
+      if (confirm(`Are you sure you want to delete the "${typeName}" collection type?`)) {
+        const customTypes = getCustomTypes().filter(t => t !== typeName);
+        localStorage.setItem('my_pwa_custom_types', JSON.stringify(customTypes));
+        populateCollectionTypeDropdown();
+        renderCustomTypeList();
+      }
+    }
+
+    function renderCustomTypeList() {
+      const container = document.getElementById('customTypeList');
+      const customTypes = getCustomTypes();
+
+      if (customTypes.length === 0) {
+        container.innerHTML = '<span style="font-size:12px; color:var(--subtext);">No custom types added yet.</span>';
+        return;
+      }
+
+      container.innerHTML = customTypes.map(t => `
+        <span class="custom-type-chip">
+          <strong>${t}</strong>
+          <button class="btn-icon" style="color:var(--danger); font-size:11px;" onclick="removeCustomType('${t}')">✕</button>
+        </span>
+      `).join('');
+    }
+
+    function populateCollectionTypeDropdown() {
+      const select = document.getElementById('mediaType');
+      const defaults = ['Movie', 'Book', 'TV Series'];
+      const custom = getCustomTypes();
+      const allTypes = [...defaults, ...custom];
+
+      select.innerHTML = allTypes.map(t => `<option value="${t}">${t}</option>`).join('');
+    }
 
     /* Vocab Logic */
     function nextVocabWord(langKey) {
@@ -1139,7 +1229,7 @@
     }
 
 
-    /* Media Tracker Core Logic */
+    /* Collections Tracker Core Logic */
     function getMediaItems() { return JSON.parse(localStorage.getItem('my_pwa_media') || '[]'); }
 
     async function fetchMediaInfo(title, type) {
@@ -1170,7 +1260,7 @@
       const notes = document.getElementById('mediaNotes').value.trim();
       const editingId = document.getElementById('editingMediaId').value;
 
-      if (!title) return alert('Please enter a title.');
+      if (!title) return alert('Please enter a title/name.');
 
       const formattedTags = tagsInput ? tagsInput.split(' ').map(t => t.startsWith('#') ? t : '#' + t) : [];
       let apiData = null;
@@ -1202,6 +1292,7 @@
       const item = getMediaItems().find(i => i.id == id);
       if (!item) return;
 
+      populateCollectionTypeDropdown();
       document.getElementById('editingMediaId').value = item.id;
       document.getElementById('mediaType').value = item.type;
       document.getElementById('mediaTitle').value = item.title;
@@ -1209,7 +1300,6 @@
       document.getElementById('mediaTags').value = (item.tags || []).join(' ');
       document.getElementById('mediaNotes').value = item.notes || '';
       setMediaRating(item.rating || 0);
-      toggleAuthorField();
 
       if (item.startDate) {
         document.getElementById('mediaStartDate').value = item.startDate.slice(0, 10);
@@ -1220,7 +1310,7 @@
         document.getElementById('mediaEndDate').value = '';
       }
 
-      document.getElementById('saveMediaBtn').innerText = 'Update Media Entry';
+      document.getElementById('saveMediaBtn').innerText = 'Update Collection Entry';
       document.getElementById('cancelMediaEditBtn').style.display = 'block';
 
       /* Focused Editing View: Hide Feed & Search Controls */
@@ -1238,7 +1328,7 @@
       document.getElementById('mediaNotes').value = '';
       document.getElementById('mediaEndDate').value = '';
       setMediaRating(0);
-      document.getElementById('saveMediaBtn').innerText = 'Add Media Log';
+      document.getElementById('saveMediaBtn').innerText = 'Add Collection Log';
       document.getElementById('cancelMediaEditBtn').style.display = 'none';
 
       /* Restore Focused View to Normal Feed Mode */
@@ -1251,7 +1341,7 @@
     }
 
     function deleteMediaItem(id) {
-      if (!confirm('Delete this media entry?')) return;
+      if (!confirm('Delete this collection entry?')) return;
       localStorage.setItem('my_pwa_media', JSON.stringify(getMediaItems().filter(i => i.id != id)));
       renderMediaList();
     }
@@ -1276,7 +1366,7 @@
       });
 
       if (filtered.length === 0) {
-        container.innerHTML = '<p style="color:var(--subtext); margin-top:12px;">No matching media entries found.</p>';
+        container.innerHTML = '<p style="color:var(--subtext); margin-top:12px;">No matching collection entries found.</p>';
         return;
       }
 
@@ -1333,7 +1423,7 @@
       const mainLogs = getLogs();
       const mediaItems = getMediaItems();
 
-      /* Categorize dates into Main / Media / Both */
+      /* Categorize dates into Main / Collections / Both */
       const dayLogs = {};
       mainLogs.forEach(l => {
         const d = new Date(l.timestamp);
@@ -1407,7 +1497,7 @@
       }
 
       if (data.media.length > 0) {
-        html += `<div style="font-size:11px; font-weight:bold; color:var(--header-accent); margin-top:8px;">MEDIA LOGS</div>`;
+        html += `<div style="font-size:11px; font-weight:bold; color:var(--header-accent); margin-top:8px;">COLLECTIONS LOGS</div>`;
         data.media.forEach(m => {
           const stars = m.rating ? ` <span style="color:#ffcc00">${'★'.repeat(m.rating)}</span>` : '';
           html += `
@@ -1486,17 +1576,16 @@
         renderChart();
       }
 
-      /* 2. MEDIA TRACKER STATS */
+      /* 2. COLLECTIONS STATS */
       const mediaItems = getMediaItems();
       document.getElementById('mst-total').innerText = mediaItems.length;
 
-      const movies = mediaItems.filter(i => i.type === 'Movie');
-      const books = mediaItems.filter(i => i.type === 'Book');
-      const series = mediaItems.filter(i => i.type === 'TV Series');
       const finished = mediaItems.filter(i => i.endDate).length;
-
       document.getElementById('mst-finished').innerText = finished;
-      document.getElementById('mst-breakdown').innerText = `${movies.length} / ${books.length} / ${series.length}`;
+
+      const allTypes = ['Movie', 'Book', 'TV Series', ...getCustomTypes()];
+      const typeCounts = allTypes.map(t => `${t}: ${mediaItems.filter(i => i.type === t).length}`);
+      document.getElementById('mst-breakdown').innerText = typeCounts.join(' | ') || 'None';
 
       const ratings = mediaItems.filter(i => i.rating).map(i => i.rating);
       const avgRating = ratings.length ? (ratings.reduce((a,b)=>a+b,0)/ratings.length).toFixed(1) + ' ★' : '-';
@@ -1513,14 +1602,25 @@
 
       renderMediaChart();
 
-      /* Render Top 3 Rated Lists */
-      renderTopMediaCategory(movies, 'topMoviesList');
-      renderTopMediaCategory(books, 'topBooksList');
-      renderTopMediaCategory(series, 'topSeriesList');
+      /* Dynamic Top Rated Lists Per Collection Type */
+      const topContainer = document.getElementById('dynamicTopRatedContainer');
+      topContainer.innerHTML = '';
+
+      allTypes.forEach(t => {
+        const items = mediaItems.filter(i => i.type === t);
+        if (items.length > 0) {
+          const card = document.createElement('div');
+          card.className = 'card';
+          card.innerHTML = `<label>Top Rated ${t}s (Top 3)</label><div id="top-${t.replace(/\s+/g, '')}-list" style="font-size: 13px;"></div>`;
+          topContainer.appendChild(card);
+          renderTopMediaCategory(items, `top-${t.replace(/\s+/g, '')}-list`);
+        }
+      });
     }
 
     function renderTopMediaCategory(items, elementId) {
       const container = document.getElementById(elementId);
+      if (!container) return;
       const sorted = [...items].sort((a, b) => (b.rating || 0) - (a.rating || 0)).slice(0, 3);
 
       if (sorted.length === 0) {
@@ -1595,7 +1695,7 @@
       const box = document.getElementById('svgMediaChartBox');
 
       if (!selectedTag) {
-        box.innerHTML = '<p style="color:var(--subtext); text-align:center; padding-top:40px;">No media tag selected.</p>';
+        box.innerHTML = '<p style="color:var(--subtext); text-align:center; padding-top:40px;">No collection tag selected.</p>';
         return;
       }
 
@@ -1616,7 +1716,7 @@
       const values = keys.map(k => buckets[k]);
 
       if (keys.length === 0) {
-        box.innerHTML = '<p style="color:var(--subtext); text-align:center; padding-top:40px;">No media history for this tag.</p>';
+        box.innerHTML = '<p style="color:var(--subtext); text-align:center; padding-top:40px;">No history for this tag.</p>';
         return;
       }
 
@@ -1663,9 +1763,9 @@
 
     async function exportMediaCSV() {
       const mediaItems = getMediaItems();
-      if (mediaItems.length === 0) return alert('No media data to export.');
+      if (mediaItems.length === 0) return alert('No collections data to export.');
 
-      let csv = "MediaType,Title,Author,StartDate,EndDate,Rating,Tags,Notes,Summary\n";
+      let csv = "Type,Title,ByCreator,StartDate,EndDate,Rating,Tags,Notes,Summary\n";
       mediaItems.forEach(i => {
         const author = (i.author || '').replace(/"/g, '""');
         const tags = (i.tags || []).join(' ');
@@ -1674,7 +1774,7 @@
         csv += `"${i.type}","${i.title.replace(/"/g, '""')}","${author}","${i.startDate || ''}","${i.endDate || ''}","${i.rating || ''}","${tags}","${notes}","${summary}"\n`;
       });
 
-      const fileName = `media_tracker_export_${new Date().toISOString().slice(0,10)}.csv`;
+      const fileName = `collections_tracker_export_${new Date().toISOString().slice(0,10)}.csv`;
       triggerShareOrDownload(csv, fileName);
     }
 
