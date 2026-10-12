@@ -94,7 +94,6 @@
       -webkit-tap-highlight-color: transparent;
     }
 
-    /* Header & Navigation Row Layout */
     .app-header {
       margin-bottom: 16px;
     }
@@ -115,30 +114,23 @@
     .nav-actions-row {
       display: flex;
       justify-content: space-between;
-      gap: 4px;
+      gap: 6px;
     }
 
     .btn-icon-head {
       background: var(--btn-secondary);
       border: 1px solid var(--border);
       color: var(--text);
-      font-size: 13px;
+      font-size: 16px;
       font-weight: 600;
       cursor: pointer;
-      padding: 8px 6px;
+      padding: 10px 8px;
       border-radius: 12px;
       margin: 0;
       flex: 1;
       display: flex;
-      flex-direction: column;
       align-items: center;
       justify-content: center;
-      gap: 2px;
-    }
-
-    .btn-icon-head span {
-      font-size: 10px;
-      font-weight: 700;
     }
 
     .card {
@@ -186,7 +178,6 @@
       cursor: pointer;
     }
 
-    /* Floating Scroll-To-Top Button */
     .btn-back-top {
       display: none;
       position: fixed;
@@ -230,7 +221,6 @@
 
     .btn-danger { background: var(--danger); color: #ffffff; margin-top: 6px; }
 
-    /* Star Rating Controls */
     .star-rating {
       display: flex; gap: 8px; font-size: 24px;
       cursor: pointer; margin-bottom: 10px; user-select: none;
@@ -238,7 +228,6 @@
     .star-rating .star { color: var(--subtext); opacity: 0.4; transition: transform 0.1s; }
     .star-rating .star.active { color: #ffcc00; opacity: 1; transform: scale(1.1); }
 
-    /* Emoji Picker & Quick Tag Scrollbars */
     .emoji-bar, .tag-scroll-bar {
       display: flex; gap: 8px; overflow-x: auto; padding-bottom: 8px; margin-bottom: 10px;
       -webkit-overflow-scrolling: touch;
@@ -276,7 +265,6 @@
 
     .tag { background: var(--tag-bg); color: var(--tag-text); padding: 2px 8px; border-radius: 12px; font-size: 11px; font-weight: 600; margin-right: 4px; display: inline-block; margin-top: 4px; }
 
-    /* Calendar Colors & Legend */
     .cal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
     .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; text-align: center; }
     .cal-day-label { font-size: 11px; font-weight: bold; color: var(--subtext); padding-bottom: 4px; }
@@ -299,7 +287,6 @@
     .legend-item { display: flex; align-items: center; gap: 6px; }
     .legend-box { width: 12px; height: 12px; border-radius: 3px; }
 
-    /* Stats Grid & Charts */
     .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px; }
     .stat-card { background: var(--bg); border: 1px solid var(--border); border-radius: 10px; padding: 10px; text-align: center; }
     .stat-val { font-size: 20px; font-weight: bold; color: var(--header-accent); }
@@ -308,15 +295,6 @@
     .chart-container { width: 100%; height: 160px; margin-top: 10px; }
     polyline { fill: none; stroke: var(--header-accent); stroke-width: 3; stroke-linecap: round; }
     circle { fill: var(--accent); stroke: var(--header-accent); stroke-width: 2; }
-
-    /* Vocab Cards */
-    .vocab-lang-badge {
-      font-size: 11px; font-weight: 700; text-transform: uppercase;
-      color: var(--header-accent); letter-spacing: 0.5px; margin-bottom: 4px;
-    }
-    .vocab-word { font-size: 20px; font-weight: 800; margin-bottom: 2px; }
-    .vocab-phonetic { font-size: 13px; color: var(--subtext); margin-bottom: 6px; }
-    .vocab-sentence { font-style: italic; margin-top: 6px; font-size: 13px; padding-left: 8px; border-left: 2px solid var(--header-accent); }
 
     .media-type-badge { font-size: 10px; font-weight: bold; text-transform: uppercase; background: var(--tag-bg); color: var(--tag-text); padding: 2px 6px; border-radius: 4px; }
     .media-cover-img { width: 100%; max-height: 180px; object-fit: contain; border-radius: 8px; margin-top: 8px; background: rgba(0,0,0,0.05); }
@@ -344,22 +322,19 @@
 </head>
 <body>
 
-  <!-- Top Navigation Header -->
   <header class="app-header">
     <div class="app-title-row">
       <h2>Quick Tracker ✨</h2>
     </div>
     <nav class="nav-actions-row">
-      <button class="btn-icon-head" onclick="toggleEntryForm()" title="New Log">📓 <!--<span>Log</span>--> </button>
-      <button class="btn-icon-head" onclick="openView('mediaView')" title="Collections">🗂️ <!--<span>Collections</span> --> </button>
-      <button class="btn-icon-head" onclick="openView('vocabView')" title="Vocab">🗣️ <!--<span>Vocab</span>--> </button>
-      <button class="btn-icon-head" onclick="openView('calendarView')" title="Calendar">📅 <!-- <span>Cal</span>--></button>
-      <button class="btn-icon-head" onclick="openView('statsView')" title="Stats">📊 <!-- <span>Stats</span>--></button>
-      <button class="btn-icon-head" onclick="openView('settingsView')" title="Settings">⚙️ <!-- <span>Opts</span>--></button>
+      <button class="btn-icon-head" onclick="toggleEntryForm()" title="New Log">📓<!-- Log --></button>
+      <button class="btn-icon-head" onclick="openView('mediaView')" title="Collections">🗂️<!-- Collections --></button>
+      <button class="btn-icon-head" onclick="openView('calendarView')" title="Calendar">📅<!-- Calendar --></button>
+      <button class="btn-icon-head" onclick="openView('statsView')" title="Stats">📊<!-- Analytics & Stats --></button>
+      <button class="btn-icon-head" onclick="openView('settingsView')" title="Settings">⚙️<!-- Settings & Options --></button>
     </nav>
   </header>
 
-  <!-- Collapsible Main Logger Card (Hidden by default) -->
   <div id="entryCard" class="card" style="display: none;">
     <label for="customDatetime" id="lbl-date">Date</label>
     <input type="datetime-local" id="customDatetime" class="input-compact">
@@ -393,14 +368,13 @@
 
     <label for="tags" id="lbl-tags">Tags</label>
     <div class="tag-scroll-bar" id="quickTagBar"></div>
-    <input type="text" id="tags" placeholder="#food #lunch" onkeyup="handleTagTyping(event)">
+    <input type="text" id="tags" placeholder="#food #lunch" oninput="renderQuickTags()" onkeyup="handleTagTyping(event)">
 
     <input type="hidden" id="editingId" value="">
     <button id="saveBtn" onclick="saveLog()">Save Entry</button>
     <button id="cancelEditBtn" onclick="cancelEdit()" style="display:none; background:var(--border); color:var(--text); margin-top:-4px;">Cancel Edit</button>
   </div>
 
-  <!-- Timeline Search & Feed -->
   <div style="margin-bottom: 8px;">
     <input type="text" id="searchFilter" placeholder="🔍 Search logs by tag or text..." oninput="render()" class="input-compact" style="margin-bottom: 8px;">
     <button id="filteredExportBtn" class="btn-themed input-compact" onclick="exportCSV(true)" style="display: none; margin-bottom: 12px; font-weight: 600;"></button>
@@ -408,7 +382,6 @@
 
   <div id="logsContainer"></div>
 
-  <!-- ==================== COLLECTIONS TRACKER OVERLAY ==================== -->
   <div id="mediaView" class="overlay-view" onscroll="handleScroll(this)">
     <div class="overlay-header">
       <h2>Collections 🗂️</h2>
@@ -482,19 +455,6 @@
     <button id="topBtn-mediaView" class="btn-back-top" onclick="scrollToTop('mediaView')">↑ Top</button>
   </div>
 
-  <!-- ==================== VOCABULARY OVERLAY ==================== -->
-  <div id="vocabView" class="overlay-view" onscroll="handleScroll(this)">
-    <div class="overlay-header">
-      <h2>Daily Vocabulary 🗣️</h2>
-      <button class="btn-close-view" onclick="closeView('vocabView')">✕</button>
-    </div>
-
-    <div id="vocabListContainer"></div>
-
-    <button id="topBtn-vocabView" class="btn-back-top" onclick="scrollToTop('vocabView')">↑ Top</button>
-  </div>
-
-  <!-- ==================== CALENDAR OVERLAY ==================== -->
   <div id="calendarView" class="overlay-view" onscroll="handleScroll(this)">
     <div class="overlay-header">
       <h2 id="lbl-cal-title">Calendar 📅</h2>
@@ -530,7 +490,6 @@
     <button id="topBtn-calendarView" class="btn-back-top" onclick="scrollToTop('calendarView')">↑ Top</button>
   </div>
 
-  <!-- ==================== STATS OVERLAY ==================== -->
   <div id="statsView" class="overlay-view" onscroll="handleScroll(this)">
     <div class="overlay-header">
       <h2 id="lbl-stats-title">Analytics & Stats 📊</h2>
@@ -617,7 +576,6 @@
     <button id="topBtn-statsView" class="btn-back-top" onclick="scrollToTop('statsView')">↑ Top</button>
   </div>
 
-  <!-- ==================== SETTINGS OVERLAY ==================== -->
   <div id="settingsView" class="overlay-view" onscroll="handleScroll(this)">
     <div class="overlay-header">
       <h2 id="lbl-settings-title">Settings ⚙️</h2>
@@ -666,7 +624,6 @@
 
   <button id="topBtn-body" class="btn-back-top" onclick="scrollToWindowTop()">↑ Top</button>
 
-  <!-- JavaScript Logic -->
   <script>
     /* Global Translations Dictionary */
     const translations = {
@@ -699,29 +656,9 @@
       }
     };
 
-    /* Vocabulary Dataset */
-    const vocabPools = {
-      es: [
-        { word: "Pusilánime", phonetic: "[pu-si-lá-ni-me]", type: "Adjetivo (Avanzado C2)", meaning: "Falto de ánimo y valor para tolerar las desgracias o hacer frente a grandes empresas.", sentence: "Su actitud pusilánime le impidió defender sus convicciones ante el comité.", source: "RAE / Español C2" },
-        { word: "Inmarcesible", phonetic: "[in-mar-ce-si-ble]", type: "Adjetivo (Avanzado C2)", meaning: "Que no se puede marchitar o perder la frescura y la belleza.", sentence: "Dejó un legado inmarcesible en la historia de la literatura hispánica.", source: "RAE / Español C2" }
-      ],
-      ca: [
-        { word: "Aixopluc", phonetic: "[əj.ʃuˈpluk]", type: "Substantiu", meaning: "Lloc on Hom es posa a cobert de la pluja.", sentence: "Van trobar un bon aixopluc sota les branques d'aquell roure antic.", source: "Diccionari Català" },
-        { word: "Lletraferit", phonetic: "[ʎə.tɾə.fəˈɾit]", type: "Substantiu / Adj.", meaning: "Persona molt aficionada a la literatura i a la lectura.", sentence: "Com a bon lletraferit, passava les tardes navegant per llibreries velles.", source: "Diccionari Català" }
-      ],
-      zh: [
-        { word: "海纳百川", phonetic: "Hǎi nà bǎi chuān", type: "Idiom (Chengyu)", meaning: "The sea admits a hundred rivers; open-mindedness and inclusivity.", sentence: "海纳百川，有容乃大。(The sea is vast because it admits all rivers.)", source: "Classical Prose / 林则徐" }
-      ],
-      th: [
-        { word: "สวัสดี", phonetic: "sà-wàt-dee", type: "Greeting", tone: "Low - Low - Mid", meaning: "Hello / Goodbye", sentence: "สวัสดีครับ คุณสบายดีไหม (Hello, how are you?)", source: "Thai Foundation" }
-      ]
-    };
-
     let currentLang = 'en';
     let calCurrentDate = new Date();
-    let vocabIndices = { es: 0, ca: 0, zh: 0, th: 0 };
 
-    /* Scroll To Top Logic */
     function handleScroll(containerEl) {
       const btn = document.getElementById(`topBtn-${containerEl.id}`);
       if (btn) {
@@ -824,6 +761,7 @@
     function toggleEntryForm() {
       const card = document.getElementById('entryCard');
       card.style.display = (card.style.display === 'none') ? 'block' : 'none';
+      renderQuickTags();
     }
 
     function toggleMediaForm() {
@@ -841,7 +779,6 @@
       document.getElementById(viewId).style.display = 'block';
       if (viewId === 'calendarView') renderCalendar();
       if (viewId === 'statsView') renderStats();
-      if (viewId === 'vocabView') renderVocabView();
       if (viewId === 'mediaView') {
         populateCollectionTypeDropdown();
         renderMediaList();
@@ -893,6 +830,7 @@
         const words = val.split(' ').map(w => w ? (w.startsWith('#') ? w : '#' + w) : '');
         input.value = words.join(' ');
       }
+      renderQuickTags();
     }
 
     function handleMediaTagTyping(e) {
@@ -906,19 +844,49 @@
 
     function appendQuickTag(tagStr) {
       const input = document.getElementById('tags');
-      const current = input.value.trim();
-      if (!current.includes(tagStr)) input.value = current ? `${current} ${tagStr}` : tagStr;
+      const val = input.value;
+      const words = val.split(' ');
+      // Replace current word being typed if matching, or append
+      if (words.length > 0 && !val.endsWith(' ')) {
+        words[words.length - 1] = tagStr;
+        input.value = words.join(' ') + ' ';
+      } else {
+        input.value = val ? `${val.trim()} ${tagStr} ` : `${tagStr} `;
+      }
+      renderQuickTags();
     }
 
+    /* DYNAMIC TAG CHIP BAR FILTERING */
     function renderQuickTags() {
       const logs = getLogs();
       const tagCounts = {};
-      logs.forEach(l => (l.tags || []).forEach(t => tagCounts[t] = (tagCounts[t] || 0) + 1));
+      logs.forEach(l => (l.tags || []).forEach(t => {
+        if (t) tagCounts[t] = (tagCounts[t] || 0) + 1;
+      }));
 
-      const defaults = ['#food', '#symptom', '#exercise', '#mood', '#meds', '#water'];
-      const combined = Array.from(new Set([...defaults, ...Object.keys(tagCounts)]));
+      // Sort tags by frequency
+      const sortedTags = Object.keys(tagCounts).sort((a, b) => tagCounts[b] - tagCounts[a]);
 
-      document.getElementById('quickTagBar').innerHTML = combined.map(t => `
+      const inputVal = document.getElementById('tags').value;
+      const words = inputVal.split(' ');
+      const currentWord = (words[words.length - 1] || '').toLowerCase().replace(/^#/, '');
+
+      let matchingTags = [];
+      if (currentWord.length > 0) {
+        // Filter by prefix if user is typing
+        matchingTags = sortedTags.filter(t => t.toLowerCase().replace(/^#/, '').startsWith(currentWord));
+      } else {
+        // Otherwise show top used tags overall
+        matchingTags = sortedTags.slice(0, 10);
+      }
+
+      const container = document.getElementById('quickTagBar');
+      if (matchingTags.length === 0) {
+        container.innerHTML = '';
+        return;
+      }
+
+      container.innerHTML = matchingTags.map(t => `
         <span class="tag-chip" onclick="appendQuickTag('${t}')">${t}</span>
       `).join('');
     }
@@ -942,7 +910,7 @@
 
       if (!noteInput) return alert('Please enter entry details.');
 
-      const formattedTags = tagsInput ? tagsInput.split(' ').map(t => t.startsWith('#') ? t : '#' + t) : [];
+      const formattedTags = tagsInput ? tagsInput.split(' ').map(t => t ? (t.startsWith('#') ? t : '#' + t) : '').filter(Boolean) : [];
       const finalTimestamp = datetimeInput ? new Date(datetimeInput).toISOString() : new Date().toISOString();
       let logs = getLogs();
 
@@ -980,8 +948,9 @@
       document.getElementById('cancelEditBtn').style.display = 'block';
       document.getElementById('entryCard').style.display = 'block';
 
-      closeView('calendarView'); closeView('statsView'); closeView('settingsView'); closeView('vocabView'); closeView('mediaView');
+      closeView('calendarView'); closeView('statsView'); closeView('settingsView'); closeView('mediaView');
       window.scrollTo({ top: 0, behavior: 'smooth' });
+      renderQuickTags();
     }
 
     function deleteLog(id) {
@@ -1023,6 +992,7 @@
       setCurrentDatetime();
       document.getElementById('saveBtn').innerText = t.save;
       document.getElementById('cancelEditBtn').style.display = 'none';
+      renderQuickTags();
     }
 
     function render() {
@@ -1086,7 +1056,6 @@
       container.innerHTML = html;
     }
 
-    /* Custom Collection Types Logic */
     function getCustomTypes() {
       return JSON.parse(localStorage.getItem('my_pwa_custom_types') || '[]');
     }
@@ -1154,82 +1123,6 @@
       select.innerHTML = allTypes.map(t => `<option value="${t}">${t}</option>`).join('');
     }
 
-    /* Vocab Logic */
-    function nextVocabWord(langKey) {
-      const pool = vocabPools[langKey] || [];
-      if (pool.length === 0) return;
-      vocabIndices[langKey] = (vocabIndices[langKey] + 1) % pool.length;
-      renderVocabView();
-    }
-
-    function speakWord(text, langCode) {
-      if ('speechSynthesis' in window) {
-        const utterance = new SpeechSynthesisUtterance(text);
-        utterance.lang = langCode;
-        window.speechSynthesis.speak(utterance);
-      }
-    }
-
-    function logVocabWord(langKey) {
-      const item = vocabPools[langKey][vocabIndices[langKey]];
-      if (!item) return;
-
-      const tagMap = { es: '#vocab #spanish', ca: '#vocab #catalan', zh: '#vocab #chinese', th: '#vocab #thai' };
-      const noteText = `Learned word: ${item.word} (${item.phonetic}) - ${item.meaning}. Sentence: "${item.sentence}"`;
-
-      document.getElementById('note').value = noteText;
-      document.getElementById('tags').value = tagMap[langKey] || '#vocab';
-      document.getElementById('selectedEmoji').value = '🗣️';
-
-      closeView('vocabView');
-      toggleEntryForm();
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-
-    function renderVocabView() {
-      const container = document.getElementById('vocabListContainer');
-      const langNames = { es: "Español (Avanzado C2)", ca: "Català", zh: "Chinese (Mandarin)", th: "Thai (ไทย)" };
-      const speechCodes = { es: "es-ES", ca: "ca-ES", zh: "zh-CN", th: "th-TH" };
-
-      let html = '';
-
-      for (const langKey in vocabPools) {
-        const pool = vocabPools[langKey];
-        const idx = vocabIndices[langKey] || 0;
-        const item = pool[idx];
-
-        if (!item) continue;
-
-        const toneGuide = item.tone ? `<div style="font-size:12px; color:var(--header-accent); margin-bottom:4px;">Tone Guide: ${item.tone}</div>` : '';
-        const plecoBtn = langKey === 'zh' ? `<a href="https://www.pleco.com/" target="_blank" style="font-size:11px; text-decoration:none; color:var(--subtext); background:var(--bg); padding:4px 8px; border-radius:8px; border:1px solid var(--border); display:inline-block; margin-top:4px;">📖 Pleco Character Breakdown</a>` : '';
-        const thaiToneAppBtn = langKey === 'th' ? `<a href="https://forvo.com/word/${encodeURIComponent(item.word)}/#th" target="_blank" style="font-size:11px; text-decoration:none; color:var(--subtext); background:var(--bg); padding:4px 8px; border-radius:8px; border:1px solid var(--border); display:inline-block; margin-top:4px;">🎯 Forvo Audio Guide</a>` : '';
-
-        html += `
-          <div class="card">
-            <div class="vocab-lang-badge">${langNames[langKey]}</div>
-            <div class="vocab-word">${item.word}</div>
-            <div class="vocab-phonetic">${item.phonetic} • <span style="font-style:italic;">${item.type}</span></div>
-            ${toneGuide}
-            <div><strong>${item.meaning}</strong></div>
-            <div class="vocab-sentence">"${item.sentence}"</div>
-            <div style="font-size:11px; color:var(--subtext); margin-top:4px;">Source: ${item.source}</div>
-
-            <div style="display:flex; gap:6px; margin-top:10px; flex-wrap:wrap;">
-              <button class="btn-themed" style="width:auto; padding:6px 10px; font-size:12px;" onclick="speakWord('${item.word.replace(/'/g, "\\'")}', '${speechCodes[langKey]}')">🔊 Listen</button>
-              ${plecoBtn}
-              ${thaiToneAppBtn}
-              <button style="width:auto; padding:6px 10px; font-size:12px;" onclick="logVocabWord('${langKey}')">＋ Log This Word</button>
-              <button class="btn-themed" style="width:auto; padding:6px 10px; font-size:12px;" onclick="nextVocabWord('${langKey}')">⏭️ Skip / Next</button>
-            </div>
-          </div>
-        `;
-      }
-
-      container.innerHTML = html;
-    }
-
-
-    /* Collections Tracker Core Logic */
     function getMediaItems() { return JSON.parse(localStorage.getItem('my_pwa_media') || '[]'); }
 
     async function fetchMediaInfo(title, type) {
@@ -1262,7 +1155,7 @@
 
       if (!title) return alert('Please enter a title/name.');
 
-      const formattedTags = tagsInput ? tagsInput.split(' ').map(t => t.startsWith('#') ? t : '#' + t) : [];
+      const formattedTags = tagsInput ? tagsInput.split(' ').map(t => t ? (t.startsWith('#') ? t : '#' + t) : '').filter(Boolean) : [];
       let apiData = null;
       if (!editingId) apiData = await fetchMediaInfo(title, type);
 
@@ -1406,7 +1299,6 @@
       }).join('');
     }
 
-
     function changeCalMonth(delta) {
       calCurrentDate.setMonth(calCurrentDate.getMonth() + delta);
       renderCalendar();
@@ -1510,7 +1402,6 @@
 
       container.innerHTML = html;
     }
-
 
     function renderStats() {
       /* 1. MAIN LOG STATS */
@@ -1741,7 +1632,6 @@
         </svg>
       `;
     }
-
 
     async function exportCSV(onlyFiltered = false) {
       const logsToExport = onlyFiltered ? getFilteredLogs() : getLogs();
