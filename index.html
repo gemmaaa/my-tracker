@@ -6,335 +6,25 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <title>Quick Tracker ✨</title>
-  
-  <style>
-    /* Default: Lavender Theme (Light) */
-    :root, [data-theme="lavender"] {
-      --bg: #e6def8;
-      --card: #d8ccf1;
-      --text: #2d1e3e;
-      --subtext: #6b5288;
-      --border: #c9b8e8;
-      --accent: #fff5a5;
-      --accent-text: #4a3c00;
-      --tag-bg: #fff8c4;
-      --tag-text: #594800;
-      --header-accent: #7b599c;
-      --danger: #ff3b30;
-      --btn-secondary: rgba(107, 82, 136, 0.18);
-      --cal-main: #b388ff;
-      --cal-media: #ffd54f;
-      --cal-both: #ff4081;
-    }
-
-    /* Hot Pink Theme (Dark) */
-    [data-theme="hotpink"] {
-      --bg: #160a18;
-      --card: #26122b;
-      --text: #fce4ec;
-      --subtext: #b388ff;
-      --border: #4a2154;
-      --accent: #ff375f;
-      --accent-text: #ffffff;
-      --tag-bg: #ff69b4;
-      --tag-text: #ffffff;
-      --header-accent: #ff80ab;
-      --danger: #ff453a;
-      --btn-secondary: rgba(179, 136, 255, 0.2);
-      --cal-main: #e040fb;
-      --cal-media: #ff9100;
-      --cal-both: #00e676;
-    }
-
-    /* Matcha Cream Theme (Light) */
-    [data-theme="matcha"] {
-      --bg: #f4f6f0;
-      --card: #e1e9dc;
-      --text: #1c2b18;
-      --subtext: #6b8e62;
-      --border: #d4e0d0;
-      --accent: #a3b18a;
-      --accent-text: #ffffff;
-      --tag-bg: #dad7cd;
-      --tag-text: #3a5a40;
-      --header-accent: #588157;
-      --danger: #e63946;
-      --btn-secondary: rgba(107, 142, 98, 0.18);
-      --cal-main: #588157;
-      --cal-media: #dda15e;
-      --cal-both: #bc6c25;
-    }
-
-    /* Monochrome High-Contrast Theme */
-    [data-theme="monochrome"] {
-      --bg: #000000;
-      --card: #141414;
-      --text: #ffffff;
-      --subtext: #a0a0a0;
-      --border: #333333;
-      --accent: #ffffff;
-      --accent-text: #000000;
-      --tag-bg: #333333;
-      --tag-text: #ffffff;
-      --header-accent: #ffffff;
-      --danger: #ff453a;
-      --btn-secondary: #222222;
-      --cal-main: #ffffff;
-      --cal-media: #888888;
-      --cal-both: #ff3b30;
-    }
-
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-      background-color: var(--bg);
-      color: var(--text);
-      margin: 0;
-      padding: 16px;
-      padding-bottom: 50px;
-      -webkit-tap-highlight-color: transparent;
-    }
-
-    .app-header {
-      margin-bottom: 16px;
-    }
-
-    .app-title-row {
-      text-align: left;
-      margin-bottom: 10px;
-    }
-
-    .app-title-row h2 {
-      margin: 0;
-      font-size: 22px;
-      font-weight: 800;
-      color: var(--header-accent);
-      letter-spacing: -0.3px;
-    }
-
-    .nav-actions-row {
-      display: flex;
-      justify-content: space-between;
-      gap: 6px;
-    }
-
-    .btn-icon-head {
-      background: var(--btn-secondary);
-      border: 1px solid var(--border);
-      color: var(--text);
-      font-size: 16px;
-      font-weight: 600;
-      cursor: pointer;
-      padding: 10px 8px;
-      border-radius: 12px;
-      margin: 0;
-      flex: 1;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .card {
-      background: var(--card);
-      padding: 16px;
-      border-radius: 16px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-      margin-bottom: 16px;
-      border: 1px solid var(--border);
-      box-sizing: border-box;
-    }
-
-    .overlay-view {
-      display: none;
-      position: fixed;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background: var(--bg);
-      z-index: 999;
-      padding: 20px;
-      overflow-y: auto;
-      box-sizing: border-box;
-    }
-
-    .overlay-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 16px;
-    }
-
-    .overlay-header h2 {
-      margin: 0;
-      font-size: 20px;
-      color: var(--header-accent);
-    }
-
-    .btn-close-view {
-      background: var(--btn-secondary);
-      color: var(--text);
-      border: 1px solid var(--border);
-      border-radius: 50%;
-      width: 34px; height: 34px;
-      font-size: 16px; font-weight: bold;
-      display: flex; align-items: center; justify-content: center;
-      cursor: pointer;
-    }
-
-    .btn-back-top {
-      display: none;
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      background: var(--accent);
-      color: var(--accent-text);
-      border: 1px solid var(--border);
-      padding: 8px 14px;
-      border-radius: 20px;
-      font-size: 12px;
-      font-weight: bold;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-      cursor: pointer;
-      z-index: 1000;
-    }
-
-    label {
-      font-size: 11px; font-weight: 600;
-      color: var(--subtext);
-      display: block; margin-bottom: 4px;
-      text-transform: uppercase; letter-spacing: 0.5px;
-    }
-
-    input, select, textarea, button {
-      width: 100%; padding: 12px;
-      font-size: 16px; border-radius: 10px;
-      border: 1px solid var(--border);
-      background: var(--bg); color: var(--text);
-      box-sizing: border-box; margin-bottom: 10px;
-      font-family: inherit;
-    }
-
-    textarea { min-height: 75px; resize: vertical; }
-
-    .input-compact { padding: 8px 10px; font-size: 14px; max-width: 100%; box-sizing: border-box; }
-
-    button { background: var(--accent); color: var(--accent-text); border: none; font-weight: 700; cursor: pointer; }
-
-    .btn-themed { background: var(--btn-secondary); color: var(--text); border: 1px solid var(--border); }
-
-    .btn-danger { background: var(--danger); color: #ffffff; margin-top: 6px; }
-
-    .star-rating {
-      display: flex; gap: 8px; font-size: 24px;
-      cursor: pointer; margin-bottom: 10px; user-select: none;
-    }
-    .star-rating .star { color: var(--subtext); opacity: 0.4; transition: transform 0.1s; }
-    .star-rating .star.active { color: #ffcc00; opacity: 1; transform: scale(1.1); }
-
-    .emoji-bar, .tag-scroll-bar {
-      display: flex; gap: 8px; overflow-x: auto; padding-bottom: 8px; margin-bottom: 10px;
-      -webkit-overflow-scrolling: touch;
-    }
-
-    .emoji-opt {
-      font-size: 22px; padding: 6px 10px;
-      background: var(--bg); border: 1px solid var(--border);
-      border-radius: 10px; cursor: pointer; flex-shrink: 0;
-    }
-    .emoji-opt.selected { border: 2px solid var(--header-accent); transform: scale(1.15); background: var(--card); }
-
-    .tag-chip {
-      background: var(--tag-bg); color: var(--tag-text);
-      padding: 4px 10px; border-radius: 12px;
-      font-size: 12px; font-weight: 600; white-space: nowrap; cursor: pointer; flex-shrink: 0;
-    }
-
-    .year-header { font-size: 20px; font-weight: 700; color: var(--header-accent); margin-top: 16px; margin-bottom: 8px; border-bottom: 2px solid var(--header-accent); padding-bottom: 4px; }
-    .month-header { font-size: 15px; font-weight: 600; color: var(--subtext); margin-top: 12px; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
-
-    .date-card {
-      background: var(--card); border-radius: 12px; padding: 12px;
-      margin-bottom: 10px; border: 1px solid var(--border);
-    }
-    .date-title { font-weight: 600; font-size: 14px; color: var(--text); margin-bottom: 8px; padding-bottom: 4px; border-bottom: 1px dashed var(--border); }
-
-    .log-entry { padding: 8px 0; }
-    .log-entry:not(:last-child) { border-bottom: 1px solid var(--border); }
-    .log-header-row { display: flex; justify-content: space-between; align-items: center; }
-    .time { font-size: 12px; color: var(--subtext); }
-    .action-btns { display: flex; gap: 8px; }
-
-    .btn-icon { background: none; border: none; padding: 0; margin: 0; font-size: 13px; width: auto; cursor: pointer; opacity: 0.7; }
-
-    .tag { background: var(--tag-bg); color: var(--tag-text); padding: 2px 8px; border-radius: 12px; font-size: 11px; font-weight: 600; margin-right: 4px; display: inline-block; margin-top: 4px; }
-
-    .cal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
-    .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; text-align: center; }
-    .cal-day-label { font-size: 11px; font-weight: bold; color: var(--subtext); padding-bottom: 4px; }
-    .cal-cell {
-      aspect-ratio: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
-      border-radius: 8px; border: 1px solid var(--border); font-size: 13px; background: var(--bg);
-      cursor: pointer; position: relative; font-weight: 500;
-    }
-    .cal-cell.empty { border: none; background: transparent; }
-    
-    .cal-cell.has-main { background: var(--cal-main); color: #fff; font-weight: bold; border-color: var(--header-accent); }
-    .cal-cell.has-media { background: var(--cal-media); color: #000; font-weight: bold; border-color: var(--header-accent); }
-    .cal-cell.has-both { background: var(--cal-both); color: #fff; font-weight: bold; border-color: var(--header-accent); }
-    .cal-cell .badge { font-size: 9px; position: absolute; bottom: 2px; }
-
-    .cal-legend {
-      display: flex; justify-content: space-around; font-size: 11px; font-weight: 600;
-      margin-top: 12px; padding-top: 10px; border-top: 1px dashed var(--border);
-    }
-    .legend-item { display: flex; align-items: center; gap: 6px; }
-    .legend-box { width: 12px; height: 12px; border-radius: 3px; }
-
-    .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px; }
-    .stat-card { background: var(--bg); border: 1px solid var(--border); border-radius: 10px; padding: 10px; text-align: center; }
-    .stat-val { font-size: 20px; font-weight: bold; color: var(--header-accent); }
-    .stat-lbl { font-size: 11px; color: var(--subtext); margin-top: 2px; }
-
-    .chart-container { width: 100%; height: 160px; margin-top: 10px; }
-    polyline { fill: none; stroke: var(--header-accent); stroke-width: 3; stroke-linecap: round; }
-    circle { fill: var(--accent); stroke: var(--header-accent); stroke-width: 2; }
-
-    .media-type-badge { font-size: 10px; font-weight: bold; text-transform: uppercase; background: var(--tag-bg); color: var(--tag-text); padding: 2px 6px; border-radius: 4px; }
-    .media-cover-img { width: 100%; max-height: 180px; object-fit: contain; border-radius: 8px; margin-top: 8px; background: rgba(0,0,0,0.05); }
-
-    .top-media-item {
-      padding: 4px 0; border-bottom: 1px dashed var(--border); font-size: 13px;
-    }
-
-    .custom-type-list {
-      margin-top: 8px;
-    }
-    .custom-type-chip {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      background: var(--bg);
-      border: 1px solid var(--border);
-      padding: 4px 10px;
-      border-radius: 12px;
-      font-size: 12px;
-      margin-right: 6px;
-      margin-bottom: 6px;
-    }
-  </style>
+  <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
 
+  <!-- App Header -->
   <header class="app-header">
     <div class="app-title-row">
-      <h2>Quick Tracker ✨</h2>
+      <h2 class="app-title-left">Quick Tracker ✨</h2>
     </div>
-    <nav class="nav-actions-row">
-      <button class="btn-icon-head" onclick="toggleEntryForm()" title="New Log">📓<!-- Log --></button>
-      <button class="btn-icon-head" onclick="openView('mediaView')" title="Collections">🗂️<!-- Collections --></button>
-      <button class="btn-icon-head" onclick="openView('calendarView')" title="Calendar">📅<!-- Calendar --></button>
-      <button class="btn-icon-head" onclick="openView('statsView')" title="Stats">📊<!-- Analytics & Stats --></button>
-      <button class="btn-icon-head" onclick="openView('settingsView')" title="Settings">⚙️<!-- Settings & Options --></button>
+    <nav class="nav-actions">
+      <button class="btn-icon-head" onclick="toggleEntryForm()" title="New Log">📓 <!-- Log --></button>
+      <button class="btn-icon-head" onclick="openView('collectionsView')" title="Collections">🗂️ <!-- Collections --></button>
+      <button class="btn-icon-head" onclick="openView('calendarView')" title="Calendar">📅 <!-- Calendar --></button>
+      <button class="btn-icon-head" onclick="openView('statsView')" title="Stats">📊 <!-- Stats --></button>
+      <button class="btn-icon-head" onclick="openView('settingsView')" title="Settings">⚙️ <!-- Settings --></button>
     </nav>
   </header>
 
+  <!-- Main Logger Input Card -->
   <div id="entryCard" class="card" style="display: none;">
     <label for="customDatetime" id="lbl-date">Date</label>
     <input type="datetime-local" id="customDatetime" class="input-compact">
@@ -368,93 +58,91 @@
 
     <label for="tags" id="lbl-tags">Tags</label>
     <div class="tag-scroll-bar" id="quickTagBar"></div>
-    <input type="text" id="tags" placeholder="#food #lunch" oninput="renderQuickTags()" onkeyup="handleTagTyping(event)">
+    <input type="text" id="tags" placeholder="#food #lunch" oninput="handleTagTyping(this, 'quickTagBar', appendQuickTag)">
 
     <input type="hidden" id="editingId" value="">
     <button id="saveBtn" onclick="saveLog()">Save Entry</button>
     <button id="cancelEditBtn" onclick="cancelEdit()" style="display:none; background:var(--border); color:var(--text); margin-top:-4px;">Cancel Edit</button>
   </div>
 
+  <!-- Timeline Search & Export -->
   <div style="margin-bottom: 8px;">
-    <input type="text" id="searchFilter" placeholder="🔍 Search logs by tag or text..." oninput="render()" class="input-compact" style="margin-bottom: 8px;">
+    <input type="text" id="searchFilter" placeholder="🔍 Search logs by tag or text..." oninput="renderLogs()" class="input-compact" style="margin-bottom: 8px;">
     <button id="filteredExportBtn" class="btn-themed input-compact" onclick="exportCSV(true)" style="display: none; margin-bottom: 12px; font-weight: 600;"></button>
   </div>
 
+  <!-- Logs Feed -->
   <div id="logsContainer"></div>
 
-  <div id="mediaView" class="overlay-view" onscroll="handleScroll(this)">
+  <!-- ==================== COLLECTIONS OVERLAY ==================== -->
+  <div id="collectionsView" class="overlay-view" onscroll="handleScroll(this)">
     <div class="overlay-header">
-      <h2>Collections 🗂️</h2>
-      <button class="btn-close-view" onclick="closeView('mediaView')">✕</button>
+      <h2 id="lbl-col-header">Collections 🗂️</h2>
+      <button class="btn-close-view" onclick="closeView('collectionsView')">✕</button>
     </div>
 
-    <!-- Collection Controls Row -->
-    <div id="mediaControlsRow" style="display: flex; gap: 8px; margin-bottom: 12px;">
-      <button onclick="toggleMediaForm()" style="margin-bottom: 0;">＋ Add Collection Entry</button>
-      <button class="btn-themed" onclick="toggleCustomTypeCard()" style="margin-bottom: 0; width: auto; font-size: 13px;">⚙️ Manage Types</button>
+    <div id="colControlsRow" style="display: flex; gap: 8px; margin-bottom: 12px; flex-wrap: wrap;">
+      <button onclick="toggleCollectionForm()" style="margin-bottom: 0; flex: 1;">＋ Add Entry</button>
+      <button class="btn-themed" onclick="promptAddCustomType()" style="margin-bottom: 0; width: auto; font-size: 13px;">＋ New Type</button>
     </div>
 
-    <!-- Manage Custom Collection Types Card -->
-    <div id="customTypeCard" class="card" style="display: none;">
-      <label>Add New Custom Collection Type</label>
-      <div style="display: flex; gap: 6px;">
-        <input type="text" id="newTypeName" placeholder="e.g. Podcast, Game, Wine, Workout" class="input-compact" style="margin-bottom: 0;">
-        <button onclick="addCustomType()" style="width: auto; padding: 0 16px; margin-bottom: 0; white-space: nowrap;">Add Type</button>
+    <!-- Collection Form -->
+    <div id="collectionFormCard" class="card" style="display: none;">
+      <label id="lbl-col-type">Collection Type</label>
+      <div style="display: flex; gap: 6px; align-items: center; margin-bottom: 6px;">
+        <select id="colType" class="input-compact" style="margin-bottom: 0; flex: 1;"></select>
+        <button id="btnDeleteCustomType" class="btn-themed" onclick="removeCurrentCustomType()" style="display: none; width: auto; margin-bottom: 0; padding: 6px 10px; color: var(--danger); font-size: 12px;" title="Delete Custom Type">🗑️</button>
       </div>
-      <label style="margin-top: 12px;">Your Custom Types</label>
-      <div id="customTypeList" class="custom-type-list"></div>
-    </div>
 
-    <!-- Collapsible Collection Entry / Edit Form Card -->
-    <div id="mediaFormCard" class="card" style="display: none;">
-      <label>Add / Edit Collection Entry</label>
-      <select id="mediaType" class="input-compact"></select>
+      <label id="lbl-col-title-input">Title / Name</label>
+      <input type="text" id="colTitle" placeholder="Title or Name" class="input-compact">
 
-      <input type="text" id="mediaTitle" placeholder="Title / Name" class="input-compact">
-      <input type="text" id="mediaAuthor" placeholder="By / Creator / Venue" class="input-compact">
+      <label id="lbl-col-by">By</label>
+      <input type="text" id="colAuthor" placeholder="Creator, Author, Venue, etc." class="input-compact">
 
       <div style="display: flex; gap: 8px;">
         <div style="flex:1;">
-          <label style="font-size:10px;">Start Date</label>
-          <input type="date" id="mediaStartDate" class="input-compact">
+          <label id="lbl-col-startdate" style="font-size:10px;">Start Date</label>
+          <input type="date" id="colStartDate" class="input-compact">
         </div>
         <div style="flex:1;">
-          <label style="font-size:10px;">End Date (Optional)</label>
-          <input type="date" id="mediaEndDate" class="input-compact">
+          <label id="lbl-col-enddate" style="font-size:10px;">End Date (Optional)</label>
+          <input type="date" id="colEndDate" class="input-compact">
         </div>
       </div>
 
-      <label style="margin-top: 4px;">Rating</label>
-      <div class="star-rating" id="mediaStarRating">
-        <span class="star" onclick="setMediaRating(1)">★</span>
-        <span class="star" onclick="setMediaRating(2)">★</span>
-        <span class="star" onclick="setMediaRating(3)">★</span>
-        <span class="star" onclick="setMediaRating(4)">★</span>
-        <span class="star" onclick="setMediaRating(5)">★</span>
+      <label id="lbl-col-rating" style="margin-top: 4px;">Rating</label>
+      <div class="star-rating" id="colStarRating">
+        <span class="star" onclick="setColRating(1)">★</span>
+        <span class="star" onclick="setColRating(2)">★</span>
+        <span class="star" onclick="setColRating(3)">★</span>
+        <span class="star" onclick="setColRating(4)">★</span>
+        <span class="star" onclick="setColRating(5)">★</span>
       </div>
-      <input type="hidden" id="selectedMediaRating" value="0">
+      <input type="hidden" id="selectedColRating" value="0">
 
-      <label for="mediaTags">Tags</label>
-      <input type="text" id="mediaTags" placeholder="#scifi #favorite" onkeyup="handleMediaTagTyping(event)" class="input-compact">
+      <label for="colTags" id="lbl-col-tags">Tags</label>
+      <div class="tag-scroll-bar" id="colQuickTagBar"></div>
+      <input type="text" id="colTags" placeholder="#scifi #series" oninput="handleTagTyping(this, 'colQuickTagBar', appendColQuickTag)" class="input-compact">
 
-      <textarea id="mediaNotes" placeholder="Review, quotes, or details..."></textarea>
+      <label id="lbl-col-notes">Notes / Review</label>
+      <textarea id="colNotes" placeholder="Thoughts, review, or details..."></textarea>
 
-      <input type="hidden" id="editingMediaId" value="">
-      <button id="saveMediaBtn" onclick="saveMediaItem()">Add Collection Log</button>
-      <button id="cancelMediaEditBtn" onclick="cancelMediaEdit()" style="display:none; background:var(--border); color:var(--text); margin-top:-4px;">Cancel Edit</button>
+      <input type="hidden" id="editingColId" value="">
+      <button id="saveColBtn" onclick="saveCollectionItem()">Save Collection Entry</button>
+      <button id="cancelColEditBtn" onclick="cancelCollectionEdit()" style="display:none; background:var(--border); color:var(--text); margin-top:-4px;">Cancel Edit</button>
     </div>
 
-    <!-- Search Input Directly Above Collection Feed -->
-    <div id="mediaFeedSearchWrapper">
-      <input type="text" id="mediaSearchFilter" placeholder="🔍 Search collections by name, creator, tag, or note..." oninput="renderMediaList()" class="input-compact" style="margin-bottom: 12px;">
+    <!-- Search directly above Collection feed -->
+    <div id="colFeedSearchWrapper">
+      <input type="text" id="colSearchFilter" placeholder="🔍 Search collections by title, creator, tag, note..." oninput="renderCollectionList()" class="input-compact" style="margin-bottom: 12px;">
     </div>
 
-    <!-- Collection Feed Container -->
-    <div id="mediaContainer"></div>
-
-    <button id="topBtn-mediaView" class="btn-back-top" onclick="scrollToTop('mediaView')">↑ Top</button>
+    <div id="collectionsContainer"></div>
+    <button id="topBtn-collectionsView" class="btn-back-top" onclick="scrollToTop('collectionsView')">↑ Top</button>
   </div>
 
+  <!-- ==================== CALENDAR OVERLAY ==================== -->
   <div id="calendarView" class="overlay-view" onscroll="handleScroll(this)">
     <div class="overlay-header">
       <h2 id="lbl-cal-title">Calendar 📅</h2>
@@ -474,11 +162,10 @@
       </div>
       <div class="cal-grid" id="calGrid"></div>
 
-      <!-- Theme-Dynamic Calendar Legend -->
       <div class="cal-legend">
-        <div class="legend-item"><div class="legend-box" style="background:var(--cal-main);"></div><span>Main Log</span></div>
-        <div class="legend-item"><div class="legend-box" style="background:var(--cal-media);"></div><span>Collections</span></div>
-        <div class="legend-item"><div class="legend-box" style="background:var(--cal-both);"></div><span>Both</span></div>
+        <div class="legend-item"><div class="legend-box" style="background:var(--cal-main);"></div><span id="lbl-leg-main">Main Log</span></div>
+        <div class="legend-item"><div class="legend-box" style="background:var(--cal-col);"></div><span id="lbl-leg-col">Collections</span></div>
+        <div class="legend-item"><div class="legend-box" style="background:var(--cal-both);"></div><span id="lbl-leg-both">Both</span></div>
       </div>
     </div>
 
@@ -490,13 +177,14 @@
     <button id="topBtn-calendarView" class="btn-back-top" onclick="scrollToTop('calendarView')">↑ Top</button>
   </div>
 
+  <!-- ==================== STATS OVERLAY ==================== -->
   <div id="statsView" class="overlay-view" onscroll="handleScroll(this)">
     <div class="overlay-header">
       <h2 id="lbl-stats-title">Analytics & Stats 📊</h2>
       <button class="btn-close-view" onclick="closeView('statsView')">✕</button>
     </div>
 
-    <!-- MAIN LOG STATS -->
+    <!-- Main Log Stats -->
     <div class="stat-grid">
       <div class="stat-card">
         <div class="stat-val" id="st-streak">0</div>
@@ -517,7 +205,7 @@
     </div>
 
     <div class="card">
-      <label id="lbl-st-toptags">Top 5 Most Used Tags</label>
+      <label id="lbl-st-toptags">Top 5 Most Used Tags (Main Log)</label>
       <div id="topTagsList" style="margin-top: 6px; font-size: 14px;"></div>
     </div>
 
@@ -534,48 +222,53 @@
       <div class="chart-container" id="svgChartBox"></div>
     </div>
 
-    <!-- INTEGRATED COLLECTIONS STATS -->
-    <h3 style="margin-top: 24px; margin-bottom: 12px; font-size: 18px; color: var(--header-accent);">Collections Analytics 🗂️</h3>
+    <!-- Collections Stats -->
+    <h3 id="lbl-col-stats-header" style="margin-top: 24px; margin-bottom: 12px; font-size: 18px; color: var(--header-accent);">Collections Analytics 🗂️</h3>
 
     <div class="stat-grid">
       <div class="stat-card">
-        <div class="stat-val" id="mst-total">0</div>
-        <div class="stat-lbl">Total Items</div>
+        <div class="stat-val" id="cst-total">0</div>
+        <div class="stat-lbl" id="lbl-cst-total">Total Items</div>
       </div>
       <div class="stat-card">
-        <div class="stat-val" id="mst-finished">0</div>
-        <div class="stat-lbl">Completed Items</div>
+        <div class="stat-val" id="cst-finished">0</div>
+        <div class="stat-lbl" id="lbl-cst-finished">Completed</div>
       </div>
       <div class="stat-card">
-        <div class="stat-val" id="mst-avg-rating">-</div>
-        <div class="stat-lbl">Average Rating</div>
+        <div class="stat-val" id="cst-avg-rating">-</div>
+        <div class="stat-lbl" id="lbl-cst-avg">Avg Rating</div>
       </div>
       <div class="stat-card">
-        <div class="stat-val" id="mst-breakdown">-</div>
-        <div class="stat-lbl">Type Breakdown</div>
+        <div class="stat-val" id="cst-breakdown" style="font-size: 13px; font-weight: bold; padding-top: 4px;">-</div>
+        <div class="stat-lbl" id="lbl-cst-breakdown">Type Breakdown</div>
       </div>
     </div>
 
-    <!-- Collection Tag Frequency Chart -->
+    <!-- Multi-faceted Collections Frequency Chart -->
     <div class="card">
-      <label>Collection Tag Frequency Chart</label>
-      <div style="display: flex; gap: 8px; margin-top: 6px;">
-        <select id="mediaChartTagSelect" onchange="renderMediaChart()" class="input-compact"></select>
-        <select id="mediaChartGrainSelect" onchange="renderMediaChart()" class="input-compact">
-          <option value="daily">Daily</option>
-          <option value="weekly">Weekly</option>
-          <option value="monthly">Monthly</option>
-        </select>
+      <label id="lbl-col-chart-title">Collections Frequency Chart</label>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 6px;">
+        <select id="colChartTypeSelect" onchange="onColChartTypeChange()" class="input-compact"></select>
+        <select id="colChartTagSelect" onchange="renderCollectionChart()" class="input-compact"></select>
       </div>
-      <div class="chart-container" id="svgMediaChartBox"></div>
+      <select id="colChartGrainSelect" onchange="renderCollectionChart()" class="input-compact" style="margin-top: 6px;">
+        <option value="daily">Daily</option>
+        <option value="weekly">Weekly</option>
+        <option value="monthly">Monthly</option>
+      </select>
+      <div class="chart-container" id="svgColChartBox"></div>
     </div>
 
-    <!-- Dynamic Top Rated Lists Per Collection Type -->
-    <div id="dynamicTopRatedContainer"></div>
+    <!-- Top Rated by Category -->
+    <div class="card">
+      <label id="lbl-top-rated-title">Top Rated Records (Top 3 Each)</label>
+      <div id="topRatedCollectionsContainer"></div>
+    </div>
 
     <button id="topBtn-statsView" class="btn-back-top" onclick="scrollToTop('statsView')">↑ Top</button>
   </div>
 
+  <!-- ==================== SETTINGS OVERLAY ==================== -->
   <div id="settingsView" class="overlay-view" onscroll="handleScroll(this)">
     <div class="overlay-header">
       <h2 id="lbl-settings-title">Settings ⚙️</h2>
@@ -583,12 +276,12 @@
     </div>
 
     <div class="card">
-      <label for="defaultViewSelect">Default Screen on App Open</label>
+      <label for="defaultViewSelect" id="lbl-opt-default">Default Screen on App Open</label>
       <select id="defaultViewSelect" onchange="changeDefaultView(this.value)">
         <option value="main">Main Log</option>
-        <option value="main_form">Main Log Entry</option>
-        <option value="media">Collections Log</option>
-        <option value="media_form">Collections Log Entry</option>
+        <option value="main_form">Main Log Entry Form</option>
+        <option value="collections">Collections</option>
+        <option value="collections_form">Collections Entry Form</option>
       </select>
 
       <label for="langSelect" id="lbl-language" style="margin-top: 10px;">Language</label>
@@ -607,16 +300,18 @@
       </select>
     </div>
 
+    <!-- Main Log Data Management -->
     <div class="card">
-      <label>Main Log Management</label>
-      <button class="btn-themed" onclick="exportCSV(false)">Export Main Log (CSV)</button>
-      <button class="btn-danger" onclick="deleteAllLogs()">Clear Main Log Data (Reset)</button>
+      <label id="lbl-mgmt-main">Main Log Management</label>
+      <button class="btn-themed" onclick="exportCSV(false)" id="btn-export-main">Export Main Log (CSV)</button>
+      <button class="btn-danger" onclick="deleteAllLogs()" id="btn-delete-main">Clear Main Log Data (Reset)</button>
     </div>
 
+    <!-- Collections Data Management -->
     <div class="card">
-      <label>Collections Log Management</label>
-      <button class="btn-themed" onclick="exportMediaCSV()">Export Collections Log (CSV)</button>
-      <button class="btn-danger" onclick="deleteMediaData()">Clear Collections Log Data (Reset)</button>
+      <label id="lbl-mgmt-col">Collections Management</label>
+      <button class="btn-themed" onclick="exportCollectionsCSV()" id="btn-export-col">Export Collections (CSV)</button>
+      <button class="btn-danger" onclick="deleteCollectionsData()" id="btn-delete-col">Clear Collections Data (Reset)</button>
     </div>
 
     <button id="topBtn-settingsView" class="btn-back-top" onclick="scrollToTop('settingsView')">↑ Top</button>
@@ -624,1080 +319,15 @@
 
   <button id="topBtn-body" class="btn-back-top" onclick="scrollToWindowTop()">↑ Top</button>
 
-  <script>
-    /* Global Translations Dictionary */
-    const translations = {
-      en: {
-        date: "Date", rating: "Rating (Optional)", emoji: "Category Emoji", details: "Entry Details",
-        tags: "Tags", placeholder_note: "What would you like to log today?", placeholder_search: "🔍 Search logs by tag or text...",
-        save: "Save Entry", update: "Update Entry", cancel: "Cancel Edit", export_all: "Export All Data (CSV)",
-        export_filtered: "Export Filtered Logs (CSV)", settings_title: "Settings ⚙️", cal_title: "Calendar 📅",
-        stats_title: "Analytics & Stats 📊", language: "Language", theme: "Color Palette Theme",
-        no_logs: "No logs recorded yet.", no_matches: "No matching logs found.", streak: "Day Streak 🔥",
-        totallogs: "Total Logs", avgday: "Avg / Day", peakhour: "Peak Hour", toptags: "Top 5 Most Used Tags", charttitle: "Main Log Tag Frequency Chart"
-      },
-      es: {
-        date: "Fecha", rating: "Calificación (Opcional)", emoji: "Emoji de Categoría", details: "Detalles de la Entrada",
-        tags: "Etiquetas", placeholder_note: "¿Qué te gustaría registrar hoy?", placeholder_search: "🔍 Buscar registros por etiqueta o texto...",
-        save: "Guardar Entrada", update: "Actualizar Entrada", cancel: "Cancelar Edición", export_all: "Exportar Todos los Datos (CSV)",
-        export_filtered: "Exportar Registros Filtrados (CSV)", settings_title: "Ajustes ⚙️", cal_title: "Calendario 📅",
-        stats_title: "Estadísticas y Análisis 📊", language: "Idioma", theme: "Paleta de Colores",
-        no_logs: "Aún no hay registros guardados.", no_matches: "No se encontraron registros coincidentes.", streak: "Racha de Días 🔥",
-        totallogs: "Total de Registros", avgday: "Prom. / Día", peakhour: "Hora Pico", toptags: "Top 5 Etiquetas Más Usadas", charttitle: "Gráfico de Frecuencia (Principal)"
-      },
-      ca: {
-        date: "Data", rating: "Qualificació (Opcional)", emoji: "Emoji de Categoria", details: "Detalls de l'Entrada",
-        tags: "Etiquetes", placeholder_note: "Què t'agradaria registrar avui?", placeholder_search: "🔍 Cerca registres per etiqueta o text...",
-        save: "Desar Entrada", update: "Actualitzar Entrada", cancel: "Cancel·lar Edició", export_all: "Exportar Totes les Dades (CSV)",
-        export_filtered: "Exportar Registros Filtrats (CSV)", settings_title: "Ajustos ⚙️", cal_title: "Calendari 📅",
-        stats_title: "Estadístiques i Anàlisi 📊", language: "Idioma", theme: "Paleta de Colors",
-        no_logs: "Encara no hi ha registres desats.", no_matches: "No s'han trobat registres coincidents.", streak: "Ratxa de Dies 🔥",
-        totallogs: "Total de Registres", avgday: "Mitjana / Dia", peakhour: "Hora Punta", toptags: "Top 5 Etiquetes Més Utilitzades", charttitle: "Gràfic de Freqüència (Principal)"
-      }
-    };
-
-    let currentLang = 'en';
-    let calCurrentDate = new Date();
-
-    function handleScroll(containerEl) {
-      const btn = document.getElementById(`topBtn-${containerEl.id}`);
-      if (btn) {
-        if (containerEl.scrollTop > 150) btn.style.display = 'block';
-        else btn.style.display = 'none';
-      }
-    }
-
-    window.onscroll = function() {
-      const btn = document.getElementById('topBtn-body');
-      if (btn) {
-        if (window.scrollY > 150) btn.style.display = 'block';
-        else btn.style.display = 'none';
-      }
-    };
-
-    function scrollToTop(viewId) {
-      document.getElementById(viewId).scrollTo({ top: 0, behavior: 'smooth' });
-    }
-
-    function scrollToWindowTop() {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-
-    /* System Language & Default Views */
-    function changeLanguage(lang) {
-      currentLang = lang || 'en';
-      localStorage.setItem('selected_lang', currentLang);
-      applyLanguage();
-      render();
-    }
-
-    function applyLanguage() {
-      const t = translations[currentLang] || translations.en;
-      document.getElementById('langSelect').value = currentLang;
-
-      document.getElementById('lbl-date').innerText = t.date;
-      document.getElementById('lbl-rating').innerText = t.rating;
-      document.getElementById('lbl-emoji').innerText = t.emoji;
-      document.getElementById('lbl-details').innerText = t.details;
-      document.getElementById('lbl-tags').innerText = t.tags;
-      document.getElementById('note').placeholder = t.placeholder_note;
-      document.getElementById('searchFilter').placeholder = t.placeholder_search;
-      
-      const isEditing = document.getElementById('editingId').value !== '';
-      document.getElementById('saveBtn').innerText = isEditing ? t.update : t.save;
-      document.getElementById('cancelEditBtn').innerText = t.cancel;
-
-      document.getElementById('lbl-settings-title').innerText = t.settings_title;
-      document.getElementById('lbl-cal-title').innerText = t.cal_title;
-      document.getElementById('lbl-stats-title').innerText = t.stats_title;
-      document.getElementById('lbl-language').innerText = t.language;
-      document.getElementById('lbl-theme').innerText = t.theme;
-
-      document.getElementById('lbl-st-streak').innerText = t.streak;
-      document.getElementById('lbl-st-total').innerText = t.totallogs;
-      document.getElementById('lbl-st-avg').innerText = t.avgday;
-      document.getElementById('lbl-st-peak').innerText = t.peakhour;
-      document.getElementById('lbl-st-toptags').innerText = t.toptags;
-      document.getElementById('lbl-st-charttitle').innerText = t.charttitle;
-    }
-
-    function detectUserLanguage() {
-      const savedLang = localStorage.getItem('selected_lang');
-      if (savedLang) return savedLang;
-      const sysLang = (navigator.language || 'en').slice(0, 2);
-      return translations[sysLang] ? sysLang : 'en';
-    }
-
-    function changeDefaultView(val) { localStorage.setItem('default_view', val); }
-
-    function loadDefaultViewSetting() {
-      const saved = localStorage.getItem('default_view') || 'main';
-      document.getElementById('defaultViewSelect').value = saved;
-      if (saved === 'main_form') toggleEntryForm();
-      else if (saved === 'media') openView('mediaView');
-      else if (saved === 'media_form') {
-        openView('mediaView');
-        toggleMediaForm();
-      }
-    }
-
-    function getNowForInput() {
-      const now = new Date();
-      now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
-      return now.toISOString().slice(0, 16);
-    }
-
-    function getTodayDateForInput() {
-      const now = new Date();
-      now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
-      return now.toISOString().slice(0, 10);
-    }
-
-    function setCurrentDatetime() {
-      document.getElementById('customDatetime').value = getNowForInput();
-      document.getElementById('mediaStartDate').value = getTodayDateForInput();
-    }
-
-    function toggleEntryForm() {
-      const card = document.getElementById('entryCard');
-      card.style.display = (card.style.display === 'none') ? 'block' : 'none';
-      renderQuickTags();
-    }
-
-    function toggleMediaForm() {
-      const card = document.getElementById('mediaFormCard');
-      card.style.display = (card.style.display === 'none') ? 'block' : 'none';
-    }
-
-    function toggleCustomTypeCard() {
-      const card = document.getElementById('customTypeCard');
-      card.style.display = (card.style.display === 'none') ? 'block' : 'none';
-      renderCustomTypeList();
-    }
-
-    function openView(viewId) {
-      document.getElementById(viewId).style.display = 'block';
-      if (viewId === 'calendarView') renderCalendar();
-      if (viewId === 'statsView') renderStats();
-      if (viewId === 'mediaView') {
-        populateCollectionTypeDropdown();
-        renderMediaList();
-      }
-    }
-
-    function closeView(viewId) { document.getElementById(viewId).style.display = 'none'; }
-
-    function changeTheme(themeName) {
-      document.documentElement.setAttribute('data-theme', themeName);
-      localStorage.setItem('selected_theme', themeName);
-    }
-
-    function loadSavedTheme() {
-      const savedTheme = localStorage.getItem('selected_theme') || 'lavender';
-      document.documentElement.setAttribute('data-theme', savedTheme);
-      document.getElementById('themeSelect').value = savedTheme;
-    }
-
-    function setLogRating(val) {
-      document.getElementById('selectedLogRating').value = val;
-      const stars = document.querySelectorAll('#logStarRating .star');
-      stars.forEach((s, idx) => {
-        if (idx < val) s.classList.add('active');
-        else s.classList.remove('active');
-      });
-    }
-
-    function setMediaRating(val) {
-      document.getElementById('selectedMediaRating').value = val;
-      const stars = document.querySelectorAll('#mediaStarRating .star');
-      stars.forEach((s, idx) => {
-        if (idx < val) s.classList.add('active');
-        else s.classList.remove('active');
-      });
-    }
-
-    function selectEmoji(el, emojiChar) {
-      document.querySelectorAll('.emoji-opt').forEach(e => e.classList.remove('selected'));
-      const hiddenInput = document.getElementById('selectedEmoji');
-      if (hiddenInput.value === emojiChar) hiddenInput.value = '';
-      else { el.classList.add('selected'); hiddenInput.value = emojiChar; }
-    }
-
-    function handleTagTyping(e) {
-      const input = document.getElementById('tags');
-      let val = input.value;
-      if (e.key === ' ' || e.code === 'Space') {
-        const words = val.split(' ').map(w => w ? (w.startsWith('#') ? w : '#' + w) : '');
-        input.value = words.join(' ');
-      }
-      renderQuickTags();
-    }
-
-    function handleMediaTagTyping(e) {
-      const input = document.getElementById('mediaTags');
-      let val = input.value;
-      if (e.key === ' ' || e.code === 'Space') {
-        const words = val.split(' ').map(w => w ? (w.startsWith('#') ? w : '#' + w) : '');
-        input.value = words.join(' ');
-      }
-    }
-
-    function appendQuickTag(tagStr) {
-      const input = document.getElementById('tags');
-      const val = input.value;
-      const words = val.split(' ');
-      // Replace current word being typed if matching, or append
-      if (words.length > 0 && !val.endsWith(' ')) {
-        words[words.length - 1] = tagStr;
-        input.value = words.join(' ') + ' ';
-      } else {
-        input.value = val ? `${val.trim()} ${tagStr} ` : `${tagStr} `;
-      }
-      renderQuickTags();
-    }
-
-    /* DYNAMIC TAG CHIP BAR FILTERING */
-    function renderQuickTags() {
-      const logs = getLogs();
-      const tagCounts = {};
-      logs.forEach(l => (l.tags || []).forEach(t => {
-        if (t) tagCounts[t] = (tagCounts[t] || 0) + 1;
-      }));
-
-      // Sort tags by frequency
-      const sortedTags = Object.keys(tagCounts).sort((a, b) => tagCounts[b] - tagCounts[a]);
-
-      const inputVal = document.getElementById('tags').value;
-      const words = inputVal.split(' ');
-      const currentWord = (words[words.length - 1] || '').toLowerCase().replace(/^#/, '');
-
-      let matchingTags = [];
-      if (currentWord.length > 0) {
-        // Filter by prefix if user is typing
-        matchingTags = sortedTags.filter(t => t.toLowerCase().replace(/^#/, '').startsWith(currentWord));
-      } else {
-        // Otherwise show top used tags overall
-        matchingTags = sortedTags.slice(0, 10);
-      }
-
-      const container = document.getElementById('quickTagBar');
-      if (matchingTags.length === 0) {
-        container.innerHTML = '';
-        return;
-      }
-
-      container.innerHTML = matchingTags.map(t => `
-        <span class="tag-chip" onclick="appendQuickTag('${t}')">${t}</span>
-      `).join('');
-    }
-
-    function getLogs() { return JSON.parse(localStorage.getItem('my_pwa_logs') || '[]'); }
-
-    function getFilteredLogs() {
-      const logs = getLogs();
-      const searchQuery = (document.getElementById('searchFilter').value || '').toLowerCase().trim();
-      if (!searchQuery) return logs;
-      return logs.filter(l => l.note.toLowerCase().includes(searchQuery) || (l.tags || []).some(t => t.toLowerCase().includes(searchQuery)));
-    }
-
-    function saveLog() {
-      const tagsInput = document.getElementById('tags').value.trim();
-      const noteInput = document.getElementById('note').value.trim();
-      const datetimeInput = document.getElementById('customDatetime').value;
-      const emojiInput = document.getElementById('selectedEmoji').value;
-      const ratingInput = parseInt(document.getElementById('selectedLogRating').value || '0');
-      const editingId = document.getElementById('editingId').value;
-
-      if (!noteInput) return alert('Please enter entry details.');
-
-      const formattedTags = tagsInput ? tagsInput.split(' ').map(t => t ? (t.startsWith('#') ? t : '#' + t) : '').filter(Boolean) : [];
-      const finalTimestamp = datetimeInput ? new Date(datetimeInput).toISOString() : new Date().toISOString();
-      let logs = getLogs();
-
-      if (editingId) {
-        logs = logs.map(log => log.id == editingId ? { ...log, timestamp: finalTimestamp, emoji: emojiInput, rating: ratingInput, tags: formattedTags, note: noteInput } : log);
-      } else {
-        logs.push({ id: Date.now(), created_at: new Date().toISOString(), timestamp: finalTimestamp, emoji: emojiInput, rating: ratingInput, tags: formattedTags, note: noteInput });
-      }
-
-      logs.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
-      localStorage.setItem('my_pwa_logs', JSON.stringify(logs));
-      resetForm();
-      render();
-      renderQuickTags();
-    }
-
-    function editLog(id) {
-      const log = getLogs().find(l => l.id == id);
-      if (!log) return;
-
-      const t = translations[currentLang] || translations.en;
-      document.getElementById('editingId').value = log.id;
-      document.getElementById('tags').value = (log.tags || []).join(' ');
-      document.getElementById('note').value = log.note;
-      document.getElementById('selectedEmoji').value = log.emoji || '';
-      setLogRating(log.rating || 0);
-
-      document.querySelectorAll('.emoji-opt').forEach(e => e.innerText === log.emoji ? e.classList.add('selected') : e.classList.remove('selected'));
-
-      const localDate = new Date(log.timestamp);
-      localDate.setMinutes(localDate.getMinutes() - localDate.getTimezoneOffset());
-      document.getElementById('customDatetime').value = localDate.toISOString().slice(0, 16);
-
-      document.getElementById('saveBtn').innerText = t.update;
-      document.getElementById('cancelEditBtn').style.display = 'block';
-      document.getElementById('entryCard').style.display = 'block';
-
-      closeView('calendarView'); closeView('statsView'); closeView('settingsView'); closeView('mediaView');
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-      renderQuickTags();
-    }
-
-    function deleteLog(id) {
-      if (!confirm('Are you sure you want to delete this entry?')) return;
-      localStorage.setItem('my_pwa_logs', JSON.stringify(getLogs().filter(l => l.id != id)));
-      render(); renderQuickTags();
-    }
-
-    function deleteAllLogs() {
-      if (confirm('FIRST WARNING: Are you sure you want to delete ALL main log entries? This cannot be undone.')) {
-        if (confirm('FINAL CONFIRMATION: Tap OK to permanently wipe your main log timeline.')) {
-          localStorage.removeItem('my_pwa_logs');
-          render(); renderQuickTags(); closeView('settingsView');
-          alert('Main log timeline has been erased.');
-        }
-      }
-    }
-
-    function deleteMediaData() {
-      if (confirm('FIRST WARNING: Are you sure you want to delete ALL Collections entries?')) {
-        if (confirm('FINAL CONFIRMATION: Tap OK to clear all collections records.')) {
-          localStorage.removeItem('my_pwa_media');
-          closeView('settingsView');
-          alert('Collections tracker data erased.');
-        }
-      }
-    }
-
-    function cancelEdit() { resetForm(); }
-
-    function resetForm() {
-      const t = translations[currentLang] || translations.en;
-      document.getElementById('editingId').value = '';
-      document.getElementById('tags').value = '';
-      document.getElementById('note').value = '';
-      document.getElementById('selectedEmoji').value = '';
-      setLogRating(0);
-      document.querySelectorAll('.emoji-opt').forEach(e => e.classList.remove('selected'));
-      setCurrentDatetime();
-      document.getElementById('saveBtn').innerText = t.save;
-      document.getElementById('cancelEditBtn').style.display = 'none';
-      renderQuickTags();
-    }
-
-    function render() {
-      const container = document.getElementById('logsContainer');
-      const searchQuery = (document.getElementById('searchFilter').value || '').trim();
-      const filteredLogs = getFilteredLogs();
-      const t = translations[currentLang] || translations.en;
-
-      const filterBtn = document.getElementById('filteredExportBtn');
-      if (searchQuery) {
-        filterBtn.innerText = `${t.export_filtered} (${filteredLogs.length})`;
-        filterBtn.style.display = 'block';
-      } else filterBtn.style.display = 'none';
-
-      if (filteredLogs.length === 0) {
-        container.innerHTML = `<p style="color:var(--subtext); margin-top:12px;">${searchQuery ? t.no_matches : t.no_logs}</p>`;
-        return;
-      }
-
-      const grouped = {};
-      filteredLogs.forEach(log => {
-        const d = new Date(log.timestamp);
-        const year = d.getFullYear();
-        const month = d.toLocaleString(currentLang, { month: 'long' });
-        const dateStr = d.toLocaleDateString(currentLang, { weekday: 'short', month: 'short', day: 'numeric' });
-        if (!grouped[year]) grouped[year] = {};
-        if (!grouped[year][month]) grouped[year][month] = {};
-        if (!grouped[year][month][dateStr]) grouped[year][month][dateStr] = [];
-        grouped[year][month][dateStr].push(log);
-      });
-
-      let html = '';
-      for (const year in grouped) {
-        html += `<div class="year-header">${year}</div>`;
-        for (const month in grouped[year]) {
-          html += `<div class="month-header">${month}</div>`;
-          for (const dateStr in grouped[year][month]) {
-            html += `<div class="date-card"><div class="date-title">${dateStr}</div>`;
-            grouped[year][month][dateStr].forEach(l => {
-              const timeStr = new Date(l.timestamp).toLocaleTimeString(currentLang, { hour: '2-digit', minute: '2-digit' });
-              const emojiDisplay = l.emoji ? `<span style="margin-right:6px; font-size:16px;">${l.emoji}</span>` : '';
-              const starsDisplay = l.rating ? `<span style="color:#ffcc00; margin-left:6px;">${'★'.repeat(l.rating)}</span>` : '';
-              html += `
-                <div class="log-entry">
-                  <div class="log-header-row">
-                    <span class="time">${timeStr}${starsDisplay}</span>
-                    <div class="action-btns">
-                      <button class="btn-icon" onclick="editLog(${l.id})">✏️</button>
-                      <button class="btn-icon" onclick="deleteLog(${l.id})">🗑️</button>
-                    </div>
-                  </div>
-                  <div style="margin-top: 4px;">${emojiDisplay}<strong>${l.note}</strong></div>
-                  <div>${(l.tags || []).map(t => `<span class="tag">${t}</span>`).join('')}</div>
-                </div>
-              `;
-            });
-            html += `</div>`;
-          }
-        }
-      }
-      container.innerHTML = html;
-    }
-
-    function getCustomTypes() {
-      return JSON.parse(localStorage.getItem('my_pwa_custom_types') || '[]');
-    }
-
-    function addCustomType() {
-      const input = document.getElementById('newTypeName');
-      const name = input.value.trim();
-      if (!name) return alert('Please enter a custom type name.');
-
-      const existing = ['Movie', 'Book', 'TV Series', ...getCustomTypes()];
-      if (existing.some(t => t.toLowerCase() === name.toLowerCase())) {
-        return alert('This collection type already exists.');
-      }
-
-      const customTypes = getCustomTypes();
-      customTypes.push(name);
-      localStorage.setItem('my_pwa_custom_types', JSON.stringify(customTypes));
-
-      input.value = '';
-      populateCollectionTypeDropdown();
-      renderCustomTypeList();
-    }
-
-    function removeCustomType(typeName) {
-      const items = getMediaItems();
-      const usageCount = items.filter(i => i.type === typeName).length;
-
-      /* SAFEGUARD CHECK: Prevent deletion if used */
-      if (usageCount > 0) {
-        alert(`This collection type has been used ${usageCount} time(s). Please remove or update those records in order to delete this type.`);
-        return;
-      }
-
-      if (confirm(`Are you sure you want to delete the "${typeName}" collection type?`)) {
-        const customTypes = getCustomTypes().filter(t => t !== typeName);
-        localStorage.setItem('my_pwa_custom_types', JSON.stringify(customTypes));
-        populateCollectionTypeDropdown();
-        renderCustomTypeList();
-      }
-    }
-
-    function renderCustomTypeList() {
-      const container = document.getElementById('customTypeList');
-      const customTypes = getCustomTypes();
-
-      if (customTypes.length === 0) {
-        container.innerHTML = '<span style="font-size:12px; color:var(--subtext);">No custom types added yet.</span>';
-        return;
-      }
-
-      container.innerHTML = customTypes.map(t => `
-        <span class="custom-type-chip">
-          <strong>${t}</strong>
-          <button class="btn-icon" style="color:var(--danger); font-size:11px;" onclick="removeCustomType('${t}')">✕</button>
-        </span>
-      `).join('');
-    }
-
-    function populateCollectionTypeDropdown() {
-      const select = document.getElementById('mediaType');
-      const defaults = ['Movie', 'Book', 'TV Series'];
-      const custom = getCustomTypes();
-      const allTypes = [...defaults, ...custom];
-
-      select.innerHTML = allTypes.map(t => `<option value="${t}">${t}</option>`).join('');
-    }
-
-    function getMediaItems() { return JSON.parse(localStorage.getItem('my_pwa_media') || '[]'); }
-
-    async function fetchMediaInfo(title, type) {
-      try {
-        if (type === 'Book') {
-          const res = await fetch(`https://openlibrary.org/search.json?title=${encodeURIComponent(title)}&limit=1`);
-          const data = await res.json();
-          if (data.docs && data.docs.length > 0) {
-            const doc = data.docs[0];
-            const coverId = doc.cover_i;
-            const coverUrl = coverId ? `https://covers.openlibrary.org/b/id/${coverId}-M.jpg` : null;
-            const summary = doc.first_sentence ? doc.first_sentence.join(' ') : (doc.author_name ? `By ${doc.author_name.join(', ')}` : 'No summary available.');
-            return { coverUrl, summary };
-          }
-        }
-      } catch (err) { console.log('API Fetch Error:', err); }
-      return null;
-    }
-
-    async function saveMediaItem() {
-      const type = document.getElementById('mediaType').value;
-      const title = document.getElementById('mediaTitle').value.trim();
-      const author = document.getElementById('mediaAuthor').value.trim();
-      const startDate = document.getElementById('mediaStartDate').value;
-      const endDate = document.getElementById('mediaEndDate').value || null;
-      const rating = parseInt(document.getElementById('selectedMediaRating').value || '0');
-      const tagsInput = document.getElementById('mediaTags').value.trim();
-      const notes = document.getElementById('mediaNotes').value.trim();
-      const editingId = document.getElementById('editingMediaId').value;
-
-      if (!title) return alert('Please enter a title/name.');
-
-      const formattedTags = tagsInput ? tagsInput.split(' ').map(t => t ? (t.startsWith('#') ? t : '#' + t) : '').filter(Boolean) : [];
-      let apiData = null;
-      if (!editingId) apiData = await fetchMediaInfo(title, type);
-
-      const items = getMediaItems();
-
-      if (editingId) {
-        const idx = items.findIndex(i => i.id == editingId);
-        if (idx !== -1) {
-          items[idx] = { ...items[idx], type, title, author, startDate, endDate, rating, tags: formattedTags, notes };
-        }
-      } else {
-        items.unshift({
-          id: Date.now(),
-          type, title, author, startDate, endDate, rating, tags: formattedTags, notes,
-          coverUrl: apiData ? apiData.coverUrl : null,
-          summary: apiData ? apiData.summary : null
-        });
-      }
-
-      localStorage.setItem('my_pwa_media', JSON.stringify(items));
-      cancelMediaEdit();
-      toggleMediaForm();
-      renderMediaList();
-    }
-
-    function editMediaItem(id) {
-      const item = getMediaItems().find(i => i.id == id);
-      if (!item) return;
-
-      populateCollectionTypeDropdown();
-      document.getElementById('editingMediaId').value = item.id;
-      document.getElementById('mediaType').value = item.type;
-      document.getElementById('mediaTitle').value = item.title;
-      document.getElementById('mediaAuthor').value = item.author || '';
-      document.getElementById('mediaTags').value = (item.tags || []).join(' ');
-      document.getElementById('mediaNotes').value = item.notes || '';
-      setMediaRating(item.rating || 0);
-
-      if (item.startDate) {
-        document.getElementById('mediaStartDate').value = item.startDate.slice(0, 10);
-      }
-      if (item.endDate) {
-        document.getElementById('mediaEndDate').value = item.endDate.slice(0, 10);
-      } else {
-        document.getElementById('mediaEndDate').value = '';
-      }
-
-      document.getElementById('saveMediaBtn').innerText = 'Update Collection Entry';
-      document.getElementById('cancelMediaEditBtn').style.display = 'block';
-
-      /* Focused Editing View: Hide Feed & Search Controls */
-      document.getElementById('mediaFormCard').style.display = 'block';
-      document.getElementById('mediaControlsRow').style.display = 'none';
-      document.getElementById('mediaFeedSearchWrapper').style.display = 'none';
-      document.getElementById('mediaContainer').style.display = 'none';
-    }
-
-    function cancelMediaEdit() {
-      document.getElementById('editingMediaId').value = '';
-      document.getElementById('mediaTitle').value = '';
-      document.getElementById('mediaAuthor').value = '';
-      document.getElementById('mediaTags').value = '';
-      document.getElementById('mediaNotes').value = '';
-      document.getElementById('mediaEndDate').value = '';
-      setMediaRating(0);
-      document.getElementById('saveMediaBtn').innerText = 'Add Collection Log';
-      document.getElementById('cancelMediaEditBtn').style.display = 'none';
-
-      /* Restore Focused View to Normal Feed Mode */
-      document.getElementById('mediaFormCard').style.display = 'none';
-      document.getElementById('mediaControlsRow').style.display = 'flex';
-      document.getElementById('mediaFeedSearchWrapper').style.display = 'block';
-      document.getElementById('mediaContainer').style.display = 'block';
-
-      setCurrentDatetime();
-    }
-
-    function deleteMediaItem(id) {
-      if (!confirm('Delete this collection entry?')) return;
-      localStorage.setItem('my_pwa_media', JSON.stringify(getMediaItems().filter(i => i.id != id)));
-      renderMediaList();
-    }
-
-    function toggleMediaCardExpand(cardId) {
-      const details = document.getElementById(`media-details-${cardId}`);
-      if (details) details.style.display = (details.style.display === 'none') ? 'block' : 'none';
-    }
-
-    function renderMediaList() {
-      const items = getMediaItems();
-      const searchQuery = (document.getElementById('mediaSearchFilter').value || '').toLowerCase().trim();
-      const container = document.getElementById('mediaContainer');
-
-      const filtered = items.filter(i => {
-        if (!searchQuery) return true;
-        return i.title.toLowerCase().includes(searchQuery) ||
-               (i.author || '').toLowerCase().includes(searchQuery) ||
-               (i.notes || '').toLowerCase().includes(searchQuery) ||
-               (i.tags || []).some(t => t.toLowerCase().includes(searchQuery)) ||
-               i.type.toLowerCase().includes(searchQuery);
-      });
-
-      if (filtered.length === 0) {
-        container.innerHTML = '<p style="color:var(--subtext); margin-top:12px;">No matching collection entries found.</p>';
-        return;
-      }
-
-      container.innerHTML = filtered.map(i => {
-        const stars = i.rating ? `<span style="color:#ffcc00; margin-left:6px;">${'★'.repeat(i.rating)}</span>` : '';
-        const startStr = i.startDate ? new Date(i.startDate + 'T00:00:00').toLocaleDateString(currentLang, { month:'short', day:'numeric', year:'numeric' }) : '';
-        const endStr = i.endDate ? new Date(i.endDate + 'T00:00:00').toLocaleDateString(currentLang, { month:'short', day:'numeric', year:'numeric' }) : 'Ongoing';
-        const dateRange = startStr ? `${startStr} → ${endStr}` : '';
-        const authorDisplay = i.author ? `<div style="font-size:12px; color:var(--subtext); font-style:italic;">By ${i.author}</div>` : '';
-
-        return `
-          <div class="card" style="margin-bottom:10px;">
-            <div style="display:flex; justify-content:space-between; align-items:center; cursor:pointer;" onclick="toggleMediaCardExpand(${i.id})">
-              <span class="media-type-badge">${i.type}</span>
-              <span style="font-size:11px; color:var(--subtext);">${dateRange}</span>
-            </div>
-
-            <div style="font-size:16px; font-weight:bold; margin-top:4px; cursor:pointer;" onclick="toggleMediaCardExpand(${i.id})">
-              ${i.title} ${stars}
-            </div>
-            ${authorDisplay}
-
-            <div style="font-size:13px; margin-top:4px; color:var(--text);">${i.notes || ''}</div>
-            <div>${(i.tags || []).map(t => `<span class="tag">${t}</span>`).join('')}</div>
-
-            <div id="media-details-${i.id}" style="display:none; margin-top:10px; border-top:1px dashed var(--border); padding-top:8px;">
-              ${i.coverUrl ? `<img src="${i.coverUrl}" class="media-cover-img" alt="Cover">` : ''}
-              ${i.summary ? `<div style="font-size:12px; font-style:italic; margin-top:6px; color:var(--subtext);">${i.summary}</div>` : ''}
-              
-              <div style="display:flex; justify-content:flex-end; gap:8px; margin-top:8px;">
-                <button class="btn-themed" style="width:auto; padding:4px 10px; font-size:12px;" onclick="editMediaItem(${i.id})">✏️ Edit</button>
-                <button class="btn-themed" style="width:auto; padding:4px 10px; font-size:12px; color:var(--danger);" onclick="deleteMediaItem(${i.id})">🗑️ Delete</button>
-              </div>
-            </div>
-          </div>
-        `;
-      }).join('');
-    }
-
-    function changeCalMonth(delta) {
-      calCurrentDate.setMonth(calCurrentDate.getMonth() + delta);
-      renderCalendar();
-    }
-
-    function renderCalendar() {
-      const year = calCurrentDate.getFullYear();
-      const month = calCurrentDate.getMonth();
-
-      document.getElementById('calMonthLabel').innerText = new Date(year, month).toLocaleString(currentLang, { month: 'long', year: 'numeric' });
-
-      const firstDay = new Date(year, month, 1).getDay();
-      const totalDays = new Date(year, month + 1, 0).getDate();
-      const mainLogs = getLogs();
-      const mediaItems = getMediaItems();
-
-      /* Categorize dates into Main / Collections / Both */
-      const dayLogs = {};
-      mainLogs.forEach(l => {
-        const d = new Date(l.timestamp);
-        const key = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
-        if (!dayLogs[key]) dayLogs[key] = { main: [], media: [] };
-        dayLogs[key].main.push(l);
-      });
-
-      mediaItems.forEach(m => {
-        const d = new Date((m.startDate || m.timestamp).slice(0, 10) + 'T00:00:00');
-        const key = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
-        if (!dayLogs[key]) dayLogs[key] = { main: [], media: [] };
-        dayLogs[key].media.push(m);
-      });
-
-      const grid = document.getElementById('calGrid');
-      grid.innerHTML = '';
-
-      for (let i = 0; i < firstDay; i++) grid.innerHTML += `<div class="cal-cell empty"></div>`;
-
-      for (let day = 1; day <= totalDays; day++) {
-        const dateKey = `${year}-${String(month+1).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
-        const entryData = dayLogs[dateKey];
-        const hasMain = entryData && entryData.main.length > 0;
-        const hasMedia = entryData && entryData.media.length > 0;
-
-        let classColor = '';
-        if (hasMain && hasMedia) classColor = 'has-both';
-        else if (hasMain) classColor = 'has-main';
-        else if (hasMedia) classColor = 'has-media';
-
-        const totalCount = (hasMain ? entryData.main.length : 0) + (hasMedia ? entryData.media.length : 0);
-
-        const cell = document.createElement('div');
-        cell.className = `cal-cell ${classColor}`;
-        cell.innerHTML = `<span>${day}</span>${totalCount > 0 ? `<span class="badge">${totalCount} ●</span>` : ''}`;
-        cell.onclick = () => inspectCalDay(dateKey, entryData || { main: [], media: [] });
-
-        grid.appendChild(cell);
-      }
-    }
-
-    function inspectCalDay(dateKey, data) {
-      const inspector = document.getElementById('calDayInspector');
-      const title = document.getElementById('calInspectDateTitle');
-      const container = document.getElementById('calInspectLogs');
-
-      inspector.style.display = 'block';
-      title.innerText = new Date(dateKey + 'T00:00:00').toLocaleDateString(currentLang, { weekday: 'long', month: 'short', day: 'numeric', year: 'numeric' });
-
-      if (data.main.length === 0 && data.media.length === 0) {
-        container.innerHTML = `<p style="color:var(--subtext); font-size:13px; margin:8px 0;">No logs on this date.</p>`;
-        return;
-      }
-
-      let html = '';
-
-      if (data.main.length > 0) {
-        html += `<div style="font-size:11px; font-weight:bold; color:var(--header-accent); margin-top:4px;">MAIN LOGS</div>`;
-        data.main.forEach(l => {
-          const timeStr = new Date(l.timestamp).toLocaleTimeString(currentLang, { hour: '2-digit', minute: '2-digit' });
-          const emoji = l.emoji ? `${l.emoji} ` : '';
-          const stars = l.rating ? ` <span style="color:#ffcc00">${'★'.repeat(l.rating)}</span>` : '';
-          html += `
-            <div style="padding: 4px 0; border-bottom: 1px dashed var(--border);">
-              <small style="color:var(--subtext);">${timeStr}${stars}</small><br>
-              <strong>${emoji}${l.note}</strong>
-            </div>
-          `;
-        });
-      }
-
-      if (data.media.length > 0) {
-        html += `<div style="font-size:11px; font-weight:bold; color:var(--header-accent); margin-top:8px;">COLLECTIONS LOGS</div>`;
-        data.media.forEach(m => {
-          const stars = m.rating ? ` <span style="color:#ffcc00">${'★'.repeat(m.rating)}</span>` : '';
-          html += `
-            <div style="padding: 4px 0; border-bottom: 1px dashed var(--border);">
-              <span class="media-type-badge">${m.type}</span> <strong>${m.title}</strong>${stars}
-            </div>
-          `;
-        });
-      }
-
-      container.innerHTML = html;
-    }
-
-    function renderStats() {
-      /* 1. MAIN LOG STATS */
-      const logs = getLogs();
-      if (logs.length === 0) {
-        document.getElementById('st-streak').innerText = '0';
-        document.getElementById('st-total').innerText = '0';
-        document.getElementById('st-avg').innerText = '0';
-        document.getElementById('st-peak').innerText = '-';
-        document.getElementById('topTagsList').innerHTML = '<p style="color:var(--subtext);">No data recorded yet.</p>';
-        document.getElementById('svgChartBox').innerHTML = '';
-      } else {
-        document.getElementById('st-total').innerText = logs.length;
-
-        const uniqueDates = Array.from(new Set(logs.map(l => l.timestamp.slice(0,10)))).sort().reverse();
-        let streak = 0;
-        const todayStr = new Date().toISOString().slice(0,10);
-        const yesterdayStr = new Date(Date.now() - 86400000).toISOString().slice(0,10);
-
-        if (uniqueDates.includes(todayStr) || uniqueDates.includes(yesterdayStr)) {
-          let checkDate = new Date(uniqueDates.includes(todayStr) ? todayStr : yesterdayStr);
-          while (true) {
-            const key = checkDate.toISOString().slice(0,10);
-            if (uniqueDates.includes(key)) {
-              streak++;
-              checkDate.setDate(checkDate.getDate() - 1);
-            } else break;
-          }
-        }
-        document.getElementById('st-streak').innerText = streak;
-
-        const avg = (logs.length / Math.max(1, uniqueDates.length)).toFixed(1);
-        document.getElementById('st-avg').innerText = avg;
-
-        const hours = {};
-        logs.forEach(l => {
-          const h = new Date(l.timestamp).getHours();
-          hours[h] = (hours[h] || 0) + 1;
-        });
-        const peakHour = Object.keys(hours).reduce((a, b) => hours[a] > hours[b] ? a : b, 12);
-        const ampm = peakHour >= 12 ? 'PM' : 'AM';
-        document.getElementById('st-peak').innerText = `${peakHour % 12 || 12}${ampm}`;
-
-        const tagCounts = {};
-        logs.forEach(l => {
-          (l.tags || []).forEach(t => tagCounts[t] = (tagCounts[t] || 0) + 1);
-        });
-
-        const sortedTags = Object.entries(tagCounts).sort((a,b) => b[1] - a[1]);
-        const top5 = sortedTags.slice(0, 5);
-
-        document.getElementById('topTagsList').innerHTML = top5.length ? top5.map(([tag, count], i) => `
-          <div style="display:flex; justify-content:space-between; padding: 4px 0; border-bottom: 1px dashed var(--border);">
-            <span><strong>${i+1}. ${tag}</strong></span>
-            <span style="color:var(--subtext);">${count} logs</span>
-          </div>
-        `).join('') : '<p style="color:var(--subtext);">No tags used yet.</p>';
-
-        const chartSelect = document.getElementById('chartTagSelect');
-        chartSelect.innerHTML = sortedTags.map(([tag]) => `<option value="${tag}">${tag}</option>`).join('');
-        if (sortedTags.length === 0) chartSelect.innerHTML = '<option value="">No tags</option>';
-
-        renderChart();
-      }
-
-      /* 2. COLLECTIONS STATS */
-      const mediaItems = getMediaItems();
-      document.getElementById('mst-total').innerText = mediaItems.length;
-
-      const finished = mediaItems.filter(i => i.endDate).length;
-      document.getElementById('mst-finished').innerText = finished;
-
-      const allTypes = ['Movie', 'Book', 'TV Series', ...getCustomTypes()];
-      const typeCounts = allTypes.map(t => `${t}: ${mediaItems.filter(i => i.type === t).length}`);
-      document.getElementById('mst-breakdown').innerText = typeCounts.join(' | ') || 'None';
-
-      const ratings = mediaItems.filter(i => i.rating).map(i => i.rating);
-      const avgRating = ratings.length ? (ratings.reduce((a,b)=>a+b,0)/ratings.length).toFixed(1) + ' ★' : '-';
-      document.getElementById('mst-avg-rating').innerText = avgRating;
-
-      /* Populate Media Tag Chart Select */
-      const mediaTagCounts = {};
-      mediaItems.forEach(i => (i.tags || []).forEach(t => mediaTagCounts[t] = (mediaTagCounts[t] || 0) + 1));
-      const sortedMediaTags = Object.entries(mediaTagCounts).sort((a,b) => b[1] - a[1]);
-
-      const mediaChartSelect = document.getElementById('mediaChartTagSelect');
-      mediaChartSelect.innerHTML = sortedMediaTags.map(([tag]) => `<option value="${tag}">${tag}</option>`).join('');
-      if (sortedMediaTags.length === 0) mediaChartSelect.innerHTML = '<option value="">No tags</option>';
-
-      renderMediaChart();
-
-      /* Dynamic Top Rated Lists Per Collection Type */
-      const topContainer = document.getElementById('dynamicTopRatedContainer');
-      topContainer.innerHTML = '';
-
-      allTypes.forEach(t => {
-        const items = mediaItems.filter(i => i.type === t);
-        if (items.length > 0) {
-          const card = document.createElement('div');
-          card.className = 'card';
-          card.innerHTML = `<label>Top Rated ${t}s (Top 3)</label><div id="top-${t.replace(/\s+/g, '')}-list" style="font-size: 13px;"></div>`;
-          topContainer.appendChild(card);
-          renderTopMediaCategory(items, `top-${t.replace(/\s+/g, '')}-list`);
-        }
-      });
-    }
-
-    function renderTopMediaCategory(items, elementId) {
-      const container = document.getElementById(elementId);
-      if (!container) return;
-      const sorted = [...items].sort((a, b) => (b.rating || 0) - (a.rating || 0)).slice(0, 3);
-
-      if (sorted.length === 0) {
-        container.innerHTML = '<span style="color:var(--subtext); font-style:italic;">None logged yet.</span>';
-        return;
-      }
-
-      container.innerHTML = sorted.map((i, idx) => `
-        <div class="top-media-item">
-          <strong>${idx+1}. ${i.title}</strong> ${i.author ? `<span style="font-size:11px; color:var(--subtext);">(By ${i.author})</span>` : ''}
-          <span style="color:#ffcc00; margin-left:4px;">${'★'.repeat(i.rating || 0)}</span>
-        </div>
-      `).join('');
-    }
-
-    function renderChart() {
-      const selectedTag = document.getElementById('chartTagSelect').value;
-      const grain = document.getElementById('chartGrainSelect').value;
-      const box = document.getElementById('svgChartBox');
-
-      if (!selectedTag) {
-        box.innerHTML = '<p style="color:var(--subtext); text-align:center; padding-top:40px;">No tag selected.</p>';
-        return;
-      }
-
-      const logs = getLogs().filter(l => (l.tags || []).includes(selectedTag));
-      const buckets = {};
-
-      logs.forEach(l => {
-        const d = new Date(l.timestamp);
-        let key;
-        if (grain === 'daily') key = d.toISOString().slice(5, 10);
-        else if (grain === 'monthly') key = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;
-        else key = `W${Math.ceil(d.getDate()/7)} ${d.toLocaleString('default',{month:'short'})}`;
-
-        buckets[key] = (buckets[key] || 0) + 1;
-      });
-
-      const keys = Object.keys(buckets).slice(-7);
-      const values = keys.map(k => buckets[k]);
-
-      if (keys.length === 0) {
-        box.innerHTML = '<p style="color:var(--subtext); text-align:center; padding-top:40px;">No log history for this tag.</p>';
-        return;
-      }
-
-      const maxVal = Math.max(...values, 1);
-      const width = 280; const height = 120; const padding = 20;
-      const points = values.map((val, idx) => {
-        const x = padding + (idx / Math.max(1, keys.length - 1)) * (width - 2 * padding);
-        const y = height - padding - (val / maxVal) * (height - 2 * padding);
-        return { x, y, val, label: keys[idx] };
-      });
-
-      const polylineStr = points.map(p => `${p.x},${p.y}`).join(' ');
-
-      box.innerHTML = `
-        <svg viewBox="0 0 ${width} ${height}" style="width:100%; height:100%;">
-          <polyline points="${polylineStr}" />
-          ${points.map(p => `
-            <circle cx="${p.x}" cy="${p.y}" r="4" />
-            <text x="${p.x}" y="${height - 2}" font-size="8" fill="var(--subtext)" text-anchor="middle">${p.label}</text>
-            <text x="${p.x}" y="${p.y - 7}" font-size="9" font-weight="bold" fill="var(--text)" text-anchor="middle">${p.val}</text>
-          `).join('')}
-        </svg>
-      `;
-    }
-
-    function renderMediaChart() {
-      const selectedTag = document.getElementById('mediaChartTagSelect').value;
-      const grain = document.getElementById('mediaChartGrainSelect').value;
-      const box = document.getElementById('svgMediaChartBox');
-
-      if (!selectedTag) {
-        box.innerHTML = '<p style="color:var(--subtext); text-align:center; padding-top:40px;">No collection tag selected.</p>';
-        return;
-      }
-
-      const items = getMediaItems().filter(i => (i.tags || []).includes(selectedTag));
-      const buckets = {};
-
-      items.forEach(i => {
-        const d = new Date((i.startDate || i.timestamp).slice(0, 10) + 'T00:00:00');
-        let key;
-        if (grain === 'daily') key = d.toISOString().slice(5, 10);
-        else if (grain === 'monthly') key = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;
-        else key = `W${Math.ceil(d.getDate()/7)} ${d.toLocaleString('default',{month:'short'})}`;
-
-        buckets[key] = (buckets[key] || 0) + 1;
-      });
-
-      const keys = Object.keys(buckets).slice(-7);
-      const values = keys.map(k => buckets[k]);
-
-      if (keys.length === 0) {
-        box.innerHTML = '<p style="color:var(--subtext); text-align:center; padding-top:40px;">No history for this tag.</p>';
-        return;
-      }
-
-      const maxVal = Math.max(...values, 1);
-      const width = 280; const height = 120; const padding = 20;
-      const points = values.map((val, idx) => {
-        const x = padding + (idx / Math.max(1, keys.length - 1)) * (width - 2 * padding);
-        const y = height - padding - (val / maxVal) * (height - 2 * padding);
-        return { x, y, val, label: keys[idx] };
-      });
-
-      const polylineStr = points.map(p => `${p.x},${p.y}`).join(' ');
-
-      box.innerHTML = `
-        <svg viewBox="0 0 ${width} ${height}" style="width:100%; height:100%;">
-          <polyline points="${polylineStr}" />
-          ${points.map(p => `
-            <circle cx="${p.x}" cy="${p.y}" r="4" />
-            <text x="${p.x}" y="${height - 2}" font-size="8" fill="var(--subtext)" text-anchor="middle">${p.label}</text>
-            <text x="${p.x}" y="${p.y - 7}" font-size="9" font-weight="bold" fill="var(--text)" text-anchor="middle">${p.val}</text>
-          `).join('')}
-        </svg>
-      `;
-    }
-
-    async function exportCSV(onlyFiltered = false) {
-      const logsToExport = onlyFiltered ? getFilteredLogs() : getLogs();
-      if (logsToExport.length === 0) return alert('No data to export.');
-
-      let csv = "EventTimestamp,RecordedTimestamp,Rating,Emoji,Tags,Note\n";
-      logsToExport.forEach(l => {
-        const recorded = l.created_at || l.timestamp;
-        const rating = l.rating || '';
-        const emoji = l.emoji || '';
-        const tags = (l.tags || []).join(' ');
-        csv += `"${l.timestamp}","${recorded}","${rating}","${emoji}","${tags}","${l.note.replace(/"/g, '""')}"\n`;
-      });
-
-      const prefix = onlyFiltered ? 'filtered_logs' : 'main_tracker_export';
-      const fileName = `${prefix}_${new Date().toISOString().slice(0,10)}.csv`;
-      triggerShareOrDownload(csv, fileName);
-    }
-
-    async function exportMediaCSV() {
-      const mediaItems = getMediaItems();
-      if (mediaItems.length === 0) return alert('No collections data to export.');
-
-      let csv = "Type,Title,ByCreator,StartDate,EndDate,Rating,Tags,Notes,Summary\n";
-      mediaItems.forEach(i => {
-        const author = (i.author || '').replace(/"/g, '""');
-        const tags = (i.tags || []).join(' ');
-        const notes = (i.notes || '').replace(/"/g, '""');
-        const summary = (i.summary || '').replace(/"/g, '""');
-        csv += `"${i.type}","${i.title.replace(/"/g, '""')}","${author}","${i.startDate || ''}","${i.endDate || ''}","${i.rating || ''}","${tags}","${notes}","${summary}"\n`;
-      });
-
-      const fileName = `collections_tracker_export_${new Date().toISOString().slice(0,10)}.csv`;
-      triggerShareOrDownload(csv, fileName);
-    }
-
-    async function triggerShareOrDownload(csvContent, fileName) {
-      const blob = new Blob([csvContent], { type: 'text/csv' });
-      if (navigator.canShare && navigator.canShare({ files: [new File([blob], fileName, { type: 'text/csv' })] })) {
-        try {
-          const file = new File([blob], fileName, { type: 'text/csv' });
-          await navigator.share({ title: 'Quick Tracker Export', files: [file] });
-        } catch (err) {
-          if (err.name !== 'AbortError') fallbackDownload(blob, fileName);
-        }
-      } else {
-        fallbackDownload(blob, fileName);
-      }
-    }
-
-    function fallbackDownload(blob, fileName) {
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = fileName;
-      a.click();
-    }
-
-    /* App Startup Initialization */
-    currentLang = detectUserLanguage();
-    applyLanguage();
-    loadSavedTheme();
-    loadDefaultViewSetting();
-    setCurrentDatetime();
-    renderQuickTags();
-    render();
-  </script>
+  <!-- Modular Scripts: Loaded sequentially without cache interference -->
+  <script src="js/translations/en.js"></script>
+  <script src="js/translations/es.js"></script>
+  <script src="js/translations/ca.js"></script>
+  <script src="js/i18n.js"></script>
+  <script src="js/logger.js"></script>
+  <script src="js/collections.js"></script>
+  <script src="js/calendar.js"></script>
+  <script src="js/stats.js"></script>
+  <script src="js/app.js"></script>
 </body>
 </html>
