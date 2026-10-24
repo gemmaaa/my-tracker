@@ -12,11 +12,11 @@ A lightweight, private tracker that runs entirely in your browser. Everything is
 ## How to Install
 
 ### iPhone / iPad (Safari)
-1. Open your site URL in **Safari**.
+1. Open `https://gemmaaa.github.io/my-tracker/` in **Safari**.
 2. Tap the **Share** button (box with an upward arrow).
 3. Tap **Add to Home Screen**, then tap **Add**.
 
 ### Android (Chrome)
-1. Open your site URL in **Chrome**.
+1. Open `https://gemmaaa.github.io/my-tracker/` in **Chrome**.
 2. Tap the **three dots (⋮)** in the top right.
 3. Tap **Add to Home screen** (or **Install app**).
