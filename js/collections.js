@@ -11,7 +11,20 @@ function getAllCollectionTypes() {
 }
 
 function getCollectionItems() {
-  return JSON.parse(localStorage.getItem('my_pwa_collections') || '[]');
+  let items = JSON.parse(localStorage.getItem('my_pwa_collections') || 'null');
+  
+  // If no collections exist yet, check if old media logs exist
+  if (!items) {
+    const legacyMedia = localStorage.getItem('my_pwa_media');
+    if (legacyMedia) {
+      items = JSON.parse(legacyMedia);
+      // Migrate them over to the new collections key
+      localStorage.setItem('my_pwa_collections', JSON.stringify(items));
+    } else {
+      items = [];
+    }
+  }
+  return items;
 }
 
 function populateCollectionTypeDropdown() {
